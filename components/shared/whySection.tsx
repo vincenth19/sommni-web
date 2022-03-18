@@ -73,7 +73,11 @@ const WhySectionItem: FC<IWhySectionItemProps> = ({ itemImage, itemText }) => {
   return (
     <Group direction="column" position="center" style={{ width: "45%" }}>
       <Image width="100px" height="100px" src={itemImage} />
-      <Text size="xl" weight={500} style={{ color: themes.colors.gray[6] }}>
+      <Text
+        size="xl"
+        weight={500}
+        style={{ color: themes.colors.gray[6], textAlign: "center" }}
+      >
         {itemText}
       </Text>
     </Group>

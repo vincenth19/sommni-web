@@ -49,7 +49,7 @@ const Footer = () => {
         color: "white",
       }}
     >
-      <div style={{ display: "flex", gap: "4rem" }}>
+      <div style={{ display: "flex", gap: "2rem" }}>
         {FooterLinks.map((links) => (
           <Group direction="column">
             {links.linkGroup.map((link) => {

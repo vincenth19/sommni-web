@@ -1,7 +1,8 @@
 import { Group } from "@mantine/core";
+import { useMediaQuery } from "@mantine/hooks";
 import Link from "next/link";
 import styles from "../../styles/Products.module.css";
-
+import { screenSizes } from "../../types";
 type TProductCard = {
   imageURL: string;
   title: string;
@@ -31,7 +32,7 @@ const ProductsSection = () => {
   ];
 
   return (
-    <Group spacing={"md"} noWrap={false}>
+    <Group spacing={"lg"} style={{ paddingTop: "1rem", paddingBottom: "2rem" }}>
       {ProductsData.map((product) => {
         return (
           <ProductCard
@@ -46,14 +47,19 @@ const ProductsSection = () => {
 };
 
 const ProductCard = ({ imageURL, title, path }: TProductCard) => {
+  const mediumScreen = useMediaQuery(`(min-width: ${screenSizes.md})`);
+  const smallScreen = useMediaQuery(`(min-width: ${screenSizes.sm})`);
+
   return (
     <Link href={path}>
       <Group
         className={styles.productCard}
         direction="column"
-        position="left"
+        position="apart"
         spacing={"xs"}
-        style={{ flex: 1 }}
+        style={{
+          width: mediumScreen ? "31.5%" : smallScreen ? "48.5%" : "100%",
+        }}
       >
         <div
           style={{
@@ -68,7 +74,7 @@ const ProductCard = ({ imageURL, title, path }: TProductCard) => {
             style={{ height: "100%", width: "100%", borderRadius: "5px" }}
           />
         </div>
-        <h2>{title}</h2>
+        <h2 style={{ marginBottom: 0 }}>{title}</h2>
       </Group>
     </Link>
   );

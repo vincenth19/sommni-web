@@ -1,5 +1,4 @@
 .productCard {
-  padding: 1rem;
   background-color: white;
   transform: scale(1);
   transition: 0.15s all ease;
@@ -7,8 +6,6 @@
 
 .productCard:hover {
   z-index: 2;
-  padding: 1rem;
   transform: scale(1.05);
-  background-color: #e4f5ff;
   border-radius: 5px;
 }

@@ -3,8 +3,11 @@ import type { AppProps } from "next/app";
 import { Container, MantineProvider } from "@mantine/core";
 import { appWithTranslation } from "next-i18next";
 import MainFrame from "../components/shared/mainFrame";
+import { useMediaQuery } from "@mantine/hooks";
+import { screenSizes } from "../types";
 
 function MyApp({ Component, pageProps }: AppProps) {
+  const screenSize = useMediaQuery(`(max-width: ${screenSizes.xs})`);
   return (
     <MantineProvider
       theme={{
@@ -27,11 +30,11 @@ function MyApp({ Component, pageProps }: AppProps) {
         primaryColor: "brand",
       }}
     >
-      <Container size="xl">
+      <div style={{ width: screenSize ? "115%" : "100%" }}>
         <MainFrame>
           <Component {...pageProps} />
         </MainFrame>
-      </Container>
+      </div>
     </MantineProvider>
   );
 }

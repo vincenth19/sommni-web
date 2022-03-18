@@ -1,8 +1,11 @@
+import { Container } from "@mantine/core";
+import { useMediaQuery } from "@mantine/hooks";
 import { FC, ReactNode } from "react";
 import Footer from "./footer/footer";
 import Navbar from "./navbar/navbar";
 import NewsletterSection from "./newsletter";
 import SignUpSection from "./signUpSection";
+import { screenSizes } from "../../types";
 
 interface MainFrameProps {
   navbar?: boolean;
@@ -19,13 +22,18 @@ const MainFrame: FC<MainFrameProps> = ({
   children,
   footer = true,
 }) => {
+  const biggerScreen = useMediaQuery(`(min-width: ${screenSizes.sm})`);
   return (
     <>
-      {navbar && <Navbar />}
-      {children}
-      {signUp && <SignUpSection />}
-      {newsletter && <NewsletterSection />}
-      {footer && <Footer />}
+      <Container size="xl" fluid={biggerScreen ? false : true}>
+        {navbar && <Navbar />}
+
+        {children}
+        {signUp && <SignUpSection />}
+        {newsletter && <NewsletterSection />}
+
+        {footer && <Footer />}
+      </Container>
     </>
   );
 };

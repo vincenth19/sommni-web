@@ -4,6 +4,7 @@ import { useTranslation } from "next-i18next";
 import Link from "next/link";
 import { ReactElement, useState } from "react";
 import { RiMoonClearLine, RiNumber0, RiTruckLine } from "react-icons/ri";
+import { screenSizes } from "../../types";
 
 type TInfo = {
   icon: ReactElement;
@@ -17,7 +18,7 @@ const InfoSection = () => {
   const [modalData, setModalData] = useState<TInfo | null>(null);
   const themes = useMantineTheme();
   const { t } = useTranslation("home");
-  const smallScreen = useMediaQuery("(max-width: 576px)");
+  const smallestScreen = useMediaQuery(`(max-width: ${screenSizes.xs})`);
 
   const infos: TInfo[] = [
     {
@@ -68,7 +69,7 @@ const InfoSection = () => {
       <div
         style={{
           display: "flex",
-          justifyContent: smallScreen ? "flex-start" : "space-around",
+          justifyContent: smallestScreen ? "flex-start" : "space-around",
           backgroundColor: "white",
           padding: 10,
           overflowX: "auto",
