@@ -1,13 +1,7 @@
-import {
-  Button,
-  Container,
-  Group,
-  Input,
-  Text,
-  useMantineTheme,
-} from "@mantine/core";
-import { useForm } from "@mantine/hooks";
-import { useState } from "react";
+import { Button, Group, Input, Text, useMantineTheme } from "@mantine/core";
+import { useForm, useMediaQuery } from "@mantine/hooks";
+import { useEffect, useState } from "react";
+import { screenSizes } from "../../types";
 
 const NewsletterSection = () => {
   const themes = useMantineTheme();
@@ -25,6 +19,7 @@ const NewsletterSection = () => {
       <Group direction="column" position="center" spacing={"lg"}>
         <Text
           weight={700}
+          align="center"
           style={{ fontSize: "2rem", color: themes.colors.brand[9] }}
         >
           Get our latest offering
@@ -49,6 +44,13 @@ interface NewsletterFormProps {
 }
 
 const NewsletterForm = ({ initialValues, onSubmit }: NewsletterFormProps) => {
+  const biggerScreen = useMediaQuery(`(min-width: ${screenSizes.sm})`);
+  const [isScreenBig, setIsScreenBig] = useState<Boolean>();
+
+  useEffect(() => {
+    setIsScreenBig(biggerScreen);
+  }, [biggerScreen]);
+
   const form = useForm({
     initialValues,
     validationRules: {
@@ -63,7 +65,7 @@ const NewsletterForm = ({ initialValues, onSubmit }: NewsletterFormProps) => {
           required
           placeholder="your@email.com"
           {...form.getInputProps("email")}
-          style={{ width: "50%" }}
+          style={{ width: isScreenBig ? "50%" : "100%" }}
         />
         <Button type="submit">Submit</Button>
       </Group>

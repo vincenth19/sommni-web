@@ -2,7 +2,7 @@ import { Button, Group, Modal, useMantineTheme } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import { useTranslation } from "next-i18next";
 import Link from "next/link";
-import { ReactElement, useState } from "react";
+import { ReactElement, useEffect, useState } from "react";
 import { RiMoonClearLine, RiNumber0, RiTruckLine } from "react-icons/ri";
 import { screenSizes } from "../../types";
 
@@ -18,7 +18,12 @@ const InfoSection = () => {
   const [modalData, setModalData] = useState<TInfo | null>(null);
   const themes = useMantineTheme();
   const { t } = useTranslation("home");
-  const smallestScreen = useMediaQuery(`(max-width: ${screenSizes.xs})`);
+  const biggerScreen = useMediaQuery(`(min-width: ${screenSizes.sm})`);
+  const [isNotMobile, setIsNotMobile] = useState<boolean>(true);
+
+  useEffect(() => {
+    setIsNotMobile(biggerScreen);
+  }, [biggerScreen]);
 
   const infos: TInfo[] = [
     {
@@ -69,7 +74,7 @@ const InfoSection = () => {
       <div
         style={{
           display: "flex",
-          justifyContent: smallestScreen ? "flex-start" : "space-around",
+          justifyContent: isNotMobile ? "space-around" : "flex-start",
           backgroundColor: "white",
           padding: 10,
           overflowX: "auto",
@@ -103,8 +108,8 @@ const InfoSection = () => {
             );
           } else {
             return (
-              <Link key={data.title} href={data.path}>
-                <Button key={data.title} variant="subtle">
+              <Link key={data.title} href={data.path} passHref>
+                <Button component="a" key={data.title} variant="subtle">
                   <Group spacing={"sm"} noWrap={true}>
                     <span
                       style={{

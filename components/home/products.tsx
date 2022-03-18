@@ -1,6 +1,7 @@
 import { Group } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import styles from "../../styles/Products.module.css";
 import { screenSizes } from "../../types";
 type TProductCard = {
@@ -36,6 +37,7 @@ const ProductsSection = () => {
       {ProductsData.map((product) => {
         return (
           <ProductCard
+            key={product.path}
             imageURL={product.imageURL}
             title={product.title}
             path={product.path}
@@ -50,6 +52,17 @@ const ProductCard = ({ imageURL, title, path }: TProductCard) => {
   const mediumScreen = useMediaQuery(`(min-width: ${screenSizes.md})`);
   const smallScreen = useMediaQuery(`(min-width: ${screenSizes.sm})`);
 
+  const [isMediumScreen, setIsMediumScreen] = useState<boolean>(true);
+  const [isSmallScreen, setIsSmallScreen] = useState<boolean>(true);
+
+  useEffect(() => {
+    setIsMediumScreen(mediumScreen);
+  }, [mediumScreen]);
+
+  useEffect(() => {
+    setIsSmallScreen(smallScreen);
+  }, [smallScreen]);
+
   return (
     <Link href={path}>
       <Group
@@ -58,7 +71,7 @@ const ProductCard = ({ imageURL, title, path }: TProductCard) => {
         position="apart"
         spacing={"xs"}
         style={{
-          width: mediumScreen ? "31.5%" : smallScreen ? "48.5%" : "100%",
+          width: isMediumScreen ? "31.5%" : isSmallScreen ? "48.5%" : "100%",
         }}
       >
         <div

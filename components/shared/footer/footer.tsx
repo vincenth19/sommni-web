@@ -50,19 +50,21 @@ const Footer = () => {
       }}
     >
       <div style={{ display: "flex", gap: "2rem" }}>
-        {FooterLinks.map((links) => (
-          <Group direction="column">
+        {FooterLinks.map((links, index) => (
+          <Group direction="column" key={index}>
             {links.linkGroup.map((link) => {
               if (!link.path) {
                 return (
-                  <Text weight="700" transform="uppercase">
+                  <Text key={link.title} weight="700" transform="uppercase">
                     {link.title}
                   </Text>
                 );
               } else {
                 return (
-                  <Link href={link.path}>
-                    <Text style={{ cursor: "pointer" }}>{link.title}</Text>
+                  <Link key={link.path} href={link.path} passHref>
+                    <Text component="a" style={{ cursor: "pointer" }}>
+                      {link.title}
+                    </Text>
                   </Link>
                 );
               }

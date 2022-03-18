@@ -30,7 +30,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         primaryColor: "brand",
       }}
     >
-      <div style={{ width: screenSize ? "115%" : "100%" }}>
+      <div>
         <MainFrame>
           <Component {...pageProps} />
         </MainFrame>

@@ -1,4 +1,4 @@
-import { Group, Button, MediaQuery, useMantineTheme } from "@mantine/core";
+import { Group, Button, MediaQuery, useMantineTheme, Box } from "@mantine/core";
 import Link from "next/link";
 import Image from "next/image";
 import { RiShoppingCartLine } from "react-icons/ri";
@@ -43,7 +43,7 @@ const Navbar = () => {
     <>
       <Group
         style={{
-          padding: "15px",
+          padding: "15px 0",
           position: "sticky",
           top: 0,
           zIndex: 5,
@@ -53,15 +53,15 @@ const Navbar = () => {
       >
         <Group>
           <NavDrawer />
-          <Link href="/">
-            <span style={{ cursor: "pointer" }}>
+          <Link href="/" passHref>
+            <Box component="a" style={{ cursor: "pointer" }}>
               <Image
                 width="100vw"
                 height="30vh"
                 src="/sommni-blue.png"
                 alt="Sommni Logo"
               />
-            </span>
+            </Box>
           </Link>
         </Group>
         <MediaQuery smallerThan={"lg"} styles={{ display: "none" }}>
@@ -84,7 +84,7 @@ const Navbar = () => {
           <Button size="lg" variant="subtle" compact>
             <RiShoppingCartLine />
           </Button>
-          {/* <BtnLanguage /> */}
+          <BtnLanguage />
         </Group>
       </Group>
     </>

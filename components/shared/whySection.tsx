@@ -1,7 +1,9 @@
 import { Group, Text, useMantineTheme } from "@mantine/core";
+import { useMediaQuery } from "@mantine/hooks";
 import { useTranslation } from "next-i18next";
 import Image from "next/image";
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
+import { screenSizes } from "../../types";
 
 const WhySection = () => {
   const { t } = useTranslation();
@@ -56,7 +58,11 @@ const WhySection = () => {
         }}
       >
         {SectionItems.map((item) => (
-          <WhySectionItem itemImage={item.itemImage} itemText={item.itemText} />
+          <WhySectionItem
+            key={item.itemText}
+            itemImage={item.itemImage}
+            itemText={item.itemText}
+          />
         ))}
       </div>
     </Group>
@@ -70,8 +76,19 @@ interface IWhySectionItemProps {
 
 const WhySectionItem: FC<IWhySectionItemProps> = ({ itemImage, itemText }) => {
   const themes = useMantineTheme();
+  const biggerScreen = useMediaQuery(`(min-width: ${screenSizes.md})`);
+
+  const [isDesktop, setIsDesktop] = useState<Boolean>();
+
+  useEffect(() => {
+    setIsDesktop(biggerScreen);
+  }, [biggerScreen]);
   return (
-    <Group direction="column" position="center" style={{ width: "45%" }}>
+    <Group
+      direction="column"
+      position="center"
+      style={{ width: isDesktop ? "20%" : "45%" }}
+    >
       <Image width="100px" height="100px" src={itemImage} />
       <Text
         size="xl"

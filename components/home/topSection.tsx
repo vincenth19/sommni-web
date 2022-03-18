@@ -1,7 +1,7 @@
 import { Button, Group, Text, useMantineTheme } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import Link from "next/link";
-import { ReactElement } from "react";
+import { ReactElement, useEffect, useState } from "react";
 import { RiMoonClearLine, RiNumber0 } from "react-icons/ri";
 import { screenSizes } from "../../types";
 
@@ -15,7 +15,12 @@ type TTopCardItem = {
 };
 
 const TopSection = () => {
-  const smallScreen = useMediaQuery(`(min-width: ${screenSizes.sm})`);
+  const biggerScreen = useMediaQuery(`(min-width: ${screenSizes.sm})`);
+  const [isNotMobile, setIsNotMobile] = useState<boolean>(true);
+
+  useEffect(() => {
+    setIsNotMobile(biggerScreen);
+  }, [biggerScreen]);
 
   const CardItems: TTopCardItem[] = [
     {
@@ -26,7 +31,7 @@ const TopSection = () => {
         "linear-gradient(to right, rgba(208, 230, 255, 0.4), rgba(208, 255, 221, 0.6))",
     },
     {
-      path: "/nights-trial",
+      path: "/instalment",
       title: "0% Instalment",
       icon: <RiNumber0 />,
       backgroundColor:
@@ -36,17 +41,18 @@ const TopSection = () => {
   return (
     <Group
       position="apart"
-      direction={smallScreen ? "row" : "column"}
+      direction={isNotMobile ? "row" : "column"}
       spacing={"sm"}
       style={{ padding: "1rem 0", width: "100%" }}
     >
       {CardItems.map((item) => (
         <TopCard
+          key={item.path}
           path={item.path}
           title={item.title}
           icon={item.icon}
           backgroundColor={item.backgroundColor}
-          smallScreen={smallScreen}
+          biggerScreen={isNotMobile}
         />
       ))}
     </Group>
@@ -54,7 +60,7 @@ const TopSection = () => {
 };
 
 interface TopCardProps extends TTopCardItem {
-  smallScreen: boolean;
+  biggerScreen: boolean;
 }
 
 const TopCard = ({
@@ -64,17 +70,17 @@ const TopCard = ({
   title,
   description,
   icon,
-  smallScreen,
+  biggerScreen,
 }: TopCardProps) => {
   const themes = useMantineTheme();
   return (
     <Group
       spacing={"xs"}
-      direction={smallScreen ? "column" : "row"}
-      position={smallScreen ? "center" : "apart"}
+      direction={biggerScreen ? "column" : "row"}
+      position={biggerScreen ? "center" : "apart"}
       style={{
         background: backgroundColor,
-        width: smallScreen ? "48%" : "100%",
+        width: biggerScreen ? "48%" : "100%",
         padding: "1rem",
         borderRadius: "10px",
       }}
@@ -95,8 +101,10 @@ const TopCard = ({
           <Text style={{ color: themes.colors.gray[5] }}>{description}</Text>
         )}
       </Group>
-      <Link href={path}>
-        <Button variant="subtle">{linkTitle}</Button>
+      <Link href={path} passHref>
+        <Button component="a" variant="subtle">
+          {linkTitle}
+        </Button>
       </Link>
     </Group>
   );

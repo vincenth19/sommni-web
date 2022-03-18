@@ -1,6 +1,6 @@
 import { Container } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
-import { FC, ReactNode } from "react";
+import { FC, ReactNode, useEffect, useState } from "react";
 import Footer from "./footer/footer";
 import Navbar from "./navbar/navbar";
 import NewsletterSection from "./newsletter";
@@ -23,9 +23,15 @@ const MainFrame: FC<MainFrameProps> = ({
   footer = true,
 }) => {
   const biggerScreen = useMediaQuery(`(min-width: ${screenSizes.sm})`);
+  const [isDesktop, setIsDesktop] = useState<Boolean>();
+
+  useEffect(() => {
+    setIsDesktop(biggerScreen);
+  }, [biggerScreen]);
+
   return (
     <>
-      <Container size="xl" fluid={biggerScreen ? false : true}>
+      <Container size="xl" fluid={isDesktop ? false : true}>
         {navbar && <Navbar />}
 
         {children}
