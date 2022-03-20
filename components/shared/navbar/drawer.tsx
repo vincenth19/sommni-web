@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { Drawer, Burger, useMantineTheme, Text, Group } from "@mantine/core";
+import { Drawer, Burger, useMantineTheme, Group, Button } from "@mantine/core";
 import { TNavLink } from "../../../types";
 import { useTranslation } from "next-i18next";
 import Link from "next/link";
+import BtnDropdown from "../btnDropdown";
 
 const NavDrawer = () => {
   const [opened, setOpened] = useState(false);
@@ -12,21 +13,25 @@ const NavDrawer = () => {
   const { t } = useTranslation("common");
 
   const NavLinks: TNavLink[] = [
+    { path: "/", title: "Home" },
+    { path: "/about-us", title: "About Us" },
     {
-      path: "/",
-      title: t("nav-home"),
-    },
-    {
-      path: "/mattress",
-      title: t("nav-mattress"),
-    },
-    {
-      path: "/pillow",
-      title: t("nav-pillow"),
-    },
-    {
-      path: "/topper",
-      title: t("nav-topper"),
+      path: "",
+      title: "Products",
+      dropdownLinks: [
+        {
+          path: "/mattress",
+          title: t("nav-mattress"),
+        },
+        {
+          path: "/pillow",
+          title: t("nav-pillow"),
+        },
+        {
+          path: "/topper",
+          title: t("nav-topper"),
+        },
+      ],
     },
     {
       path: "/faq",
@@ -37,8 +42,8 @@ const NavDrawer = () => {
       title: t("nav-compare"),
     },
     {
-      path: "/tracking",
-      title: t("nav-tracking"),
+      path: "/sleep-experience",
+      title: "Sleep Experience",
     },
   ];
 
@@ -52,16 +57,31 @@ const NavDrawer = () => {
         size="sm"
       >
         <Group direction="column">
-          {NavLinks.map((link) => (
-            <Link href={link.path} key={link.path}>
-              <Text
-                weight={500}
-                style={{ color: themes.colors.brand[9], cursor: "pointer" }}
-              >
-                {link.title}
-              </Text>
-            </Link>
-          ))}
+          {NavLinks.map((link) => {
+            if (link.path !== "") {
+              return (
+                <Link href={link.path} key={link.path}>
+                  <Button
+                    variant="subtle"
+                    size="lg"
+                    style={{ color: themes.colors.brand[9] }}
+                  >
+                    {link.title}
+                  </Button>
+                </Link>
+              );
+            } else {
+              if (link.dropdownLinks) {
+                return (
+                  <BtnDropdown
+                    btnSize={"lg"}
+                    dropdownTitle={link.title}
+                    links={link.dropdownLinks}
+                  />
+                );
+              }
+            }
+          })}
         </Group>
       </Drawer>
 

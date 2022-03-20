@@ -1,6 +1,7 @@
 import common from "./public/locales/en/common.json";
 import home from "./public/locales/en/home.json";
 import footer from "./public/locales/en/footer.json";
+import { ReactElement } from "react";
 
 export interface Resources {
   common: typeof common;
@@ -11,6 +12,9 @@ export interface Resources {
 export type TNavLink = {
   path: string;
   title: string;
+  leftIcon?: ReactElement;
+  rightIcon?: ReactElement;
+  dropdownLinks?: TNavLink[];
 };
 
 export type TFooterLink = {

@@ -1,6 +1,6 @@
 import "../styles/globals.css";
 import type { AppProps } from "next/app";
-import { Container, MantineProvider } from "@mantine/core";
+import { MantineProvider } from "@mantine/core";
 import { appWithTranslation } from "next-i18next";
 import MainFrame from "../components/shared/mainFrame";
 import { useMediaQuery } from "@mantine/hooks";

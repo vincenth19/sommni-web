@@ -3,27 +3,39 @@ import Link from "next/link";
 import Image from "next/image";
 import { RiShoppingCartLine } from "react-icons/ri";
 import { useTranslation } from "next-i18next";
-import NavDrawer from "./drawer";
+// import NavDrawer from "./drawer";
 import UserPopover from "./userPopover";
 import BtnLanguage from "./btnLanguage";
 import { TNavLink } from "../../../types";
+import BtnDropdown from "../btnDropdown";
+import dynamic from "next/dynamic";
+
+const NavDrawer = dynamic(() => import("./drawer"));
 
 const Navbar = () => {
   const themes = useMantineTheme();
   const { t } = useTranslation("common");
 
   const NavLinks: TNavLink[] = [
+    { path: "/", title: "Home" },
+    { path: "/about-us", title: "About Us" },
     {
-      path: "/mattress",
-      title: t("nav-mattress"),
-    },
-    {
-      path: "/pillow",
-      title: t("nav-pillow"),
-    },
-    {
-      path: "/topper",
-      title: t("nav-topper"),
+      path: "",
+      title: "Products",
+      dropdownLinks: [
+        {
+          path: "/mattress",
+          title: t("nav-mattress"),
+        },
+        {
+          path: "/pillow",
+          title: t("nav-pillow"),
+        },
+        {
+          path: "/topper",
+          title: t("nav-topper"),
+        },
+      ],
     },
     {
       path: "/faq",
@@ -34,8 +46,8 @@ const Navbar = () => {
       title: t("nav-compare"),
     },
     {
-      path: "/tracking",
-      title: t("nav-tracking"),
+      path: "/sleep-experience",
+      title: "Sleep Experience",
     },
   ];
 
@@ -66,16 +78,29 @@ const Navbar = () => {
         </Group>
         <MediaQuery smallerThan={"lg"} styles={{ display: "none" }}>
           <Group position="center" spacing="lg">
-            {NavLinks.map((link) => (
-              <Link href={link.path} key={link.path}>
-                <Button
-                  variant="subtle"
-                  style={{ color: themes.colors.brand[9] }}
-                >
-                  {link.title}
-                </Button>
-              </Link>
-            ))}
+            {NavLinks.map((link) => {
+              if (link.path !== "") {
+                return (
+                  <Link href={link.path} key={link.path}>
+                    <Button
+                      variant="subtle"
+                      style={{ color: themes.colors.brand[9] }}
+                    >
+                      {link.title}
+                    </Button>
+                  </Link>
+                );
+              } else {
+                if (link.dropdownLinks) {
+                  return (
+                    <BtnDropdown
+                      dropdownTitle={link.title}
+                      links={link.dropdownLinks}
+                    />
+                  );
+                }
+              }
+            })}
           </Group>
         </MediaQuery>
 
