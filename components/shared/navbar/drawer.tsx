@@ -1,7 +1,15 @@
 import { useState } from "react";
-import { Drawer, Burger, useMantineTheme, Group, Button } from "@mantine/core";
+import {
+  Drawer,
+  Burger,
+  useMantineTheme,
+  Group,
+  Button,
+  Box,
+} from "@mantine/core";
 import { TNavLink } from "../../../types";
 import { useTranslation } from "next-i18next";
+import Image from "next/image";
 import Link from "next/link";
 import BtnDropdown from "../btnDropdown";
 
@@ -20,16 +28,16 @@ const NavDrawer = () => {
       title: "Products",
       dropdownLinks: [
         {
-          path: "/mattress",
+          path: "/products/mattress",
           title: t("nav-mattress"),
         },
         {
-          path: "/pillow",
-          title: t("nav-pillow"),
+          path: "/products/topper",
+          title: t("nav-topper"),
         },
         {
-          path: "/topper",
-          title: t("nav-topper"),
+          path: "/products/pillow",
+          title: t("nav-pillow"),
         },
       ],
     },
@@ -52,7 +60,18 @@ const NavDrawer = () => {
       <Drawer
         opened={opened}
         onClose={() => setOpened(false)}
-        title="Sommni"
+        title={
+          <Link href="/" passHref>
+            <Box component="a" style={{ cursor: "pointer" }}>
+              <Image
+                width="100%"
+                height="30vh"
+                src="/sommni-blue.png"
+                alt="Sommni Logo"
+              />
+            </Box>
+          </Link>
+        }
         padding="md"
         size="sm"
       >

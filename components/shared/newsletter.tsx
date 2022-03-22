@@ -22,7 +22,7 @@ const NewsletterSection = () => {
           align="center"
           style={{ fontSize: "2rem", color: themes.colors.brand[9] }}
         >
-          Get our latest offering
+          Get our latest news & offering
         </Text>
         <NewsletterForm
           initialValues={{ email: "" }}

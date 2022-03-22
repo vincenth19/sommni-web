@@ -4,11 +4,12 @@ import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import dynamic from "next/dynamic";
 
 const MainFrame = dynamic(() => import("../../components/shared/mainFrame"));
+const ComingSoon = dynamic(() => import("../../components/shared/comingSoon"));
 
-const Mattress: NextPage = () => {
+const Topper: NextPage = () => {
   return (
-    <MainFrame>
-      <p>mattress</p>
+    <MainFrame signUp={false}>
+      <ComingSoon />
     </MainFrame>
   );
 };
@@ -21,4 +22,4 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
   };
 };
 
-export default Mattress;
+export default Topper;

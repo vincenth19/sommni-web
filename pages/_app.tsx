@@ -2,12 +2,8 @@ import "../styles/globals.css";
 import type { AppProps } from "next/app";
 import { MantineProvider } from "@mantine/core";
 import { appWithTranslation } from "next-i18next";
-import MainFrame from "../components/shared/mainFrame";
-import { useMediaQuery } from "@mantine/hooks";
-import { screenSizes } from "../types";
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const screenSize = useMediaQuery(`(max-width: ${screenSizes.xs})`);
   return (
     <MantineProvider
       theme={{
@@ -27,14 +23,14 @@ function MyApp({ Component, pageProps }: AppProps) {
             "#003687",
           ],
         },
+        fontSizes: {
+          d1: 32,
+          d2: 48,
+        },
         primaryColor: "brand",
       }}
     >
-      <div>
-        <MainFrame>
-          <Component {...pageProps} />
-        </MainFrame>
-      </div>
+      <Component {...pageProps} />
     </MantineProvider>
   );
 }

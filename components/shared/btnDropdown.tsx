@@ -1,5 +1,4 @@
 import { Box, Button, Group, useMantineTheme } from "@mantine/core";
-import { url } from "inspector";
 import Link from "next/link";
 import { FC, useEffect, useState } from "react";
 import { RiArrowDownSLine } from "react-icons/ri";

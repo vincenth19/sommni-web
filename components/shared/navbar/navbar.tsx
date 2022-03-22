@@ -20,20 +20,20 @@ const Navbar = () => {
     { path: "/", title: "Home" },
     { path: "/about-us", title: "About Us" },
     {
-      path: "",
+      path: "/products",
       title: "Products",
       dropdownLinks: [
         {
-          path: "/mattress",
+          path: "/products/mattress",
           title: t("nav-mattress"),
         },
         {
-          path: "/pillow",
-          title: t("nav-pillow"),
+          path: "/products/topper",
+          title: t("nav-topper"),
         },
         {
-          path: "/topper",
-          title: t("nav-topper"),
+          path: "/products/pillow",
+          title: t("nav-pillow"),
         },
       ],
     },
@@ -68,7 +68,7 @@ const Navbar = () => {
           <Link href="/" passHref>
             <Box component="a" style={{ cursor: "pointer" }}>
               <Image
-                width="100vw"
+                width="100%"
                 height="30vh"
                 src="/sommni-blue.png"
                 alt="Sommni Logo"
@@ -79,7 +79,7 @@ const Navbar = () => {
         <MediaQuery smallerThan={"lg"} styles={{ display: "none" }}>
           <Group position="center" spacing="lg">
             {NavLinks.map((link) => {
-              if (link.path !== "") {
+              if (!link.dropdownLinks) {
                 return (
                   <Link href={link.path} key={link.path}>
                     <Button
@@ -91,14 +91,12 @@ const Navbar = () => {
                   </Link>
                 );
               } else {
-                if (link.dropdownLinks) {
-                  return (
-                    <BtnDropdown
-                      dropdownTitle={link.title}
-                      links={link.dropdownLinks}
-                    />
-                  );
-                }
+                return (
+                  <BtnDropdown
+                    dropdownTitle={link.title}
+                    links={link.dropdownLinks}
+                  />
+                );
               }
             })}
           </Group>
