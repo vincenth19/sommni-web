@@ -6,6 +6,7 @@ import Navbar from "./navbar/navbar";
 import NewsletterSection from "./newsletter";
 import SignUpSection from "./signUpSection";
 import { screenSizes } from "../../types";
+import ScrollToTop from "./scrollToTop";
 
 interface MainFrameProps {
   navbar?: boolean;
@@ -13,6 +14,7 @@ interface MainFrameProps {
   newsletter?: boolean;
   children: ReactNode;
   footer?: boolean;
+  scrollToTop?: boolean;
 }
 
 const MainFrame: FC<MainFrameProps> = ({
@@ -21,6 +23,7 @@ const MainFrame: FC<MainFrameProps> = ({
   newsletter = true,
   children,
   footer = true,
+  scrollToTop = true,
 }) => {
   const biggerScreen = useMediaQuery(`(min-width: ${screenSizes.sm})`);
   const [isDesktop, setIsDesktop] = useState<Boolean>();
@@ -31,15 +34,30 @@ const MainFrame: FC<MainFrameProps> = ({
 
   return (
     <>
-      <Container size="xl" fluid={isDesktop ? false : true}>
-        {navbar && <Navbar />}
+      {isDesktop ? (
+        <Container size="xl">
+          {navbar && <Navbar />}
 
-        {children}
-        {signUp && <SignUpSection />}
-        {newsletter && <NewsletterSection />}
+          {children}
+          {signUp && <SignUpSection />}
+          {newsletter && <NewsletterSection />}
+          {scrollToTop && <ScrollToTop />}
+          {footer && <Footer />}
+        </Container>
+      ) : (
+        <>
+          <Container size="xl">
+            {navbar && <Navbar />}
 
-        {footer && <Footer />}
-      </Container>
+            {children}
+            {signUp && <SignUpSection />}
+            {newsletter && <NewsletterSection />}
+            {scrollToTop && <ScrollToTop />}
+          </Container>
+
+          {footer && <Footer />}
+        </>
+      )}
     </>
   );
 };
