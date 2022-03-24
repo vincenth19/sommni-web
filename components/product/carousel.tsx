@@ -30,9 +30,9 @@ const Carousel: FC<CarouselProps> = ({ slides }) => {
         modules={[FreeMode, Navigation, Thumbs]}
         className="mySwiper2"
       >
-        {slides.map((slideURL) => {
+        {slides.map((slideURL, index) => {
           return (
-            <SwiperSlide>
+            <SwiperSlide key={index}>
               <img src={slideURL} />
             </SwiperSlide>
           );
@@ -47,9 +47,9 @@ const Carousel: FC<CarouselProps> = ({ slides }) => {
         modules={[FreeMode, Navigation, Thumbs]}
         className="mySwiper"
       >
-        {slides.map((slideURL) => {
+        {slides.map((slideURL, index) => {
           return (
-            <SwiperSlide>
+            <SwiperSlide key={index}>
               <img src={slideURL} />
             </SwiperSlide>
           );

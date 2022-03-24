@@ -10,6 +10,7 @@ import {
   TOptionData,
 } from "../../types";
 import { useMediaQuery } from "@mantine/hooks";
+import Head from "next/head";
 
 const ProductPage = dynamic(
   () => import("../../components/product/productPage")
@@ -144,26 +145,33 @@ const Mattress: NextPage = () => {
   }, [biggerScreen]);
 
   return (
-    <ProductPage
-      prodTitle="The Sommni"
-      prodPrice="RM 1,234"
-      valueState={size}
-      valueSetter={setSize}
-      slideImages={slides}
-      btnAddToCart={
-        <Button
-          fullWidth={isScreenBig ? false : true}
-          size="lg"
-          style={{ margin: "1rem 0" }}
-        >
-          Add to Cart
-        </Button>
-      }
-      prodDescription={productDescription}
-      prodSpecs={mattressSpecs}
-      variants={sizeData}
-      extraInfos={mattressExtraInfos}
-    />
+    <>
+      <Head>
+        <title>The Sommni</title>
+        <meta name="description" content="Sommni - The Sommni" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+      <ProductPage
+        prodTitle="The Sommni"
+        prodPrice="RM 1,234"
+        valueState={size}
+        valueSetter={setSize}
+        slideImages={slides}
+        btnAddToCart={
+          <Button
+            fullWidth={isScreenBig ? false : true}
+            size="lg"
+            style={{ margin: "1rem 0" }}
+          >
+            Add to Cart
+          </Button>
+        }
+        prodDescription={productDescription}
+        prodSpecs={mattressSpecs}
+        variants={sizeData}
+        extraInfos={mattressExtraInfos}
+      />
+    </>
   );
 };
 

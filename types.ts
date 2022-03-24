@@ -46,5 +46,5 @@ export type TAccordionItem = {
 export type TExtraInfo = {
   imageURL: string;
   title: string;
-  content: string;
+  content: string | ReactElement | string[] | ReactElement[];
 };

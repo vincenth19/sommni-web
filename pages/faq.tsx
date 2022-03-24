@@ -1,6 +1,7 @@
 import { Accordion, Text, Group, Select, Box } from "@mantine/core";
 import { GetStaticProps, NextPage } from "next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import Head from "next/head";
 import { FC, useEffect, useState } from "react";
 import MainFrame from "../components/shared/mainFrame";
 import { TAccordionItem } from "../types";
@@ -76,6 +77,11 @@ const Faq: NextPage = () => {
 
   return (
     <MainFrame>
+      <Head>
+        <title>Sommni - FAQ</title>
+        <meta name="description" content="Sommni - FAQ" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
       <Group position="center" direction="column">
         <Group
           position="center"

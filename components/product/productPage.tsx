@@ -15,6 +15,9 @@ const Carousel = dynamic(() => import("./carousel"));
 const InfoSection = dynamic(() => import("../home/infoSection"));
 const OptionChips = dynamic(() => import("../shared/optionChips"));
 const WhySection = dynamic(() => import("../shared/whySection"));
+const AlternatingSections = dynamic(
+  () => import("../shared/alternatingSections")
+);
 
 interface ProductPageProps {
   prodTitle: string;
@@ -92,36 +95,7 @@ const ProductPage: FC<ProductPageProps> = ({
         </Box>
       </div>
       <WhySection />
-      {extraInfos &&
-        extraInfos.map((info, index) => {
-          return (
-            <div
-              style={{
-                display: "flex",
-                gap: "1rem",
-                padding: "1rem 0",
-                alignItems: "center",
-                flexDirection: isScreenBig
-                  ? index % 2 === 0
-                    ? "row"
-                    : "row-reverse"
-                  : "column",
-              }}
-            >
-              <img
-                style={{
-                  width: isScreenBig ? "50%" : "100%",
-                  borderRadius: "5px",
-                }}
-                src={info.imageURL}
-              />
-              <Group direction="column" spacing={"xs"}>
-                <h3 style={{ margin: 0 }}>{info.title}</h3>
-                <p>{info.content}</p>
-              </Group>
-            </div>
-          );
-        })}
+      {extraInfos && <AlternatingSections infos={extraInfos} />}
     </MainFrame>
   );
 };

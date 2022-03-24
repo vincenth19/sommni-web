@@ -26,7 +26,7 @@ const OptionChips: FC<ProductOptionsProps> = ({
     >
       {options.map((data) => {
         return (
-          <Chip disabled={data.disable} value={data.value}>
+          <Chip key={data.value} disabled={data.disable} value={data.value}>
             {data.label}
           </Chip>
         );
