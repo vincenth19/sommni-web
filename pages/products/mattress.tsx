@@ -1,19 +1,19 @@
-import { FC, isValidElement, ReactElement, useEffect, useState } from "react";
-import { Accordion, Box, Button, Group, Text, Image } from "@mantine/core";
-import { useMediaQuery } from "@mantine/hooks";
+import { ReactElement, useEffect, useState } from "react";
+import { Button, Group, Text } from "@mantine/core";
 import { GetStaticProps, NextPage } from "next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
-import DOMPurify from "isomorphic-dompurify";
 import dynamic from "next/dynamic";
-import { screenSizes, TAccordionItem, TOptionData } from "../../types";
+import {
+  screenSizes,
+  TAccordionItem,
+  TExtraInfo,
+  TOptionData,
+} from "../../types";
+import { useMediaQuery } from "@mantine/hooks";
 
-const MainFrame = dynamic(() => import("../../components/shared/mainFrame"));
-const Carousel = dynamic(() => import("../../components/product/carousel"));
-const InfoSection = dynamic(() => import("../../components/home/infoSection"));
-const OptionChips = dynamic(
-  () => import("../../components/shared/optionChips")
+const ProductPage = dynamic(
+  () => import("../../components/product/productPage")
 );
-const WhySection = dynamic(() => import("../../components/shared/whySection"));
 
 const slides = [
   "https://images.ctfassets.net/uvwd10ivtduz/6Qg7oy05IqzITZMvX04hJd/b73cf717b7131b983e440bbbc85ee6eb/LS1_Queen.jpg??w=1920&h=1440&q=75&fit=fill&fm=webp",
@@ -117,6 +117,23 @@ const mattressSpecs: TAccordionItem[] = [
   },
 ];
 
+const mattressExtraInfos: TExtraInfo[] = [
+  {
+    imageURL:
+      "https://images.ctfassets.net/uvwd10ivtduz/63ZP2CJyW2fvtLk0LbooQY/fae86c5734920aa2242122bfde02b0bf/16_9-Mattress__1_.png??w=1200&h=675&q=75&fit=fill&fm=webp",
+    title: "Support in all the right places",
+    content:
+      "We have a firmer support base right beneath the hips that prevents your body from sinking into the mattress. This comes in real handy when it comes to helping you maintain a healthy sleeping posture.",
+  },
+  {
+    imageURL:
+      "https://images.ctfassets.net/uvwd10ivtduz/6xROkM3MgHXs5kFRtJwRUz/3289bbe5dd6898acc3c6654bedd5091c/T00461_AU_Paddington_bedbaseQueenAU_Queen_Eucalyptus_17101.jpg??w=1200&h=675&q=75&fit=fill&fm=webp",
+    title: "Adjustable firmness levels",
+    content:
+      "What might feel right to your mate, doesn't feel right to you. That's why we've created our double-sided comfort layer that gives you the choice between medium-firm support and firm support. Just unzip and flip it to find what works for you.",
+  },
+];
+
 const Mattress: NextPage = () => {
   const [size, setSize] = useState("single");
   const biggerScreen = useMediaQuery(`(min-width: ${screenSizes.sm})`);
@@ -127,150 +144,26 @@ const Mattress: NextPage = () => {
   }, [biggerScreen]);
 
   return (
-    <MainFrame>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          flexWrap: isScreenBig ? "nowrap" : "wrap",
-          gap: isScreenBig ? "1rem" : 0,
-          padding: "1rem 0",
-        }}
-      >
-        <Box
-          style={{
-            maxWidth: isScreenBig ? "45vw" : "100%",
-            position: isScreenBig ? "sticky" : "unset",
-            top: "4rem",
-            zIndex: 2,
-            height: "100%",
-          }}
+    <ProductPage
+      prodTitle="The Sommni"
+      prodPrice="RM 1,234"
+      valueState={size}
+      valueSetter={setSize}
+      slideImages={slides}
+      btnAddToCart={
+        <Button
+          fullWidth={isScreenBig ? false : true}
+          size="lg"
+          style={{ margin: "1rem 0" }}
         >
-          <Carousel slides={slides} />
-        </Box>
-        <Box>
-          <h1 style={{ fontSize: "2.5rem" }}>The Sommni</h1>
-          <Group>
-            <Text size="xl">RM 1,238</Text>
-            <InfoSection />
-          </Group>
-
-          <OptionChips
-            valueState={size}
-            valueSetter={setSize}
-            options={sizeData}
-          />
-          <Button
-            fullWidth={isScreenBig ? false : true}
-            size="lg"
-            style={{ margin: "1rem 0" }}
-          >
-            Add to Cart
-          </Button>
-          <ProductDescription description={productDescription} />
-          <ProductSpecification specs={mattressSpecs} />
-        </Box>
-      </div>
-      <WhySection />
-      <div
-        style={{
-          display: "flex",
-          gap: "1rem",
-          padding: "1rem 0",
-          alignItems: "center",
-          flexDirection: isScreenBig ? "row" : "column",
-        }}
-      >
-        <img
-          style={{ width: isScreenBig ? "50%" : "100%", borderRadius: "5px" }}
-          src="https://images.ctfassets.net/uvwd10ivtduz/63ZP2CJyW2fvtLk0LbooQY/fae86c5734920aa2242122bfde02b0bf/16_9-Mattress__1_.png??w=1200&h=675&q=75&fit=fill&fm=webp"
-        />
-        <Group direction="column" spacing={"xs"}>
-          <h3 style={{ margin: 0 }}>Support in all the right places</h3>
-          <p>
-            We have a firmer support base right beneath the hips that prevents
-            your body from sinking into the mattress. This comes in real handy
-            when it comes to helping you maintain a healthy sleeping posture.
-          </p>
-        </Group>
-      </div>
-      <div
-        style={{
-          display: "flex",
-          gap: "1rem",
-          padding: "1rem 0",
-          alignItems: "center",
-          flexDirection: isScreenBig ? "row" : "column-reverse",
-        }}
-      >
-        <Group direction="column" spacing={"xs"}>
-          <h3 style={{ margin: 0 }}>Adjustable firmness levels</h3>
-          <p>
-            What might feel right to your mate, doesn't feel right to you.
-            That's why we've created our double-sided comfort layer that gives
-            you the choice between medium-firm support and firm support. Just
-            unzip and flip it to find what works for you.
-          </p>
-        </Group>
-        <img
-          style={{ width: isScreenBig ? "50%" : "100%", borderRadius: "5px" }}
-          src="https://images.ctfassets.net/uvwd10ivtduz/6xROkM3MgHXs5kFRtJwRUz/3289bbe5dd6898acc3c6654bedd5091c/T00461_AU_Paddington_bedbaseQueenAU_Queen_Eucalyptus_17101.jpg??w=1200&h=675&q=75&fit=fill&fm=webp"
-        />
-      </div>
-    </MainFrame>
-  );
-};
-
-interface ProductDescriptionProps {
-  description: string | HTMLElement | ReactElement;
-}
-
-const ProductDescription: FC<ProductDescriptionProps> = ({ description }) => {
-  if (description) {
-    if (typeof description === "string") {
-      return (
-        <div
-          dangerouslySetInnerHTML={{
-            __html: DOMPurify.sanitize(description),
-          }}
-        ></div>
-      );
-    } else if (isValidElement(description)) {
-      return description;
-    } else {
-      return (
-        <div
-          dangerouslySetInnerHTML={{
-            __html: DOMPurify.sanitize(description),
-          }}
-        ></div>
-      );
-    }
-  } else {
-    return <></>;
-  }
-};
-
-interface ProductSpecificationProps {
-  specs: TAccordionItem[];
-}
-
-const ProductSpecification: FC<ProductSpecificationProps> = ({ specs }) => {
-  const items = specs.map((spec) => (
-    <Accordion.Item label={spec.label} key={spec.label}>
-      <Text size="md" color="gray" style={{ whiteSpace: "pre-line" }}>
-        {spec.content}
-      </Text>
-    </Accordion.Item>
-  ));
-
-  return (
-    <Box style={{ padding: "1rem 0" }}>
-      <h3>Product Specification</h3>
-      <Accordion initialItem={0} iconPosition="right" multiple>
-        {items}
-      </Accordion>
-    </Box>
+          Add to Cart
+        </Button>
+      }
+      prodDescription={productDescription}
+      prodSpecs={mattressSpecs}
+      variants={sizeData}
+      extraInfos={mattressExtraInfos}
+    />
   );
 };
 

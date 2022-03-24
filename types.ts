@@ -30,6 +30,7 @@ export const screenSizes = {
   xl: "1400px",
 };
 
+// for Chips component
 export type TOptionData = {
   value: string;
   label: string;
@@ -39,4 +40,11 @@ export type TOptionData = {
 export type TAccordionItem = {
   label: string;
   content: string | ReactElement | HTMLElement;
+};
+
+// for extra info in productPage
+export type TExtraInfo = {
+  imageURL: string;
+  title: string;
+  content: string;
 };
