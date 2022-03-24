@@ -57,7 +57,7 @@ const BtnDropdown: FC<BtnDropdownProps> = ({
           {links &&
             links.map((link) => {
               return (
-                <Link href={link.path} passHref>
+                <Link href={link.path} passHref key={link.path}>
                   <Button
                     size={btnSizeChanges}
                     variant="subtle"

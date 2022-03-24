@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import styles from "../../styles/Products.module.css";
 import { screenSizes } from "../../types";
+
 type TProductCard = {
   imageURL: string;
   title: string;

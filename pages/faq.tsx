@@ -3,6 +3,7 @@ import { GetStaticProps, NextPage } from "next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { FC, useEffect, useState } from "react";
 import MainFrame from "../components/shared/mainFrame";
+import { TAccordionItem } from "../types";
 
 interface IFaqData extends FaqCategoryProps {
   value: string;
@@ -85,30 +86,35 @@ const Faq: NextPage = () => {
           <Select
             placeholder="Select a Category"
             data={selectCategoryOptions}
-            style={{ minWidth: "40vw" }}
+            style={{ minWidth: "80vw" }}
             onChange={(val) => {
               if (val !== null) {
                 let element = document.getElementById(val);
                 let headerOffset = 50;
-                let elementPosition = element.getBoundingClientRect().top;
-                let offsetPosition =
-                  elementPosition + window.pageYOffset - headerOffset;
-                window.scrollTo({
-                  top: offsetPosition,
-                  behavior: "smooth",
-                });
+                let elementPosition;
+                if (element) {
+                  elementPosition = element.getBoundingClientRect().top;
+                  let offsetPosition =
+                    elementPosition + window.pageYOffset - headerOffset;
+                  window.scrollTo({
+                    top: offsetPosition,
+                    behavior: "smooth",
+                  });
+                }
               }
             }}
           />
         </Group>
-        {FaqData.map((data) => (
-          <FaqCategory
-            value={data.value}
-            category={data.category}
-            categoryItems={data.categoryItems}
-            key={data.value}
-          />
-        ))}
+        <Group direction="column" position="left">
+          {FaqData.map((data) => (
+            <FaqCategory
+              value={data.value}
+              category={data.category}
+              categoryItems={data.categoryItems}
+              key={data.value}
+            />
+          ))}
+        </Group>
       </Group>
     </MainFrame>
   );
@@ -117,12 +123,7 @@ const Faq: NextPage = () => {
 interface FaqCategoryProps {
   value: string;
   category: string;
-  categoryItems: IFaqItem[];
-}
-
-interface IFaqItem {
-  label: string;
-  content: string;
+  categoryItems: TAccordionItem[];
 }
 
 const FaqCategory: FC<FaqCategoryProps> = ({
@@ -132,7 +133,7 @@ const FaqCategory: FC<FaqCategoryProps> = ({
 }) => {
   const items = categoryItems.map((item) => (
     <Accordion.Item
-      style={{ width: "80vw" }}
+      style={{ minWidth: "80vw" }}
       label={item.label}
       key={item.label}
     >
@@ -155,11 +156,7 @@ const FaqCategory: FC<FaqCategoryProps> = ({
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
   return {
     props: {
-      ...(await serverSideTranslations(locale as string, [
-        "common",
-        "home",
-        "footer",
-      ])),
+      ...(await serverSideTranslations(locale as string, ["common", "footer"])),
     },
   };
 };

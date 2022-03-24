@@ -29,3 +29,14 @@ export const screenSizes = {
   lg: "1200px",
   xl: "1400px",
 };
+
+export type TOptionData = {
+  value: string;
+  label: string;
+  disable: boolean;
+};
+
+export type TAccordionItem = {
+  label: string;
+  content: string | ReactElement | HTMLElement;
+};
