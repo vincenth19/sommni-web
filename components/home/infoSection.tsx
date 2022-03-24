@@ -30,7 +30,7 @@ const InfoSection = () => {
       icon: <RiTruckLine />,
       title: t("info-delivery"),
       content:
-        "Leverage agile frameworks to provide a robust synopsis for high level overviews. Iterative approaches to corporate strategy foster collaborative thinking to further the overall value proposition. Organically grow the holistic world view of disruptive innovation via workplace diversity and empowerment.",
+        "We offer free, safe no-contact delivery and free returns with every order, no matter how big or small. Orders usually deliver within 3-11 business days with our carrier Lalamove. Shipping times may vary during the holiday season.",
     },
     // {
     //   icon: <RiMoonClearLine />,
