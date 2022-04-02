@@ -8,9 +8,10 @@ import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/navigation";
 import "swiper/css/thumbs";
+import { TImageNode } from "../../types";
 
 interface CarouselProps {
-  slides: string[];
+  slides: TImageNode[];
 }
 
 const Carousel: FC<CarouselProps> = ({ slides }) => {
@@ -20,6 +21,7 @@ const Carousel: FC<CarouselProps> = ({ slides }) => {
     <>
       <Swiper
         style={{
+          // @ts-ignore
           "--swiper-navigation-size": "2rem", //it works but TS gives error
           "--swiper-pagination-size": "2rem",
         }}
@@ -30,15 +32,16 @@ const Carousel: FC<CarouselProps> = ({ slides }) => {
         modules={[FreeMode, Navigation, Thumbs]}
         className="mySwiper2"
       >
-        {slides.map((slideURL, index) => {
+        {slides.map((slide) => {
           return (
-            <SwiperSlide key={index}>
-              <img src={slideURL} />
+            <SwiperSlide key={slide.node.url}>
+              <img src={slide.node.url} />
             </SwiperSlide>
           );
         })}
       </Swiper>
       <Swiper
+        // @ts-ignore
         onSwiper={setThumbsSwiper} //it works but TS gives error
         spaceBetween={10}
         slidesPerView={4}
@@ -47,10 +50,10 @@ const Carousel: FC<CarouselProps> = ({ slides }) => {
         modules={[FreeMode, Navigation, Thumbs]}
         className="mySwiper"
       >
-        {slides.map((slideURL, index) => {
+        {slides.map((slide, index) => {
           return (
-            <SwiperSlide key={index}>
-              <img src={slideURL} />
+            <SwiperSlide key={slide.node.url}>
+              <img src={slide.node.url} />
             </SwiperSlide>
           );
         })}

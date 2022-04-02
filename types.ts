@@ -37,9 +37,16 @@ export type TOptionData = {
   disable: boolean;
 };
 
+export type THeaderOptions = {
+  endpoint: string;
+  method: string;
+  headers: any;
+  body: string;
+};
+
 export type TAccordionItem = {
   label: string;
-  content: string | ReactElement | HTMLElement;
+  content: string | ReactElement | string[] | ReactElement[];
 };
 
 // for extra info in productPage
@@ -48,3 +55,94 @@ export type TExtraInfo = {
   title: string;
   content: string | ReactElement | string[] | ReactElement[];
 };
+
+// START Shopify GraphQL Types
+// Modify these type if query on respective function changes
+
+// getAllCollections()
+export type TGetAllCollections = {
+  node: {
+    id: string;
+    title: string;
+    descriptionHtml: string;
+    handle: string;
+    image: {
+      url: string;
+    };
+  };
+};
+
+export type TGetProductsByCollection = {
+  node: {
+    id: string;
+    title: string;
+    descriptionHtml: string;
+    handle: string;
+    availableForSale: boolean;
+    featuredImage: {
+      url: string;
+    };
+  };
+};
+
+// for images from Shopify
+export type TImageNode = {
+  node: {
+    url: string;
+  };
+};
+
+// for product variant(s) from Shopify
+export type TProductVariant = {
+  node: {
+    priceV2: {
+      amount: number;
+      currencyCode: string;
+    };
+    availableForSale: boolean;
+    title: string;
+  };
+};
+
+export type TGetProduct = {
+  id: string;
+  title: string;
+  availableForSale: boolean;
+  descriptionHtml: string;
+  compareAtPriceRange: {
+    maxVariantPrice: {
+      amount: number;
+      currencyCode: string;
+    };
+    minVariantPrice: {
+      amount: number;
+      currencyCode: string;
+    };
+  };
+  priceRange: {
+    maxVariantPrice: {
+      amount: number;
+      currencyCode: string;
+    };
+    minVariantPrice: {
+      amount: number;
+      currencyCode: string;
+    };
+  };
+  images: {
+    edges: TImageNode[];
+  };
+  options: TProductOption[];
+  variants: {
+    edges: TProductVariant[];
+  };
+};
+
+// for product option(s) chips
+export type TProductOption = {
+  id: string;
+  name: string;
+  values: string[];
+};
+
+// END Shopify GraphQL Types

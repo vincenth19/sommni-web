@@ -1,14 +1,21 @@
-import { FC, isValidElement, ReactElement, useEffect, useState } from "react";
-import { Accordion, Box, Group, Text, Divider } from "@mantine/core";
+import { FC, useEffect, useState } from "react";
+import {
+  Accordion,
+  Box,
+  Group,
+  Text,
+  Divider,
+  Image,
+  Button,
+} from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
-import DOMPurify from "isomorphic-dompurify";
-import dynamic from "next/dynamic";
 import {
   screenSizes,
   TAccordionItem,
   TExtraInfo,
-  TOptionData,
+  TGetProduct,
 } from "../../types";
+import dynamic from "next/dynamic";
 
 const MainFrame = dynamic(() => import("../shared/mainFrame"));
 const Carousel = dynamic(() => import("./carousel"));
@@ -20,114 +27,187 @@ const AlternatingSections = dynamic(
 );
 
 interface ProductPageProps {
-  prodTitle: string;
-  prodPrice: string;
-  valueState: string;
+  productData: TGetProduct;
+  valueState: any;
   valueSetter: (value: string) => void;
-  slideImages: string[];
-  btnAddToCart: ReactElement;
-  variants?: TOptionData[];
-  prodDescription?: string | HTMLElement | ReactElement;
-  prodSpecs?: TAccordionItem[];
-  extraInfos?: TExtraInfo[];
+  prodSpecs?: TAccordionItem[] | null;
+  extraInfos?: TExtraInfo[] | null;
 }
 
 const ProductPage: FC<ProductPageProps> = ({
-  prodTitle,
-  prodPrice,
+  productData,
   valueState,
   valueSetter,
-  slideImages,
-  btnAddToCart,
-  variants,
-  prodDescription,
   prodSpecs,
   extraInfos,
 }) => {
   const biggerScreen = useMediaQuery(`(min-width: ${screenSizes.sm})`);
+  const [displayedPrice, setDisplayedPrice] = useState<string | number>("");
   const [isScreenBig, setIsScreenBig] = useState<Boolean>();
+  const [variantNames, setVariantNames] = useState<string[]>([]);
+  const [isVariantEmpty, setIsVariantEmpty] = useState<boolean>(true);
 
   useEffect(() => {
     setIsScreenBig(biggerScreen);
   }, [biggerScreen]);
 
+  useEffect(() => {
+    productData.options.forEach((option) => {
+      if (option.name !== "Title") {
+        setVariantNames((prev) => (prev = [...prev, option.name]));
+      } else {
+        setIsVariantEmpty(false);
+      }
+    });
+  }, [productData]);
+
+  // setting displayed price based on selected variants
+  useEffect(() => {
+    if (valueState) {
+      if (variantNames.length > 0) {
+        let counterVariantSelected = 0;
+        variantNames.forEach((variant) => {
+          if (valueState[variant] !== "") {
+            counterVariantSelected++;
+          }
+        });
+        if (counterVariantSelected === variantNames.length) {
+          let variantValues: string[] = [];
+          variantNames.forEach((variant) => {
+            variantValues.push(valueState[variant]);
+          });
+
+          let stringSelectedVariant = "";
+          if (variantValues.length === 1) {
+            stringSelectedVariant = variantValues[0];
+          } else if (variantValues.length === variantNames.length) {
+            stringSelectedVariant = variantValues.join(" / ");
+          } else {
+            throw new Error("Product variant error.");
+          }
+          productData.variants.edges.forEach((variant) => {
+            if (variant.node.title === stringSelectedVariant) {
+              setDisplayedPrice((prev) => (prev = variant.node.priceV2.amount));
+              setIsVariantEmpty(
+                (prev) => (prev = !variant.node.availableForSale)
+              );
+            }
+          });
+        } else {
+          // initial displayed price when variant(s) is not selected
+          if (
+            productData.priceRange.minVariantPrice.amount ===
+            productData.priceRange.maxVariantPrice.amount
+          ) {
+            setDisplayedPrice(productData.priceRange.minVariantPrice.amount);
+          } else {
+            setDisplayedPrice(
+              `${productData.priceRange.minVariantPrice.amount} - ${productData.priceRange.maxVariantPrice.amount}`
+            );
+          }
+        }
+      } else {
+        setDisplayedPrice(productData.priceRange.minVariantPrice.amount);
+      }
+    }
+  }, [valueState]);
+
   return (
-    <MainFrame>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          flexWrap: isScreenBig ? "nowrap" : "wrap",
-          gap: isScreenBig ? "1rem" : 0,
-          padding: "1rem 0",
-        }}
-      >
-        <Box
-          style={{
-            maxWidth: isScreenBig ? "45vw" : "100%",
-            position: isScreenBig ? "sticky" : "unset",
-            top: "4rem",
-            zIndex: 2,
-            height: "100%",
-          }}
-        >
-          <Carousel slides={slideImages} />
-        </Box>
-        <Box>
-          <h1 style={{ fontSize: "2.5rem" }}>{prodTitle}</h1>
-          <Group>
-            <Text size="xl">{prodPrice}</Text>
-            <InfoSection />
-          </Group>
-          {variants && (
-            <OptionChips
-              valueState={valueState}
-              valueSetter={valueSetter}
-              options={variants}
-            />
-          )}
-          {btnAddToCart}
-          {prodDescription && (
-            <ProductDescription description={prodDescription} />
-          )}
-          <Divider size="xs" />
-          {prodSpecs && <ProductSpecification specs={prodSpecs} />}
-        </Box>
-      </div>
-      <WhySection />
-      {extraInfos && <AlternatingSections infos={extraInfos} />}
-    </MainFrame>
+    <>
+      {valueState && (
+        <MainFrame>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              flexWrap: isScreenBig ? "nowrap" : "wrap",
+              gap: isScreenBig ? "1rem" : 0,
+              padding: "1rem 0",
+            }}
+          >
+            <Box
+              style={{
+                maxWidth: isScreenBig ? "35vw" : "100%",
+                position: isScreenBig ? "sticky" : "unset",
+                top: "4rem",
+                zIndex: 2,
+                height: "100%",
+              }}
+            >
+              {productData.images.edges.length === 0 ? (
+                <Image
+                  src={"/imgPlaceholder.png"}
+                  width={"100%"}
+                  height={500}
+                  radius="sm"
+                />
+              ) : (
+                <Carousel slides={productData.images.edges} />
+              )}
+            </Box>
+            <Box style={{ width: "100%" }}>
+              <h1 style={{ fontSize: "2.5rem" }}>{productData.title}</h1>
+              <Group>
+                <Text size="xl">
+                  {productData.priceRange.maxVariantPrice.currencyCode}{" "}
+                  {displayedPrice}
+                </Text>
+                <InfoSection />
+              </Group>
+              {productData.options && (
+                <>
+                  {productData.options[0].name !== "Title" && (
+                    <OptionChips
+                      valueState={valueState}
+                      valueSetter={valueSetter}
+                      options={productData.options}
+                    />
+                  )}
+                </>
+              )}
+              <Button
+                fullWidth={isScreenBig ? false : true}
+                size="lg"
+                style={{ margin: "1rem 0" }}
+                disabled={isVariantEmpty}
+              >
+                Add to Cart
+              </Button>
+              {productData.descriptionHtml && (
+                <ProductDescription
+                  descriptionHtml={productData.descriptionHtml}
+                />
+              )}
+              <Divider size="xs" style={{ margin: "1rem 0" }} />
+              {prodSpecs && <ProductSpecification specs={prodSpecs} />}
+            </Box>
+          </div>
+          <WhySection />
+          {extraInfos && <AlternatingSections infos={extraInfos} />}
+        </MainFrame>
+      )}
+    </>
   );
 };
 
 interface ProductDescriptionProps {
-  description: string | HTMLElement | ReactElement;
+  descriptionHtml: string;
 }
 
-const ProductDescription: FC<ProductDescriptionProps> = ({ description }) => {
-  if (description) {
-    if (typeof description === "string") {
-      return (
+const ProductDescription: FC<ProductDescriptionProps> = ({
+  descriptionHtml,
+}) => {
+  return (
+    <>
+      {descriptionHtml && (
         <div
           dangerouslySetInnerHTML={{
-            __html: DOMPurify.sanitize(description),
+            __html: descriptionHtml,
           }}
         ></div>
-      );
-    } else if (isValidElement(description)) {
-      return description;
-    } else {
-      return (
-        <div
-          dangerouslySetInnerHTML={{
-            __html: DOMPurify.sanitize(description),
-          }}
-        ></div>
-      );
-    }
-  } else {
-    return <></>;
-  }
+      )}
+    </>
+  );
 };
 
 interface ProductSpecificationProps {

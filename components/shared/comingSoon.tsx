@@ -1,7 +1,7 @@
 import { Group, Text, useMantineTheme } from "@mantine/core";
 import { FC } from "react";
 
-const ComingSoon: FC = () => {
+const ComingSoon: FC = ({ children }) => {
   const themes = useMantineTheme();
   return (
     <Group
@@ -15,9 +15,7 @@ const ComingSoon: FC = () => {
       >
         Coming Soon
       </Text>
-      <Text color="gray" size="lg">
-        Subscribe to our newsletter to get the latest update for this product.
-      </Text>
+      {children}
     </Group>
   );
 };

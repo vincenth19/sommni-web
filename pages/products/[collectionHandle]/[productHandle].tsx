@@ -1,54 +1,20 @@
-import { ReactElement, useEffect, useState } from "react";
 import { Button, Group, Text } from "@mantine/core";
-import { GetStaticProps, NextPage } from "next";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
-import dynamic from "next/dynamic";
 import {
-  screenSizes,
-  TAccordionItem,
-  TExtraInfo,
-  TOptionData,
-} from "../../types";
-import { useMediaQuery } from "@mantine/hooks";
+  GetServerSideProps,
+  InferGetServerSidePropsType,
+  NextPage,
+} from "next";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import Head from "next/head";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import ProductPage from "../../../components/product/productPage";
+import AlertCard from "../../../components/shared/alertCard";
+import MainFrame from "../../../components/shared/mainFrame";
+import { getProduct } from "../../../lib/shopify";
+import { TAccordionItem, TExtraInfo, TProductOption } from "../../../types";
 
-const ProductPage = dynamic(
-  () => import("../../components/product/productPage")
-);
-
-const slides = [
-  "https://images.ctfassets.net/uvwd10ivtduz/6Qg7oy05IqzITZMvX04hJd/b73cf717b7131b983e440bbbc85ee6eb/LS1_Queen.jpg??w=1920&h=1440&q=75&fit=fill&fm=webp",
-  "https://images.ctfassets.net/uvwd10ivtduz/2h9vqkwn7BuOayrB4yULRm/1bc4d69a1a4e7734d5eab505d4dc1afe/210621_koala_jballa_ls1_01_hero_427_queen.jpg??w=1920&h=1440&q=75&fit=fill&fm=webp",
-  "https://images.ctfassets.net/uvwd10ivtduz/g0DEwjo7QS7uhOYZyrL4s/eb53412c1a707736d9059895dc545398/3._Copy_of_R0552_SK_LS1_Customised_Topper_Queen_NAKED_11576.jpg??w=1920&h=1440&q=75&fit=fill&fm=webp",
-  "https://images.ctfassets.net/uvwd10ivtduz/3gLtgQINriL54BVUUJwlRA/dee0751f993d9e9a2dc771c895eca2df/T00742_AU_LS1_MattressQueenAU_Queen_NAKED_24203.jpg??w=1920&h=1440&q=75&fit=fill&fm=webp",
-  "https://images.ctfassets.net/uvwd10ivtduz/5YsPp51GQgTjpBL3lZfMUe/c6fd746d4cb6c61471df6a68766c97d5/5._Copy_of_Copy_of_R0551_SK_LS1_Customised_Topper_Queen_NAKED_11583.jpg??w=1920&h=1440&q=75&fit=fill&fm=webp",
-  "https://images.ctfassets.net/uvwd10ivtduz/6qGhEZvRLz4KWRt6upjmN5/f40f268e0a1f1f81317960d02981d377/R0571_AU_LS1_MattressQueenAU_Queen_NAKED_11789.jpg??w=1920&h=1440&q=75&fit=fill&fm=webp",
-  "https://images.ctfassets.net/uvwd10ivtduz/18b4xSzMHLIdRxQy5co4Un/e431c847c07091bf7d2f47f1658e6b61/LS1_Queen_360174.png??w=1920&h=1440&q=75&fit=pad&fm=webp",
-];
-
-const sizeData: TOptionData[] = [
-  { value: "single", label: "Single", disable: false },
-  { value: "super_single", label: "Super Single", disable: false },
-  { value: "queen", label: "Queen", disable: true },
-  { value: "king", label: "King", disable: false },
-];
-
-const productDescription: ReactElement | HTMLElement = (
-  <article>
-    <p>
-      Crafted by experienced Manufacturers. The Sommni provides Dual Comfort in
-      one Mattress for a good night’s sleep.
-    </p>
-    <h3>Why you'll love The Sommni</h3>
-    <ul>
-      <li>Dual Comfort, Plush and FIRM in one</li>
-      <li>Certified 100% Natural Latex</li>
-      <li>Extraordinary 5 Layers of comfort</li>
-      <li>10 Years Manufacturer's Warranty</li>
-      <li>Flexible trial plan</li>
-    </ul>
-  </article>
-);
 const mattressSpecs: TAccordionItem[] = [
   {
     label: "Materials & Certification",
@@ -135,47 +101,87 @@ const mattressExtraInfos: TExtraInfo[] = [
   },
 ];
 
-const Mattress: NextPage = () => {
-  const [size, setSize] = useState("single");
-  const biggerScreen = useMediaQuery(`(min-width: ${screenSizes.sm})`);
-  const [isScreenBig, setIsScreenBig] = useState<Boolean>();
+const ProductView: NextPage = ({
+  oneProduct,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+  const [variants, setVariants] = useState<any>(null);
+  const [productSpec, setProductSpec] = useState<TAccordionItem[] | null>(null);
+  const [productExtraInfo, setProductExtraInfo] = useState<TExtraInfo[] | null>(
+    null
+  );
+  const [collectionHandle, setCollectionHandle] = useState<
+    string | string[] | undefined
+  >("");
+  const router = useRouter();
 
   useEffect(() => {
-    setIsScreenBig(biggerScreen);
-  }, [biggerScreen]);
+    setCollectionHandle(router.query.collectionHandle);
+    if (oneProduct) {
+      if (oneProduct.options.length > 0) {
+        oneProduct.options.forEach((option: TProductOption) => {
+          if (option.name !== "Title") {
+            setVariants((prev: any) => (prev = { ...prev, [option.name]: "" }));
+          }
+        });
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    if (collectionHandle === "mattress") {
+      setProductSpec(mattressSpecs);
+      setProductExtraInfo(mattressExtraInfos);
+    } else {
+      setProductSpec(null);
+      setProductExtraInfo(null);
+    }
+  }, [collectionHandle]);
 
   return (
     <>
       <Head>
-        <title>The Sommni</title>
-        <meta name="description" content="Sommni - The Sommni" />
+        <title>{`Sommni - ${router.query.productHandle}`}</title>
+        <meta
+          name="description"
+          content={`Sommni - ${router.query.productHandle}`}
+        />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <ProductPage
-        prodTitle="The Sommni"
-        prodPrice="RM 1,234"
-        valueState={size}
-        valueSetter={setSize}
-        slideImages={slides}
-        btnAddToCart={
-          <Button
-            fullWidth={isScreenBig ? false : true}
-            size="lg"
-            style={{ margin: "1rem 0" }}
-          >
-            Add to Cart
-          </Button>
-        }
-        prodDescription={productDescription}
-        prodSpecs={mattressSpecs}
-        variants={sizeData}
-        extraInfos={mattressExtraInfos}
-      />
+      {oneProduct ? (
+        <ProductPage
+          productData={oneProduct}
+          valueState={variants}
+          valueSetter={setVariants}
+          prodSpecs={productSpec}
+          extraInfos={productExtraInfo}
+        />
+      ) : (
+        <MainFrame>
+          <div style={{ padding: "3rem 0" }}>
+            <AlertCard
+              title={`Oops... '${router.query.productHandle}' is not found`}
+            >
+              <p>Try search other product.</p>
+              <Link href="/products" passHref>
+                <Button component="a">Go to Products</Button>
+              </Link>
+            </AlertCard>
+          </div>
+        </MainFrame>
+      )}
     </>
   );
 };
 
-export const getStaticProps: GetStaticProps = async ({ locale }) => {
+export const getServerSideProps: GetServerSideProps = async ({
+  params,
+  locale,
+}) => {
+  const prodHandle = params?.productHandle;
+  let oneProduct: any = [];
+  if (prodHandle) {
+    oneProduct = await getProduct(prodHandle);
+  }
   return {
     props: {
       ...(await serverSideTranslations(locale as string, [
@@ -183,8 +189,9 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
         "footer",
         "home",
       ])),
+      oneProduct,
     },
   };
 };
 
-export default Mattress;
+export default ProductView;

@@ -1,11 +1,11 @@
-import { Chip, Chips } from "@mantine/core";
+import { Chip, Chips, Text } from "@mantine/core";
 import { FC } from "react";
-import { TOptionData } from "../../types";
+import { TProductOption } from "../../types";
 
 interface ProductOptionsProps {
-  valueState: string;
-  valueSetter: (value: string) => void;
-  options: TOptionData[];
+  valueState: any;
+  valueSetter: (value: any) => void;
+  options: TProductOption[];
   chipSize?: "xs" | "sm" | "md" | "lg" | "xl";
 }
 
@@ -16,22 +16,37 @@ const OptionChips: FC<ProductOptionsProps> = ({
   chipSize = "md",
 }) => {
   return (
-    <Chips
-      size={chipSize}
-      aria-label="Select product size"
-      style={{ padding: "1rem 0" }}
-      multiple={false}
-      value={valueState}
-      onChange={valueSetter}
-    >
-      {options.map((data) => {
+    <>
+      {options.map((option) => {
         return (
-          <Chip key={data.value} disabled={data.disable} value={data.value}>
-            {data.label}
-          </Chip>
+          <>
+            <Text key={option.id} weight={500}>
+              {option.name}
+            </Text>
+            <Chips
+              key={option.name}
+              size={chipSize}
+              style={{ padding: "1rem 0" }}
+              multiple={false}
+              value={valueState[option.name]}
+              onChange={(value) =>
+                valueSetter(
+                  (prev: any) => (prev = { ...prev, [option.name]: value })
+                )
+              }
+            >
+              {option.values.map((value) => {
+                return (
+                  <Chip key={value} value={value}>
+                    {value}
+                  </Chip>
+                );
+              })}
+            </Chips>
+          </>
         );
       })}
-    </Chips>
+    </>
   );
 };
 

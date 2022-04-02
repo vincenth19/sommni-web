@@ -6,12 +6,14 @@ import { TNavLink } from "../../types";
 
 interface BtnDropdownProps {
   links: TNavLink[];
+  path?: string;
   dropdownTitle: string;
   btnSize?: "xs" | "sm" | "md" | "lg" | "xl";
 }
 
 const BtnDropdown: FC<BtnDropdownProps> = ({
   links,
+  path,
   dropdownTitle,
   btnSize = "sm",
 }) => {
@@ -31,16 +33,32 @@ const BtnDropdown: FC<BtnDropdownProps> = ({
       onMouseOut={() => setIsBtnHover((data) => !data)}
       style={{ position: "relative", display: "inline-block" }}
     >
-      <Button
-        size={btnSizeChanges}
-        variant="subtle"
-        style={{ color: themes.colors.brand[9] }}
-      >
-        {dropdownTitle}
-        <span style={{ marginLeft: "5px" }}>
-          <RiArrowDownSLine />
-        </span>
-      </Button>
+      {path ? (
+        <Link href={path} passHref>
+          <Button
+            component="a"
+            size={btnSizeChanges}
+            variant="subtle"
+            style={{ color: themes.colors.brand[9] }}
+          >
+            {dropdownTitle}
+            <span style={{ marginLeft: "5px" }}>
+              <RiArrowDownSLine />
+            </span>
+          </Button>
+        </Link>
+      ) : (
+        <Button
+          size={btnSizeChanges}
+          variant="subtle"
+          style={{ color: themes.colors.brand[9] }}
+        >
+          {dropdownTitle}
+          <span style={{ marginLeft: "5px" }}>
+            <RiArrowDownSLine />
+          </span>
+        </Button>
+      )}
       <Box
         style={{
           display: !isBtnHover ? "none" : "block",

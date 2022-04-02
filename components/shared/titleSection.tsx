@@ -2,7 +2,7 @@ import { Group, useMantineTheme } from "@mantine/core";
 import { FC } from "react";
 
 interface TitleSectionProps {
-  title: string;
+  title: string | string[];
   fontSize?: number;
 }
 
@@ -15,7 +15,9 @@ const TitleSection: FC<TitleSectionProps> = ({ title, fontSize = 48 }) => {
         height: "150px",
       }}
     >
-      <h1 style={{ fontSize: `${fontSize}px` }}>{title}</h1>
+      <h1 style={{ fontSize: `${fontSize}px`, textTransform: "capitalize" }}>
+        {title}
+      </h1>
     </Group>
   );
 };

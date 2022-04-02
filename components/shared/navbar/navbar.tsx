@@ -93,6 +93,8 @@ const Navbar = () => {
               } else {
                 return (
                   <BtnDropdown
+                    key={link.path}
+                    path={link.path}
                     dropdownTitle={link.title}
                     links={link.dropdownLinks}
                   />
@@ -107,7 +109,7 @@ const Navbar = () => {
           <Button size="lg" variant="subtle" compact>
             <RiShoppingCartLine />
           </Button>
-          <BtnLanguage />
+          {/* <BtnLanguage /> */}
         </Group>
       </Group>
     </>

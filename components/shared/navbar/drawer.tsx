@@ -24,7 +24,7 @@ const NavDrawer = () => {
     { path: "/", title: "Home" },
     { path: "/about-us", title: "About Us" },
     {
-      path: "",
+      path: "/products",
       title: "Products",
       dropdownLinks: [
         {
@@ -76,8 +76,8 @@ const NavDrawer = () => {
         size="sm"
       >
         <Group direction="column">
-          {NavLinks.map((link) => {
-            if (link.path !== "") {
+          {NavLinks.map((link, index) => {
+            if (!link.dropdownLinks) {
               return (
                 <Link href={link.path} key={link.path}>
                   <Button
@@ -93,6 +93,8 @@ const NavDrawer = () => {
               if (link.dropdownLinks) {
                 return (
                   <BtnDropdown
+                    key={index}
+                    path={link.path}
                     btnSize={"lg"}
                     dropdownTitle={link.title}
                     links={link.dropdownLinks}
