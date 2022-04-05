@@ -1,14 +1,12 @@
-import { TCreateUser, THeaderOptions } from "../types";
+import { THeaderOptions } from "../types";
 
 const domain = process.env.SHOPIFY_STORE_DOMAIN;
 const storefrontAccessToken = process.env.SHOPIFY_STOREFRONT_ACCESSTOKEN;
-
+const URL = `https://${domain}/api/2022-04/graphql.json`;
 // GraphQL is in types.ts file located at root
 // Modify the type if query on respective function changes
 
 async function ShopifyData(query: string) {
-  const URL = `https://${domain}/api/2022-04/graphql.json`;
-
   const options: THeaderOptions = {
     endpoint: URL,
     method: "POST",
@@ -104,6 +102,7 @@ export async function getAllCollectionsHandle() {
     collections(first: 50) {
       edges {
         node {
+          title
           handle
         }
       }

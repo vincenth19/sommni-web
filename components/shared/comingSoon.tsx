@@ -7,7 +7,7 @@ const ComingSoon: FC = ({ children }) => {
     <Group
       position="center"
       direction="column"
-      style={{ height: "50vh", padding: "40px 0", justifyContent: "center" }}
+      style={{ minHeight: "55vh", padding: "40px 0", justifyContent: "center" }}
     >
       <Text
         weight={700}

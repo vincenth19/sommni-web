@@ -1,8 +1,6 @@
 import {
   Group,
-  Button,
   MediaQuery,
-  useMantineTheme,
   Box,
   // Text,
 } from "@mantine/core";
@@ -10,20 +8,15 @@ import Link from "next/link";
 import Image from "next/image";
 // import { RiShoppingCartLine } from "react-icons/ri";
 import { useTranslation } from "next-i18next";
-// import NavDrawer from "./drawer";
 // import UserPopover from "./userPopover";
 // import BtnLanguage from "./btnLanguage";
-import { TGetProduct, TNavLink } from "../../../types";
-import BtnDropdown from "../btnDropdown";
 import dynamic from "next/dynamic";
-import { useEffect, useState } from "react";
 
 const NavDrawer = dynamic(() => import("./drawer"));
+const BtnNavLinks = dynamic(() => import("./btnNavLinks"));
 
 const Navbar = () => {
-  const themes = useMantineTheme();
   // const [cartQuantity, setCartQuantity] = useState<number | null>(null);
-  const { t } = useTranslation("common");
 
   // useEffect(() => {
   //   if (typeof window !== "undefined") {
@@ -34,41 +27,6 @@ const Navbar = () => {
   //     }
   //   }
   // }, []);
-
-  const NavLinks: TNavLink[] = [
-    { path: "/", title: "Home" },
-    { path: "/about-us", title: "About Us" },
-    {
-      path: "/products",
-      title: "Products",
-      dropdownLinks: [
-        {
-          path: "/products/mattress",
-          title: t("nav-mattress"),
-        },
-        {
-          path: "/products/topper",
-          title: t("nav-topper"),
-        },
-        {
-          path: "/products/pillow",
-          title: t("nav-pillow"),
-        },
-      ],
-    },
-    {
-      path: "/faq",
-      title: t("nav-faq"),
-    },
-    {
-      path: "/compare",
-      title: t("nav-compare"),
-    },
-    {
-      path: "/sleep-experience",
-      title: "Sleep Experience",
-    },
-  ];
 
   return (
     <>
@@ -97,30 +55,7 @@ const Navbar = () => {
         </Group>
         <MediaQuery smallerThan={"lg"} styles={{ display: "none" }}>
           <Group position="center" spacing="lg">
-            {NavLinks.map((link) => {
-              if (!link.dropdownLinks) {
-                return (
-                  <Link href={link.path} key={link.path} passHref>
-                    <Button
-                      component="a"
-                      variant="subtle"
-                      style={{ color: themes.colors.brand[9] }}
-                    >
-                      {link.title}
-                    </Button>
-                  </Link>
-                );
-              } else {
-                return (
-                  <BtnDropdown
-                    key={link.path}
-                    path={link.path}
-                    dropdownTitle={link.title}
-                    links={link.dropdownLinks}
-                  />
-                );
-              }
-            })}
+            <BtnNavLinks />
           </Group>
         </MediaQuery>
 

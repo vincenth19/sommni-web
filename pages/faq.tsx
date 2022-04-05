@@ -3,9 +3,11 @@ import { GetStaticProps, NextPage } from "next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import Head from "next/head";
 import { FC, useEffect, useState } from "react";
-import MainFrame from "../components/shared/mainFrame";
 import { TAccordionItem } from "../types";
 
+import dynamic from "next/dynamic";
+
+const MainFrame = dynamic(() => import("../components/shared/mainFrame"));
 interface IFaqData extends FaqCategoryProps {
   value: string;
 }
@@ -76,13 +78,13 @@ const Faq: NextPage = () => {
   }, []);
 
   return (
-    <MainFrame>
+    <>
       <Head>
         <title>Sommni - FAQ</title>
         <meta name="description" content="Sommni - FAQ" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Group position="center" direction="column">
+      <MainFrame>
         <Group
           position="center"
           direction="column"
@@ -92,7 +94,7 @@ const Faq: NextPage = () => {
           <Select
             placeholder="Select a Category"
             data={selectCategoryOptions}
-            style={{ minWidth: "80vw" }}
+            style={{ minWidth: "40vw" }}
             onChange={(val) => {
               if (val !== null) {
                 let element = document.getElementById(val);
@@ -111,18 +113,16 @@ const Faq: NextPage = () => {
             }}
           />
         </Group>
-        <Group direction="column" position="left">
-          {FaqData.map((data) => (
-            <FaqCategory
-              value={data.value}
-              category={data.category}
-              categoryItems={data.categoryItems}
-              key={data.value}
-            />
-          ))}
-        </Group>
-      </Group>
-    </MainFrame>
+        {FaqData.map((data) => (
+          <FaqCategory
+            value={data.value}
+            category={data.category}
+            categoryItems={data.categoryItems}
+            key={data.value}
+          />
+        ))}
+      </MainFrame>
+    </>
   );
 };
 
@@ -138,11 +138,7 @@ const FaqCategory: FC<FaqCategoryProps> = ({
   value,
 }) => {
   const items = categoryItems.map((item) => (
-    <Accordion.Item
-      style={{ minWidth: "80vw" }}
-      label={item.label}
-      key={item.label}
-    >
+    <Accordion.Item label={item.label} key={item.label}>
       <Text size="md" color="gray" style={{ whiteSpace: "pre-line" }}>
         {item.content}
       </Text>

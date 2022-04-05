@@ -1,6 +1,6 @@
-import { Box, Button, Group, useMantineTheme } from "@mantine/core";
+import { Box, Button, Group, useMantineTheme, Text } from "@mantine/core";
 import Link from "next/link";
-import { FC, useEffect, useState } from "react";
+import { FC, useState } from "react";
 import { RiArrowDownSLine } from "react-icons/ri";
 import { TNavLink } from "../../types";
 
@@ -15,17 +15,10 @@ const BtnDropdown: FC<BtnDropdownProps> = ({
   links,
   path,
   dropdownTitle,
-  btnSize = "sm",
+  btnSize = "md",
 }) => {
   const [isBtnHover, setIsBtnHover] = useState(false);
-  const [btnSizeChanges, setBtnSizeChanges] = useState<
-    "xs" | "sm" | "md" | "lg" | "xl"
-  >("md");
   const themes = useMantineTheme();
-
-  useEffect(() => {
-    setBtnSizeChanges((data) => (data = btnSize));
-  }, [btnSize]);
 
   return (
     <Box
@@ -37,7 +30,7 @@ const BtnDropdown: FC<BtnDropdownProps> = ({
         <Link href={path} passHref>
           <Button
             component="a"
-            size={btnSizeChanges}
+            size={btnSize}
             variant="subtle"
             style={{ color: themes.colors.brand[9] }}
           >
@@ -49,7 +42,7 @@ const BtnDropdown: FC<BtnDropdownProps> = ({
         </Link>
       ) : (
         <Button
-          size={btnSizeChanges}
+          size={btnSize}
           variant="subtle"
           style={{ color: themes.colors.brand[9] }}
         >
@@ -77,11 +70,12 @@ const BtnDropdown: FC<BtnDropdownProps> = ({
               return (
                 <Link href={link.path} passHref key={link.path}>
                   <Button
-                    size={btnSizeChanges}
+                    fullWidth
+                    size={btnSize}
                     variant="subtle"
                     style={{ color: themes.colors.brand[9] }}
                   >
-                    {link.title}
+                    <Text align="left">{link.title}</Text>
                   </Button>
                 </Link>
               );
