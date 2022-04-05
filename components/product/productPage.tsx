@@ -2,11 +2,11 @@ import { FC, useEffect, useState } from "react";
 import {
   Accordion,
   Box,
-  Group,
+  // Group,
   Text,
   Divider,
   Image,
-  Button,
+  // Button,
 } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import {
@@ -14,18 +14,18 @@ import {
   TAccordionItem,
   TExtraInfo,
   TGetProduct,
-  TProductVariant,
+  // TProductVariant,
 } from "../../types";
 import dynamic from "next/dynamic";
-import ShopifyBuyButon from "./shopifyBuyButton";
 
 const Carousel = dynamic(() => import("./carousel"));
 const InfoSection = dynamic(() => import("../home/infoSection"));
-const OptionChips = dynamic(() => import("../shared/optionChips"));
+// const OptionChips = dynamic(() => import("../shared/optionChips"));
 const WhySection = dynamic(() => import("../shared/whySection"));
 const AlternatingSections = dynamic(
   () => import("../shared/alternatingSections")
 );
+const ShopifyBuyButon = dynamic(() => import("./shopifyBuyButton"));
 
 interface ProductPageProps {
   productData: TGetProduct;

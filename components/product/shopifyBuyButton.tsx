@@ -1,6 +1,9 @@
 import { Text } from "@mantine/core";
 import { FC, useEffect, useState } from "react";
-import AlertCard from "../shared/alertCard";
+
+import dynamic from "next/dynamic";
+
+const AlertCard = dynamic(() => import("../shared/alertCard"));
 
 const domain = process.env.SHOPIFY_STORE_DOMAIN;
 const storefrontAccessToken = process.env.SHOPIFY_STOREFRONT_ACCESSTOKEN;

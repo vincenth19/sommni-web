@@ -4,15 +4,15 @@ import {
   MediaQuery,
   useMantineTheme,
   Box,
-  Text,
+  // Text,
 } from "@mantine/core";
 import Link from "next/link";
 import Image from "next/image";
-import { RiShoppingCartLine } from "react-icons/ri";
+// import { RiShoppingCartLine } from "react-icons/ri";
 import { useTranslation } from "next-i18next";
 // import NavDrawer from "./drawer";
-import UserPopover from "./userPopover";
-import BtnLanguage from "./btnLanguage";
+// import UserPopover from "./userPopover";
+// import BtnLanguage from "./btnLanguage";
 import { TGetProduct, TNavLink } from "../../../types";
 import BtnDropdown from "../btnDropdown";
 import dynamic from "next/dynamic";
@@ -22,22 +22,18 @@ const NavDrawer = dynamic(() => import("./drawer"));
 
 const Navbar = () => {
   const themes = useMantineTheme();
-  const [cartQuantity, setCartQuantity] = useState<number | null>(null);
+  // const [cartQuantity, setCartQuantity] = useState<number | null>(null);
   const { t } = useTranslation("common");
 
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      console.log("navbar iwndow mounted");
-      const cartItems = localStorage.getItem("cartItem");
-      if (cartItems) {
-        const items = JSON.parse(cartItems);
-        console.log("have item", items);
-        setCartQuantity(items.length);
-      } else {
-        console.log("still null");
-      }
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (typeof window !== "undefined") {
+  //     const cartItems = localStorage.getItem("cartItem");
+  //     if (cartItems) {
+  //       const items = JSON.parse(cartItems);
+  //       setCartQuantity(items.length);
+  //     }
+  //   }
+  // }, []);
 
   const NavLinks: TNavLink[] = [
     { path: "/", title: "Home" },

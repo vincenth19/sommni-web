@@ -1,4 +1,4 @@
-import { Button, Container, Group, Text, useMantineTheme } from "@mantine/core";
+import { Button, Group, Text, useMantineTheme } from "@mantine/core";
 
 const SignUpSection = () => {
   const themes = useMantineTheme();

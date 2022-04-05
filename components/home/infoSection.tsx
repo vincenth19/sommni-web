@@ -3,7 +3,11 @@ import { useMediaQuery } from "@mantine/hooks";
 import { useTranslation } from "next-i18next";
 import Link from "next/link";
 import { ReactElement, useEffect, useState } from "react";
-import { RiMoonClearLine, RiNumber0, RiTruckLine } from "react-icons/ri";
+import {
+  // RiMoonClearLine,
+  // RiNumber0,
+  RiTruckLine,
+} from "react-icons/ri";
 import { screenSizes } from "../../types";
 
 type TInfo = {

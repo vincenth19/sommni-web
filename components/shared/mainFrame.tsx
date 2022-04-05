@@ -1,12 +1,15 @@
 import { Container } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import { FC, ReactNode, useEffect, useState } from "react";
-import Footer from "./footer/footer";
-import Navbar from "./navbar/navbar";
-import NewsletterSection from "./newsletter";
-import SignUpSection from "./signUpSection";
 import { screenSizes } from "../../types";
-import ScrollToTop from "./scrollToTop";
+
+import dynamic from "next/dynamic";
+
+const Footer = dynamic(() => import("./footer/footer"));
+const Navbar = dynamic(() => import("./navbar/navbar"));
+const NewsletterSection = dynamic(() => import("./newsletter"));
+const SignUpSection = dynamic(() => import("./signUpSection"));
+const ScrollToTop = dynamic(() => import("./scrollToTop"));
 
 interface MainFrameProps {
   navbar?: boolean;
@@ -19,8 +22,8 @@ interface MainFrameProps {
 
 const MainFrame: FC<MainFrameProps> = ({
   navbar = true,
-  signUp = true,
-  newsletter = true,
+  signUp = false,
+  newsletter = false,
   children,
   footer = true,
   scrollToTop = true,

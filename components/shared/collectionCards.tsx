@@ -4,7 +4,10 @@ import Link from "next/link";
 import { FC, useEffect, useState } from "react";
 import styles from "../../styles/Products.module.css";
 import { screenSizes, TGetAllCollections } from "../../types";
-import AlertCard from "./alertCard";
+
+import dynamic from "next/dynamic";
+
+const AlertCard = dynamic(() => import("./alertCard"));
 
 interface CollectionCardsSectionProps {
   collections: TGetAllCollections[];

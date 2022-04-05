@@ -5,16 +5,21 @@ import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import ProductPage from "../../../components/product/productPage";
-import AlertCard from "../../../components/shared/alertCard";
-import MainFrame from "../../../components/shared/mainFrame";
 import { getProduct } from "../../../lib/shopify";
 import {
   TAccordionItem,
   TExtraInfo,
-  TGetProduct,
+  // TGetProduct,
   TProductOption,
 } from "../../../types";
+
+import dynamic from "next/dynamic";
+
+const AlertCard = dynamic(() => import("../../../components/shared/alertCard"));
+const ProductPage = dynamic(
+  () => import("../../../components/product/productPage")
+);
+const MainFrame = dynamic(() => import("../../../components/shared/mainFrame"));
 
 const mattressSpecs: TAccordionItem[] = [
   {
