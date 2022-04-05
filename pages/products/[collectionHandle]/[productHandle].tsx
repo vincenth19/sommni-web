@@ -1,9 +1,5 @@
-import { Button, Group, Text } from "@mantine/core";
-import {
-  GetServerSideProps,
-  InferGetServerSidePropsType,
-  NextPage,
-} from "next";
+import { Button, Group, Loader, Text } from "@mantine/core";
+import { GetServerSideProps, NextPage } from "next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import Head from "next/head";
 import Link from "next/link";
@@ -13,7 +9,12 @@ import ProductPage from "../../../components/product/productPage";
 import AlertCard from "../../../components/shared/alertCard";
 import MainFrame from "../../../components/shared/mainFrame";
 import { getProduct } from "../../../lib/shopify";
-import { TAccordionItem, TExtraInfo, TProductOption } from "../../../types";
+import {
+  TAccordionItem,
+  TExtraInfo,
+  TGetProduct,
+  TProductOption,
+} from "../../../types";
 
 const mattressSpecs: TAccordionItem[] = [
   {
@@ -101,9 +102,9 @@ const mattressExtraInfos: TExtraInfo[] = [
   },
 ];
 
-const ProductView: NextPage = ({
-  oneProduct,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+const ProductView: NextPage = () => {
+  const [isLoading, setIsloading] = useState<boolean>(true);
+  const [productTitle, setProductTitle] = useState<string>("");
   const [variants, setVariants] = useState<any>(null);
   const [productSpec, setProductSpec] = useState<TAccordionItem[] | null>(null);
   const [productExtraInfo, setProductExtraInfo] = useState<TExtraInfo[] | null>(
@@ -112,20 +113,37 @@ const ProductView: NextPage = ({
   const [collectionHandle, setCollectionHandle] = useState<
     string | string[] | undefined
   >("");
+  const [fetchedProduct, setFetchedProduct] = useState<any>(null);
   const router = useRouter();
 
   useEffect(() => {
     setCollectionHandle(router.query.collectionHandle);
-    if (oneProduct) {
-      if (oneProduct.options.length > 0) {
-        oneProduct.options.forEach((option: TProductOption) => {
+    const fetchProduct = async () => {
+      const res = await getProduct(router.query.productHandle);
+      if (res) {
+        setFetchedProduct(res);
+        setProductTitle(res.title);
+        setIsloading(false);
+      }
+    };
+    fetchProduct();
+  }, []);
+
+  useEffect(() => {
+    if (fetchedProduct && "errors" in fetchedProduct === false) {
+      if (fetchedProduct.options.length > 0) {
+        console.log("options");
+        fetchedProduct.options.forEach((option: TProductOption) => {
+          console.log("reading options 1 by 1");
           if (option.name !== "Title") {
             setVariants((prev: any) => (prev = { ...prev, [option.name]: "" }));
+          } else {
+            console.log("no variant");
           }
         });
       }
     }
-  }, []);
+  }, [fetchedProduct]);
 
   useEffect(() => {
     if (collectionHandle === "mattress") {
@@ -140,48 +158,65 @@ const ProductView: NextPage = ({
   return (
     <>
       <Head>
-        <title>{`Sommni - ${router.query.productHandle}`}</title>
-        <meta
-          name="description"
-          content={`Sommni - ${router.query.productHandle}`}
-        />
+        <title>{`Sommni - ${productTitle}`}</title>
+        <meta name="description" content={`Sommni - ${productTitle}`} />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      {oneProduct ? (
-        <ProductPage
-          productData={oneProduct}
-          valueState={variants}
-          valueSetter={setVariants}
-          prodSpecs={productSpec}
-          extraInfos={productExtraInfo}
-        />
-      ) : (
-        <MainFrame>
-          <div style={{ padding: "3rem 0" }}>
-            <AlertCard
-              title={`Oops... '${router.query.productHandle}' is not found`}
-            >
-              <p>Try search other product.</p>
-              <Link href="/products" passHref>
-                <Button component="a">Go to Products</Button>
-              </Link>
-            </AlertCard>
-          </div>
-        </MainFrame>
-      )}
+      <MainFrame>
+        {isLoading ? (
+          <Group
+            direction="column"
+            position="center"
+            style={{ height: "80vh", justifyContent: "center" }}
+          >
+            <Text size="lg">Getting our product...</Text>
+            <Loader />
+          </Group>
+        ) : (
+          <>
+            {fetchedProduct ? (
+              "errors" in fetchedProduct ? (
+                <div style={{ padding: "3rem 0" }}>
+                  <AlertCard>
+                    <p>Errors:</p>
+                    {fetchedProduct.errors.map((error: any) => {
+                      return <p key={error}>{error.message}</p>;
+                    })}
+                  </AlertCard>
+                </div>
+              ) : (
+                <>
+                  <ProductPage
+                    productData={fetchedProduct}
+                    valueState={variants}
+                    valueSetter={setVariants}
+                    prodSpecs={productSpec}
+                    extraInfos={productExtraInfo}
+                  />
+                </>
+              )
+            ) : (
+              <>
+                <div style={{ padding: "3rem 0" }}>
+                  <AlertCard
+                    title={`Oops... '${router.query.productHandle}' is not found`}
+                  >
+                    <p>Try search other product.</p>
+                    <Link href="/products" passHref>
+                      <Button component="a">Go to Products</Button>
+                    </Link>
+                  </AlertCard>
+                </div>
+              </>
+            )}
+          </>
+        )}
+      </MainFrame>
     </>
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async ({
-  params,
-  locale,
-}) => {
-  const prodHandle = params?.productHandle;
-  let oneProduct: any = [];
-  if (prodHandle) {
-    oneProduct = await getProduct(prodHandle);
-  }
+export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
   return {
     props: {
       ...(await serverSideTranslations(locale as string, [
@@ -189,7 +224,6 @@ export const getServerSideProps: GetServerSideProps = async ({
         "footer",
         "home",
       ])),
-      oneProduct,
     },
   };
 };

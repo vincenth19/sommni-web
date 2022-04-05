@@ -1,4 +1,4 @@
-import { THeaderOptions } from "../types";
+import { TCreateUser, THeaderOptions } from "../types";
 
 const domain = process.env.SHOPIFY_STORE_DOMAIN;
 const storefrontAccessToken = process.env.SHOPIFY_STOREFRONT_ACCESSTOKEN;
@@ -7,7 +7,7 @@ const storefrontAccessToken = process.env.SHOPIFY_STOREFRONT_ACCESSTOKEN;
 // Modify the type if query on respective function changes
 
 async function ShopifyData(query: string) {
-  const URL = `https://${domain}/api/2022-01/graphql.json`;
+  const URL = `https://${domain}/api/2022-04/graphql.json`;
 
   const options: THeaderOptions = {
     endpoint: URL,
@@ -87,12 +87,15 @@ export async function getAllCollections() {
   }
   `;
   const response = await ShopifyData(query);
+  if (!response.errors) {
+    const allCollections = response.data.collections.edges
+      ? response.data.collections.edges
+      : [];
 
-  const allCollections = response.data.collections.edges
-    ? response.data.collections.edges
-    : [];
-
-  return allCollections;
+    return allCollections;
+  } else {
+    return response;
+  }
 }
 
 export async function getAllCollectionsHandle() {
@@ -202,6 +205,7 @@ export async function getProduct(handle: string | string[] | undefined) {
           variants(first: 25){
             edges{
               node{
+                id
                 priceV2{
                   amount
                   currencyCode
@@ -216,31 +220,17 @@ export async function getProduct(handle: string | string[] | undefined) {
     `;
       const response = await ShopifyData(query);
 
-      const product = response.data.product ? response.data.product : null;
+      if ("errors" in response) {
+        return response;
+      } else {
+        const product = response.data.product ? response.data.product : null;
 
-      return product;
+        return product;
+      }
     }
   } else {
     return null;
   }
-}
-
-// for getStaticPath
-export async function getProductHandle(handle: string | string[] | undefined) {
-  const query = `
-  {
-    product(handle: "${handle}"){
-      handle
-    }
-  }
-  `;
-  const response = await ShopifyData(query);
-
-  const product = response.data.product.handle
-    ? response.data.product.handle
-    : [];
-
-  return product;
 }
 
 // more complete query for getProduct()

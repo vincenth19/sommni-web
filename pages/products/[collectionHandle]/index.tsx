@@ -14,6 +14,8 @@ import {
 import dynamic from "next/dynamic";
 import ComingSoon from "../../../components/shared/comingSoon";
 import Head from "next/head";
+import { useEffect, useState } from "react";
+import { Group, Loader, Text } from "@mantine/core";
 
 const MainFrame = dynamic(() => import("../../../components/shared/mainFrame"));
 const AlertCard = dynamic(() => import("../../../components/shared/alertCard"));
@@ -25,6 +27,14 @@ const ProductsInCollection: NextPage = ({
   collectionProducts,
   params,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    if (collectionProducts) {
+      setIsLoading(false);
+    }
+  }, [collectionProducts]);
+
   return (
     <>
       <Head>
@@ -36,26 +46,39 @@ const ProductsInCollection: NextPage = ({
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <MainFrame>
-        {"errors" in collectionProducts ? (
-          <AlertCard>
-            <p>Errors:</p>
-            {collectionProducts.errors.map((error: any) => {
-              return <p>{error.message}</p>;
-            })}
-          </AlertCard>
+        {isLoading ? (
+          <Group
+            direction="column"
+            position="center"
+            style={{ height: "80vh", justifyContent: "center" }}
+          >
+            <Text size="lg">Getting our products...</Text>
+            <Loader />
+          </Group>
         ) : (
           <>
-            {collectionProducts.length === 0 ? (
-              <ComingSoon>
-                <p>Product is coming soon.</p>
-                <p>Subscribe to our newsletter to get our latest news.</p>
-              </ComingSoon>
+            {"errors" in collectionProducts ? (
+              <AlertCard>
+                <p>Errors:</p>
+                {collectionProducts.errors.map((error: any) => {
+                  return <p key={error}>{error.message}</p>;
+                })}
+              </AlertCard>
             ) : (
-              <ProductCardsSection
-                collectionHandle={params.collectionHandle}
-                products={collectionProducts}
-                collectionTitle={params.collectionHandle}
-              />
+              <>
+                {collectionProducts.length === 0 ? (
+                  <ComingSoon>
+                    <p>Product is coming soon.</p>
+                    <p>Subscribe to our newsletter to get our latest news.</p>
+                  </ComingSoon>
+                ) : (
+                  <ProductCardsSection
+                    collectionHandle={params.collectionHandle}
+                    products={collectionProducts}
+                    collectionTitle={params.collectionHandle}
+                  />
+                )}
+              </>
             )}
           </>
         )}

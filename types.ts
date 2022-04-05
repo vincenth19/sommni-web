@@ -95,6 +95,7 @@ export type TImageNode = {
 // for product variant(s) from Shopify
 export type TProductVariant = {
   node: {
+    id: string;
     priceV2: {
       amount: number;
       currencyCode: string;
@@ -106,6 +107,7 @@ export type TProductVariant = {
 
 export type TGetProduct = {
   id: string;
+  handle: string;
   title: string;
   availableForSale: boolean;
   descriptionHtml: string;
@@ -143,6 +145,21 @@ export type TProductOption = {
   id: string;
   name: string;
   values: string[];
+};
+
+// customer type
+export type TCreateUser = {
+  email: string;
+  password: string;
+  acceptsMarketing?: boolean;
+  firstName?: string;
+  lastName?: string;
+  phone?: string;
+};
+
+export type TUserAccessToken = {
+  email: string;
+  password: string;
 };
 
 // END Shopify GraphQL Types

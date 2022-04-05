@@ -22,7 +22,7 @@ interface ApiErrorProps {
 
 const AlertCard: FC<ApiErrorProps> = ({
   icon = <RiErrorWarningLine />,
-  title = "Oops...something wrong",
+  title = "Oops... something wrong",
   color = "red",
   children,
 }) => {

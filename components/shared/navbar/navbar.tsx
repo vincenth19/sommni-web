@@ -1,4 +1,11 @@
-import { Group, Button, MediaQuery, useMantineTheme, Box } from "@mantine/core";
+import {
+  Group,
+  Button,
+  MediaQuery,
+  useMantineTheme,
+  Box,
+  Text,
+} from "@mantine/core";
 import Link from "next/link";
 import Image from "next/image";
 import { RiShoppingCartLine } from "react-icons/ri";
@@ -6,15 +13,31 @@ import { useTranslation } from "next-i18next";
 // import NavDrawer from "./drawer";
 import UserPopover from "./userPopover";
 import BtnLanguage from "./btnLanguage";
-import { TNavLink } from "../../../types";
+import { TGetProduct, TNavLink } from "../../../types";
 import BtnDropdown from "../btnDropdown";
 import dynamic from "next/dynamic";
+import { useEffect, useState } from "react";
 
 const NavDrawer = dynamic(() => import("./drawer"));
 
 const Navbar = () => {
   const themes = useMantineTheme();
+  const [cartQuantity, setCartQuantity] = useState<number | null>(null);
   const { t } = useTranslation("common");
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      console.log("navbar iwndow mounted");
+      const cartItems = localStorage.getItem("cartItem");
+      if (cartItems) {
+        const items = JSON.parse(cartItems);
+        console.log("have item", items);
+        setCartQuantity(items.length);
+      } else {
+        console.log("still null");
+      }
+    }
+  }, []);
 
   const NavLinks: TNavLink[] = [
     { path: "/", title: "Home" },
@@ -105,10 +128,26 @@ const Navbar = () => {
         </MediaQuery>
 
         <Group position="right" spacing="xs">
-          <UserPopover />
-          <Button size="lg" variant="subtle" compact>
-            <RiShoppingCartLine />
-          </Button>
+          {/* <UserPopover />
+          <Link href={"/cart"} passHref>
+            <Button component="a" size="lg" variant="light" compact>
+              <RiShoppingCartLine
+                style={{ marginRight: cartQuantity ? 10 : 0 }}
+              />
+              {cartQuantity && (
+                <Text
+                  color="white"
+                  style={{
+                    backgroundColor: "crimson",
+                    borderRadius: "100%",
+                    padding: "0 10px",
+                  }}
+                >
+                  {cartQuantity}
+                </Text>
+              )}
+            </Button>
+          </Link> */}
           {/* <BtnLanguage /> */}
         </Group>
       </Group>
