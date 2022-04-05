@@ -1,4 +1,5 @@
 import { FC, useState } from "react";
+import { Image } from "@mantine/core";
 
 import { Swiper, SwiperSlide } from "swiper/react";
 import { FreeMode, Navigation, Thumbs } from "swiper";
@@ -35,7 +36,7 @@ const Carousel: FC<CarouselProps> = ({ slides }) => {
         {slides.map((slide) => {
           return (
             <SwiperSlide key={slide.node.url}>
-              <img src={slide.node.url} />
+              <Image alt="main-product-image" src={slide.node.url} />
             </SwiperSlide>
           );
         })}
@@ -50,10 +51,13 @@ const Carousel: FC<CarouselProps> = ({ slides }) => {
         modules={[FreeMode, Navigation, Thumbs]}
         className="mySwiper"
       >
-        {slides.map((slide, index) => {
+        {slides.map((slide) => {
           return (
             <SwiperSlide key={slide.node.url}>
-              <img src={slide.node.url} />
+              <Image
+                alt="product-carousel-thumbnail-image"
+                src={slide.node.url}
+              />
             </SwiperSlide>
           );
         })}

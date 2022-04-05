@@ -79,8 +79,9 @@ const NavDrawer = () => {
           {NavLinks.map((link, index) => {
             if (!link.dropdownLinks) {
               return (
-                <Link href={link.path} key={link.path}>
+                <Link href={link.path} key={link.path} passHref>
                   <Button
+                    component="a"
                     variant="subtle"
                     size="lg"
                     style={{ color: themes.colors.brand[9] }}

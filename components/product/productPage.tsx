@@ -148,6 +148,7 @@ const ProductPage: FC<ProductPageProps> = ({
                 width={isScreenBig ? 600 : "100%"}
                 height={isScreenBig ? 500 : 200}
                 radius="sm"
+                alt="product-image-placeholder"
               />
             ) : (
               <Carousel slides={productData.images.edges} />

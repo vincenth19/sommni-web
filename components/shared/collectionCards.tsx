@@ -79,7 +79,7 @@ const ProductCard = ({
   }, [smallScreen]);
 
   return (
-    <Link href={path}>
+    <Link href={path} passHref>
       <Group
         className={styles.productCard}
         direction="column"
@@ -102,6 +102,7 @@ const ProductCard = ({
             width={"100%"}
             height={250}
             radius="sm"
+            alt="collection-placeholder-image"
           />
         </div>
         <h2 style={{ marginBottom: 0 }}>{title}</h2>

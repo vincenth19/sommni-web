@@ -1,4 +1,4 @@
-import { Group } from "@mantine/core";
+import { Group, Image } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import { FC, useEffect, useState } from "react";
 import { screenSizes, TExtraInfo } from "../../types";
@@ -33,14 +33,20 @@ const AlternatingSections: FC<AlternatingSectionsProps> = ({ infos }) => {
             }}
             key={index}
           >
-            <img
+            <Image
+              radius={"md"}
               style={{
                 width: isScreenBig ? "50%" : "100%",
                 borderRadius: "5px",
               }}
               src={info.imageURL}
+              alt={"extra-product-info-image"}
             />
-            <Group direction="column" spacing={"xs"}>
+            <Group
+              style={{ width: isScreenBig ? "50%" : "100%" }}
+              direction="column"
+              spacing={"xs"}
+            >
               <h3 style={{ margin: 0 }}>{info.title}</h3>
               {/* {typeof info.content === "string" ? (
                 <p>{info.content}</p>
@@ -51,8 +57,8 @@ const AlternatingSections: FC<AlternatingSectionsProps> = ({ infos }) => {
                 <>
                   {typeof info.content[0] === "string" ? (
                     <>
-                      {info.content.map((data) => (
-                        <p>{data}</p>
+                      {info.content.map((data, index) => (
+                        <p key={index}>{data}</p>
                       ))}
                     </>
                   ) : (

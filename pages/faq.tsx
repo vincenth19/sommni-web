@@ -73,7 +73,7 @@ const Faq: NextPage = () => {
       options.push({ value: element.value, label: element.category });
     });
     setSelectCategoryOptions((data) => (data = options));
-  }, [FaqData]);
+  }, []);
 
   return (
     <MainFrame>

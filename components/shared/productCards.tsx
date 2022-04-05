@@ -79,7 +79,7 @@ const ProductCard = ({
   }, [smallScreen]);
 
   return (
-    <Link href={availableForSale ? path : "#"}>
+    <Link href={availableForSale ? path : "#"} passHref>
       <Group
         className={styles.productCard}
         direction="column"
@@ -103,6 +103,7 @@ const ProductCard = ({
             width={"100%"}
             height={200}
             radius="sm"
+            alt="placeholder-image"
           />
         </div>
         {availableForSale ? <></> : <Badge color="red">Out of stock</Badge>}

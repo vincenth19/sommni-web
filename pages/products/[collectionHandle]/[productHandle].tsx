@@ -127,18 +127,14 @@ const ProductView: NextPage = () => {
       }
     };
     fetchProduct();
-  }, []);
+  }, [router.query.collectionHandle, router.query.productHandle]);
 
   useEffect(() => {
     if (fetchedProduct && "errors" in fetchedProduct === false) {
       if (fetchedProduct.options.length > 0) {
-        console.log("options");
         fetchedProduct.options.forEach((option: TProductOption) => {
-          console.log("reading options 1 by 1");
           if (option.name !== "Title") {
             setVariants((prev: any) => (prev = { ...prev, [option.name]: "" }));
-          } else {
-            console.log("no variant");
           }
         });
       }

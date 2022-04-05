@@ -104,8 +104,9 @@ const Navbar = () => {
             {NavLinks.map((link) => {
               if (!link.dropdownLinks) {
                 return (
-                  <Link href={link.path} key={link.path}>
+                  <Link href={link.path} key={link.path} passHref>
                     <Button
+                      component="a"
                       variant="subtle"
                       style={{ color: themes.colors.brand[9] }}
                     >

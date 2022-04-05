@@ -89,7 +89,12 @@ const WhySectionItem: FC<IWhySectionItemProps> = ({ itemImage, itemText }) => {
       position="center"
       style={{ width: isDesktop ? "20%" : "45%" }}
     >
-      <Image width="100px" height="100px" src={itemImage} />
+      <Image
+        width="100px"
+        height="100px"
+        src={itemImage}
+        alt={"sommni-benefit-illustrations"}
+      />
       <Text
         size="xl"
         weight={500}
