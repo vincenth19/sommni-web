@@ -164,6 +164,10 @@ function shopifyBuyButtonInit(merchandiseID: string) {
               total: "Subtotal",
               button: "Checkout",
             },
+            contents: {
+              note: true,
+            },
+            popup: false,
           },
           toggle: {
             styles: {

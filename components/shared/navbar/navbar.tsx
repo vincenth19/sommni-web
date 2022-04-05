@@ -59,8 +59,8 @@ const Navbar = () => {
           </Group>
         </MediaQuery>
 
-        <Group position="right" spacing="xs">
-          {/* <UserPopover />
+        {/* <Group position="right" spacing="xs">
+          <UserPopover />
           <Link href={"/cart"} passHref>
             <Button component="a" size="lg" variant="light" compact>
               <RiShoppingCartLine
@@ -79,9 +79,9 @@ const Navbar = () => {
                 </Text>
               )}
             </Button>
-          </Link> */}
-          {/* <BtnLanguage /> */}
-        </Group>
+          </Link>
+          <BtnLanguage />
+        </Group> */}
       </Group>
     </>
   );
