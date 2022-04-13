@@ -78,7 +78,7 @@ const WhySectionItem: FC<IWhySectionItemProps> = ({ itemImage, itemText }) => {
   const themes = useMantineTheme();
   const biggerScreen = useMediaQuery(`(min-width: ${screenSizes.md})`);
 
-  const [isDesktop, setIsDesktop] = useState<Boolean>();
+  const [isDesktop, setIsDesktop] = useState<boolean>();
 
   useEffect(() => {
     setIsDesktop(biggerScreen);

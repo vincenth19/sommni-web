@@ -45,7 +45,7 @@ interface NewsletterFormProps {
 
 const NewsletterForm = ({ initialValues, onSubmit }: NewsletterFormProps) => {
   const biggerScreen = useMediaQuery(`(min-width: ${screenSizes.sm})`);
-  const [isScreenBig, setIsScreenBig] = useState<Boolean>();
+  const [isScreenBig, setIsScreenBig] = useState<boolean>();
 
   useEffect(() => {
     setIsScreenBig(biggerScreen);

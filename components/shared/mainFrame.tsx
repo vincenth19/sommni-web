@@ -29,7 +29,7 @@ const MainFrame: FC<MainFrameProps> = ({
   scrollToTop = true,
 }) => {
   const biggerScreen = useMediaQuery(`(min-width: ${screenSizes.sm})`);
-  const [isDesktop, setIsDesktop] = useState<Boolean>();
+  const [isDesktop, setIsDesktop] = useState<boolean>();
 
   useEffect(() => {
     setIsDesktop(biggerScreen);

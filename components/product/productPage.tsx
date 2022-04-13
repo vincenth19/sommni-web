@@ -46,7 +46,7 @@ const ProductPage: FC<ProductPageProps> = ({
 }) => {
   const biggerScreen = useMediaQuery(`(min-width: ${screenSizes.sm})`);
   const [displayedPrice, setDisplayedPrice] = useState<string | number>("");
-  const [isScreenBig, setIsScreenBig] = useState<Boolean>();
+  const [isScreenBig, setIsScreenBig] = useState<boolean>();
   const [variantNames, setVariantNames] = useState<string[]>([]);
   const [selectedItem, setSelectedItem] = useState<TProductVariant | null>(
     null

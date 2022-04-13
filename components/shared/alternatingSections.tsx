@@ -9,7 +9,7 @@ interface AlternatingSectionsProps {
 
 const AlternatingSections: FC<AlternatingSectionsProps> = ({ infos }) => {
   const biggerScreen = useMediaQuery(`(min-width: ${screenSizes.sm})`);
-  const [isScreenBig, setIsScreenBig] = useState<Boolean>();
+  const [isScreenBig, setIsScreenBig] = useState<boolean>();
 
   useEffect(() => {
     setIsScreenBig(biggerScreen);
