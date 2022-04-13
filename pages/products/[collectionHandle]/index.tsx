@@ -15,7 +15,7 @@ import dynamic from "next/dynamic";
 import ComingSoon from "../../../components/shared/comingSoon";
 import Head from "next/head";
 import { useEffect, useState } from "react";
-import { Group, Loader, Text } from "@mantine/core";
+import Loading from "../../../components/shared/loading";
 
 const MainFrame = dynamic(() => import("../../../components/shared/mainFrame"));
 const AlertCard = dynamic(() => import("../../../components/shared/alertCard"));
@@ -47,23 +47,11 @@ const ProductsInCollection: NextPage = ({
       </Head>
       <MainFrame>
         {isLoading ? (
-          <Group
-            direction="column"
-            position="center"
-            style={{ height: "80vh", justifyContent: "center" }}
-          >
-            <Text size="lg">Getting our products...</Text>
-            <Loader />
-          </Group>
+          <Loading height="80vh" text="Getting our products..." />
         ) : (
           <>
             {"errors" in collectionProducts ? (
-              <AlertCard>
-                <p>Errors:</p>
-                {collectionProducts.errors.map((error: any) => {
-                  return <p key={error}>{error.message}</p>;
-                })}
-              </AlertCard>
+              <AlertCard errors={collectionProducts} />
             ) : (
               <>
                 {collectionProducts.length === 0 ? (

@@ -2,11 +2,11 @@ import { FC, useEffect, useState } from "react";
 import {
   Accordion,
   Box,
-  // Group,
+  Group,
   Text,
   Divider,
   Image,
-  // Button,
+  Button,
 } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import {
@@ -14,18 +14,19 @@ import {
   TAccordionItem,
   TExtraInfo,
   TGetProduct,
-  // TProductVariant,
+  TProductVariant,
 } from "../../types";
 import dynamic from "next/dynamic";
+import { useContextData } from "../../AppContext";
 
 const Carousel = dynamic(() => import("./carousel"));
 const InfoSection = dynamic(() => import("../home/infoSection"));
-// const OptionChips = dynamic(() => import("../shared/optionChips"));
+const OptionChips = dynamic(() => import("../shared/optionChips"));
 const WhySection = dynamic(() => import("../shared/whySection"));
 const AlternatingSections = dynamic(
   () => import("../shared/alternatingSections")
 );
-const ShopifyBuyButon = dynamic(() => import("./shopifyBuyButton"));
+// const ShopifyBuyButon = dynamic(() => import("./shopifyBuyButton"));
 
 interface ProductPageProps {
   productData: TGetProduct;
@@ -37,89 +38,89 @@ interface ProductPageProps {
 
 const ProductPage: FC<ProductPageProps> = ({
   productData,
-  // valueState,
-  // valueSetter,
+  valueState,
+  valueSetter,
   prodSpecs,
   extraInfos,
 }) => {
   const biggerScreen = useMediaQuery(`(min-width: ${screenSizes.sm})`);
   const [displayedPrice, setDisplayedPrice] = useState<string | number>("");
   const [isScreenBig, setIsScreenBig] = useState<Boolean>();
-  // const [variantNames, setVariantNames] = useState<string[]>([]);
-  // const [selectedItem, setSelectedItem] = useState<TProductVariant | null>(
-  //   null
-  // );
-  // const [isVariantEmpty, setIsVariantEmpty] = useState<boolean>(true);
+  const [variantNames, setVariantNames] = useState<string[]>([]);
+  const [selectedItem, setSelectedItem] = useState<TProductVariant | null>(
+    null
+  );
+  const [isVariantEmpty, setIsVariantEmpty] = useState<boolean>(true);
 
-  useEffect(() => {}, []);
+  const { setTotalCart } = useContextData();
 
   useEffect(() => {
     setIsScreenBig(biggerScreen);
   }, [biggerScreen]);
 
-  // useEffect(() => {
-  //   productData.options.forEach((option) => {
-  //     if (option.name !== "Title") {
-  //       setVariantNames((prev) => (prev = [...prev, option.name]));
-  //     } else {
-  //       setIsVariantEmpty(false);
-  //     }
-  //   });
-  // }, [productData]);
+  useEffect(() => {
+    productData.options.forEach((option) => {
+      if (option.name !== "Title") {
+        setVariantNames((prev) => (prev = [...prev, option.name]));
+      } else {
+        setIsVariantEmpty(false);
+      }
+    });
+  }, [productData]);
 
-  // setting displayed price based on selected variants
-  // useEffect(() => {
-  //   if (valueState) {
-  //     if (variantNames.length > 0) {
-  //       let counterVariantSelected = 0;
-  //       variantNames.forEach((variant) => {
-  //         if (valueState[variant] !== "") {
-  //           counterVariantSelected++;
-  //         }
-  //       });
-  //       if (counterVariantSelected === variantNames.length) {
-  //         let variantValues: string[] = [];
-  //         variantNames.forEach((variant) => {
-  //           variantValues.push(valueState[variant]);
-  //         });
+  //setting displayed price based on selected variants
+  useEffect(() => {
+    if (valueState) {
+      if (variantNames.length > 0) {
+        let counterVariantSelected = 0;
+        variantNames.forEach((variant) => {
+          if (valueState[variant] !== "") {
+            counterVariantSelected++;
+          }
+        });
+        if (counterVariantSelected === variantNames.length) {
+          let variantValues: string[] = [];
+          variantNames.forEach((variant) => {
+            variantValues.push(valueState[variant]);
+          });
 
-  //         let stringSelectedVariant = "";
-  //         if (variantValues.length === 1) {
-  //           stringSelectedVariant = variantValues[0];
-  //         } else if (variantValues.length === variantNames.length) {
-  //           stringSelectedVariant = variantValues.join(" / ");
-  //         } else {
-  //           throw new Error("Product variant error.");
-  //         }
-  //         productData.variants.edges.forEach((variant) => {
-  //           if (variant.node.title === stringSelectedVariant) {
-  //             setDisplayedPrice((prev) => (prev = variant.node.priceV2.amount));
-  //             if (variant.node.availableForSale) {
-  //               setSelectedItem(variant);
-  //             }
-  //             setIsVariantEmpty(
-  //               (prev) => (prev = !variant.node.availableForSale)
-  //             );
-  //           }
-  //         });
-  //       } else {
-  //         // initial displayed price when variant(s) is not selected
-  //         if (
-  //           productData.priceRange.minVariantPrice.amount ===
-  //           productData.priceRange.maxVariantPrice.amount
-  //         ) {
-  //           setDisplayedPrice(productData.priceRange.minVariantPrice.amount);
-  //         } else {
-  //           setDisplayedPrice(
-  //             `${productData.priceRange.minVariantPrice.amount} - ${productData.priceRange.maxVariantPrice.amount}`
-  //           );
-  //         }
-  //       }
-  //     } else {
-  //       setDisplayedPrice(productData.priceRange.minVariantPrice.amount);
-  //     }
-  //   }
-  // }, [valueState]);
+          let stringSelectedVariant = "";
+          if (variantValues.length === 1) {
+            stringSelectedVariant = variantValues[0];
+          } else if (variantValues.length === variantNames.length) {
+            stringSelectedVariant = variantValues.join(" / ");
+          } else {
+            throw new Error("Product variant error.");
+          }
+          productData.variants.edges.forEach((variant) => {
+            if (variant.node.title === stringSelectedVariant) {
+              setDisplayedPrice((prev) => (prev = variant.node.priceV2.amount));
+              if (variant.node.availableForSale) {
+                setSelectedItem(variant);
+              }
+              setIsVariantEmpty(
+                (prev) => (prev = !variant.node.availableForSale)
+              );
+            }
+          });
+        } else {
+          // initial displayed price when variant(s) is not selected
+          if (
+            productData.priceRange.minVariantPrice.amount ===
+            productData.priceRange.maxVariantPrice.amount
+          ) {
+            setDisplayedPrice(productData.priceRange.minVariantPrice.amount);
+          } else {
+            setDisplayedPrice(
+              `${productData.priceRange.minVariantPrice.amount} - ${productData.priceRange.maxVariantPrice.amount}`
+            );
+          }
+        }
+      } else {
+        setDisplayedPrice(productData.priceRange.minVariantPrice.amount);
+      }
+    }
+  }, [valueState]);
 
   return (
     <>
@@ -156,14 +157,14 @@ const ProductPage: FC<ProductPageProps> = ({
           </Box>
           <Box style={{ width: "100%" }}>
             <h1 style={{ fontSize: "2.5rem" }}>{productData.title}</h1>
-            {/* <Group>
+            <Group>
               <Text size="xl">
                 {productData.priceRange.maxVariantPrice.currencyCode}{" "}
                 {displayedPrice}
               </Text>
               <InfoSection />
-            </Group> */}
-            {/* {productData.options && (
+            </Group>
+            {productData.options && (
               <>
                 {productData.options[0].name !== "Title" && (
                   <OptionChips
@@ -180,6 +181,7 @@ const ProductPage: FC<ProductPageProps> = ({
               style={{ margin: "1rem 0" }}
               disabled={isVariantEmpty}
               onClick={() => {
+                setTotalCart((prev) => prev + 1);
                 if (localStorage.getItem("cartItem")) {
                   const prevCart = localStorage.getItem("cartItem");
                   if (prevCart) {
@@ -204,9 +206,9 @@ const ProductPage: FC<ProductPageProps> = ({
               }}
             >
               Add to Cart
-            </Button> */}
+            </Button>
             <Box style={{ padding: "1rem 0" }}>
-              <ShopifyBuyButon merchandiseID={productData.id} />
+              {/* <ShopifyBuyButon merchandiseID={productData.id} /> */}
               <InfoSection />
             </Box>
             {/* {selectedItemID && <pre>{JSON.stringify(selectedItemID)}</pre>} */}

@@ -1,32 +1,42 @@
-import {
-  Group,
-  MediaQuery,
-  Box,
-  // Text,
-} from "@mantine/core";
+import { Group, MediaQuery, Box, Button, Text, Loader } from "@mantine/core";
 import Link from "next/link";
 import Image from "next/image";
-// import { RiShoppingCartLine } from "react-icons/ri";
-import { useTranslation } from "next-i18next";
-// import UserPopover from "./userPopover";
 // import BtnLanguage from "./btnLanguage";
 import dynamic from "next/dynamic";
+import { useContextData } from "../../../AppContext";
+import { RiShoppingCartLine } from "react-icons/ri";
+import { useEffect, useState } from "react";
+import { useCookies } from "react-cookie";
+import { decrypt } from "../../../lib/cryptojs";
+import { getCustomer } from "../../../lib/shopify";
 
 const NavDrawer = dynamic(() => import("./drawer"));
 const BtnNavLinks = dynamic(() => import("./btnNavLinks"));
 
 const Navbar = () => {
-  // const [cartQuantity, setCartQuantity] = useState<number | null>(null);
+  const { user, totalCart, setUser } = useContextData();
+  const [cookies, setCookie, removeCookie] = useCookies(["login"]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // useEffect(() => {
-  //   if (typeof window !== "undefined") {
-  //     const cartItems = localStorage.getItem("cartItem");
-  //     if (cartItems) {
-  //       const items = JSON.parse(cartItems);
-  //       setCartQuantity(items.length);
-  //     }
-  //   }
-  // }, []);
+  const getData = async (token: string) => {
+    const res = await getCustomer(token);
+    if (res) {
+      setUser(res.displayName);
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (cookies.login) {
+      const decryptedID = decrypt(cookies.login);
+      if (decryptedID) {
+        const cleanedID = decryptedID.replace(/['"]+/g, "");
+        getData(cleanedID);
+      }
+    } else {
+      setIsLoading(false);
+    }
+  }, []);
 
   return (
     <>
@@ -59,29 +69,37 @@ const Navbar = () => {
           </Group>
         </MediaQuery>
 
-        {/* <Group position="right" spacing="xs">
-          <UserPopover />
-          <Link href={"/cart"} passHref>
-            <Button component="a" size="lg" variant="light" compact>
-              <RiShoppingCartLine
-                style={{ marginRight: cartQuantity ? 10 : 0 }}
-              />
-              {cartQuantity && (
-                <Text
-                  color="white"
-                  style={{
-                    backgroundColor: "crimson",
-                    borderRadius: "100%",
-                    padding: "0 10px",
-                  }}
-                >
-                  {cartQuantity}
-                </Text>
-              )}
-            </Button>
-          </Link>
-          <BtnLanguage />
-        </Group> */}
+        <MediaQuery smallerThan={"lg"} styles={{ display: "none" }}>
+          <Group position="right" spacing="xs">
+            {user ? (
+              <Link href="/profile" passHref>
+                <Button size="md" component="a" compact variant="light">
+                  Hi, {user}
+                </Button>
+              </Link>
+            ) : (
+              <>
+                {isLoading ? (
+                  <Loader size={"sm"} />
+                ) : (
+                  <Link href={"/sign-up"} passHref>
+                    <Button component="a" compact variant="light" size="md">
+                      Sign Up / Sign In
+                    </Button>
+                  </Link>
+                )}
+              </>
+            )}
+            <Link href={"/cart"} passHref>
+              <Button component="a" size="md" variant="light" compact>
+                <RiShoppingCartLine
+                  style={{ marginRight: totalCart ? 10 : 0 }}
+                />
+                {totalCart !== 0 && <Text>{totalCart}</Text>}
+              </Button>
+            </Link>
+          </Group>
+        </MediaQuery>
       </Group>
     </>
   );

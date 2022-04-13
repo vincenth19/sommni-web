@@ -1,36 +1,10 @@
-import { Button, Group, useMantineTheme } from "@mantine/core";
+import { Button, useMantineTheme } from "@mantine/core";
 import { useTranslation } from "next-i18next";
 import Link from "next/link";
 import { FC, useEffect, useState } from "react";
-import { THeaderOptions, TNavLink } from "../../../types";
+import { getNavLinks } from "../../../lib/shopify";
+import { TNavLink } from "../../../types";
 import BtnDropdown from "../btnDropdown";
-
-const domain = process.env.SHOPIFY_STORE_DOMAIN;
-const storefrontAccessToken = process.env.SHOPIFY_STOREFRONT_ACCESSTOKEN;
-const URL = `https://${domain}/api/2022-04/graphql.json`;
-const query = `
-  {
-    collections(first: 50) {
-      edges {
-        node {
-          title
-          handle
-        }
-      }
-    }
-  }
-`;
-
-const options: THeaderOptions = {
-  endpoint: URL,
-  method: "POST",
-  headers: {
-    "X-Shopify-Storefront-Access-Token": storefrontAccessToken,
-    Accept: "application/json",
-    "Content-Type": "application/json",
-  },
-  body: JSON.stringify({ query }),
-};
 
 const BtnNavLinks: FC = () => {
   const { t } = useTranslation("common");
@@ -73,38 +47,17 @@ const BtnNavLinks: FC = () => {
   const [navbarLinks, setNavbarLinks] = useState<TNavLink[]>(NavLinks);
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      if (sessionStorage.getItem("navbarLinks")) {
-        const links = sessionStorage.getItem("navbarLinks");
-        if (links) setNavbarLinks(JSON.parse(links));
-      } else {
-        fetch(URL, options)
-          .then((res) => res.json())
-          .then((data) => {
-            if (!data.errors) {
-              const serverCollections = data.data.collections.edges.map(
-                (el: any) => {
-                  return {
-                    path: `/products/${el.node.handle}`,
-                    title: el.node.title,
-                  };
-                }
-              );
-              const copied = JSON.stringify(navbarLinks);
-              let newNavLinks = JSON.parse(copied);
-              newNavLinks[2].dropdownLinks = serverCollections;
-              sessionStorage.setItem(
-                "navbarlinks",
-                JSON.stringify(newNavLinks)
-              );
-              setNavbarLinks(newNavLinks);
-            }
-          })
-          .catch((error) => {
-            console.error(error);
-            throw new Error("API error in getting collection (n)");
-          });
-      }
+    if (sessionStorage.getItem("navbarLinks")) {
+      const links = sessionStorage.getItem("navbarLinks");
+      if (links) setNavbarLinks(JSON.parse(links));
+    } else {
+      const getRunner = async () => {
+        const data = await getNavLinks(NavLinks);
+        if (data) {
+          setNavbarLinks(data);
+        }
+      };
+      getRunner();
     }
   }, []);
   return (

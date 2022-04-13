@@ -1,15 +1,27 @@
 import { useState } from "react";
-import { Drawer, Burger, useMantineTheme, Group, Box } from "@mantine/core";
+import {
+  Drawer,
+  Burger,
+  useMantineTheme,
+  Group,
+  Box,
+  Button,
+  Text,
+} from "@mantine/core";
 import Image from "next/image";
 import Link from "next/link";
 
 import dynamic from "next/dynamic";
+import { useContextData } from "../../../AppContext";
+import { RiShoppingCartLine } from "react-icons/ri";
 const BtnNavLinks = dynamic(() => import("./btnNavLinks"));
 
 const NavDrawer = () => {
   const [opened, setOpened] = useState(false);
   const title = opened ? "Close drawer" : "Open drawer";
   const themes = useMantineTheme();
+
+  const { user, totalCart } = useContextData();
 
   return (
     <>
@@ -32,6 +44,38 @@ const NavDrawer = () => {
         size="md"
       >
         <Group direction="column">
+          {user ? (
+            <Link href="/profile" passHref>
+              <Button size="md" component="a" variant="light">
+                Hi, {user}
+              </Button>
+            </Link>
+          ) : (
+            <>
+              <Link href={"/sign-up"} passHref>
+                <Button component="a" variant="light" size="md">
+                  Sign Up / Sign In
+                </Button>
+              </Link>
+            </>
+          )}
+          <Link href={"/cart"} passHref>
+            <Button component="a" size="md" variant="light">
+              <RiShoppingCartLine style={{ marginRight: totalCart ? 10 : 0 }} />
+              {totalCart !== 0 && (
+                <Text
+                  color="white"
+                  style={{
+                    backgroundColor: "crimson",
+                    borderRadius: "100%",
+                    padding: "0 10px",
+                  }}
+                >
+                  {totalCart}
+                </Text>
+              )}
+            </Button>
+          </Link>
           <BtnNavLinks />
         </Group>
       </Drawer>

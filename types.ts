@@ -1,8 +1,14 @@
 import common from "./public/locales/en/common.json";
 import home from "./public/locales/en/home.json";
 import footer from "./public/locales/en/footer.json";
-import { ReactElement } from "react";
+import { Dispatch, ReactElement, SetStateAction } from "react";
 
+export type TAppContext = {
+  user: string | null;
+  totalCart: number;
+  setUser: Dispatch<SetStateAction<string | null>>;
+  setTotalCart: Dispatch<SetStateAction<number>>;
+};
 export interface Resources {
   common: typeof common;
   home: typeof home;
@@ -58,6 +64,25 @@ export type TExtraInfo = {
 
 // START Shopify GraphQL Types
 // Modify these type if query on respective function changes
+
+type TErrorLoc = {
+  line: number;
+  column: number;
+};
+
+export type TError = {
+  message: string;
+  locations: TErrorLoc[];
+  path: string[];
+  extensions: {
+    code: string;
+    typeName: string;
+    fieldName: string;
+  };
+};
+export type TApiError = {
+  errors: TError[];
+};
 
 // getAllCollections()
 export type TGetAllCollections = {
@@ -159,6 +184,155 @@ export type TCreateUser = {
 
 export type TUserAccessToken = {
   email: string;
+  password: string;
+};
+
+export type TUserCred = {
+  email: string;
+  password: string;
+};
+
+// for customerAccessTokenCreate error
+export type TCustomerUserError = {
+  code: string;
+  field: null | string[];
+  message: string;
+};
+
+export type TCustomerAccessToken = {
+  accessToken: string;
+  expiresAt: string;
+};
+
+export type TCustomerAccessTokenCreate = {
+  data: {
+    customerAccessTokenCreate: {
+      customerAccessToken: TCustomerAccessToken;
+    };
+    customerUserErrors: TCustomerUserError[];
+  };
+};
+
+export type TCustomerAddress = {
+  address1: string | null;
+  address2: string | null;
+  firstName: string | null;
+  lastName: string | null;
+  zip: string | null;
+  name: string | null;
+  phone: string | null;
+  city: string | null;
+  province: string | null;
+  provinceCode: string | null;
+  country: string | null;
+  countryCodeV2: string | null;
+  company: string | null;
+  formatted: string[] | null;
+  formattedArea: string | null;
+  id: string | null;
+  latitude: null | number;
+  longitude: null | number;
+};
+
+type TCustomerAddressWithNode = {
+  node: TCustomerAddress;
+};
+
+export type TCustomer = {
+  id: string;
+  firstName: string | null;
+  lastName: string | null;
+  displayName: string | null;
+  email: string;
+  phone: string | null;
+  acceptsMarketing: boolean;
+  defaultAddress: TCustomerAddress | null;
+  addresses: {
+    edges: TCustomerAddressWithNode[];
+  };
+  orders: {
+    pageInfo: {
+      startCursor: string | null;
+      endCursor: string | null;
+      hasNextPage: boolean;
+      hasPreviousPage: boolean;
+    };
+  };
+  updatedAt: string;
+  createdAt: string;
+};
+
+export type TInputCustomerCreate = {
+  email: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+  acceptsMarketing: boolean;
+};
+
+export type TCustomerCreate = {
+  data: {
+    customerCreate: {
+      customerUserErrors: TCustomerUserError[];
+      customer: {
+        id: string;
+        firstName: string;
+        lastName: string;
+        acceptsMarketing: boolean;
+      };
+    };
+  };
+};
+
+export type TSuccessCustomerCreate = {
+  id: string;
+  firstName: string;
+  lastName: string;
+  acceptsMarketing: boolean;
+};
+
+export type TInputAddressDelete = {
+  customerAccessToken: string;
+  id: string;
+};
+
+export type TInputDefaultAddressChange = {
+  customerAccessToken: string;
+  addressId: string;
+};
+
+export type TBasicAddress = {
+  address1: string;
+  address2: string;
+  city: string;
+  company: string;
+  country: string;
+  firstName: string;
+  lastName: string;
+  phone: string;
+  province: string;
+  zip: string;
+};
+
+export type TInputAddressUpdate = {
+  address: TBasicAddress;
+  customerAccessToken: string;
+  id: string;
+};
+
+export type TInputAddressCreate = {
+  address: TBasicAddress;
+  customerAccessToken: string;
+};
+
+export type TInputCustomerUpdateProfile = {
+  email: string;
+  firstName: string;
+  lastName: string;
+  phone: string;
+};
+
+export type TInputCustomerUpdatePassword = {
   password: string;
 };
 

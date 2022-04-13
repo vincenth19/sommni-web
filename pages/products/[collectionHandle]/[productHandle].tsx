@@ -1,4 +1,4 @@
-import { Button, Group, Loader, Text } from "@mantine/core";
+import { Button, Group, Text } from "@mantine/core";
 import { GetServerSideProps, NextPage } from "next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import Head from "next/head";
@@ -14,6 +14,7 @@ import {
 } from "../../../types";
 
 import dynamic from "next/dynamic";
+import Loading from "../../../components/shared/loading";
 
 const AlertCard = dynamic(() => import("../../../components/shared/alertCard"));
 const ProductPage = dynamic(
@@ -165,25 +166,13 @@ const ProductView: NextPage = () => {
       </Head>
       <MainFrame>
         {isLoading ? (
-          <Group
-            direction="column"
-            position="center"
-            style={{ height: "80vh", justifyContent: "center" }}
-          >
-            <Text size="lg">Getting our product...</Text>
-            <Loader />
-          </Group>
+          <Loading height="80vh" text="Getting our product..." />
         ) : (
           <>
             {fetchedProduct ? (
               "errors" in fetchedProduct ? (
                 <div style={{ padding: "3rem 0" }}>
-                  <AlertCard>
-                    <p>Errors:</p>
-                    {fetchedProduct.errors.map((error: any) => {
-                      return <p key={error}>{error.message}</p>;
-                    })}
-                  </AlertCard>
+                  <AlertCard errors={fetchedProduct} />
                 </div>
               ) : (
                 <>
