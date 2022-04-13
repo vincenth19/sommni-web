@@ -1,4 +1,5 @@
 import { Button, Group, Text, useMantineTheme } from "@mantine/core";
+import Link from "next/link";
 
 const SignUpSection = () => {
   const themes = useMantineTheme();
@@ -18,7 +19,11 @@ const SignUpSection = () => {
         >
           Sign up today!
         </Text>
-        <Button size="lg">Sign Up</Button>
+        <Link href="/sign-up" passHref>
+          <Button component="a" size="lg">
+            Sign Up
+          </Button>
+        </Link>
       </Group>
     </div>
   );

@@ -229,6 +229,9 @@ export async function getProduct(handle: string | string[] | undefined) {
             maxVariantPrice{amount currencyCode}
             minVariantPrice{amount currencyCode}
           }
+          featuredImage{
+            url
+          }
           images(first: 5){
             edges{
               node{

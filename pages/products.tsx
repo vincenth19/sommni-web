@@ -1,5 +1,4 @@
 import { GetStaticProps, InferGetStaticPropsType, NextPage } from "next";
-import Head from "next/head";
 import dynamic from "next/dynamic";
 import { getAllCollections } from "../lib/shopify";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
@@ -12,6 +11,7 @@ const ProductsSection = dynamic(
 );
 const Loading = dynamic(() => import("../components/shared/loading"));
 const AlertCard = dynamic(() => import("../components/shared/alertCard"));
+const PageHead = dynamic(() => import("../components/shared/pageHead"));
 
 const Products: NextPage = ({
   collections,
@@ -26,11 +26,7 @@ const Products: NextPage = ({
 
   return (
     <MainFrame>
-      <Head>
-        <title>Sommni - Products</title>
-        <meta name="description" content="Sommni - Products" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+      <PageHead title="Products - Sommni" />
       {isLoading ? (
         <Loading height="80vh" text="Getting our collections..." />
       ) : (

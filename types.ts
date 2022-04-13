@@ -7,7 +7,7 @@ export type TAppContext = {
   user: string | null;
   totalCart: number;
   setUser: Dispatch<SetStateAction<string | null>>;
-  setTotalCart: Dispatch<SetStateAction<number>>;
+  cartTotalUpdater: () => void;
 };
 export interface Resources {
   common: typeof common;
@@ -156,6 +156,7 @@ export type TGetProduct = {
       currencyCode: string;
     };
   };
+  featuredImage: { url: string };
   images: {
     edges: TImageNode[];
   };

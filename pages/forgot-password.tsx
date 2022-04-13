@@ -12,6 +12,7 @@ import dynamic from "next/dynamic";
 const MainFrame = dynamic(() => import("../components/shared/mainFrame"));
 const AlertCard = dynamic(() => import("../components/shared/alertCard"));
 const TitleSection = dynamic(() => import("../components/shared/titleSection"));
+const PageHead = dynamic(() => import("../components/shared/pageHead"));
 
 type TFormInput = {
   email: string;
@@ -49,6 +50,7 @@ const ForgotPassword: NextPage = () => {
 
   return (
     <MainFrame>
+      <PageHead title="Forgot Password - Sommni" />
       <form
         onSubmit={handleSubmit(onSubmit)}
         style={{ width: "100%", padding: "5.05rem 0" }}

@@ -9,11 +9,12 @@ import { useCookies } from "react-cookie";
 import { customerAccessTokenCreate } from "../lib/shopify";
 import { screenSizes, TCustomerUserError, TUserCred } from "../types";
 import { useRouter } from "next/router";
-import { ecrypt } from "../lib/cryptojs";
+import { encrypt } from "../lib/cryptojs";
 import { SubmitHandler, useForm } from "react-hook-form";
 
 const MainFrame = dynamic(() => import("../components/shared/mainFrame"));
 const AlertCard = dynamic(() => import("../components/shared/alertCard"));
+const PageHead = dynamic(() => import("../components/shared/pageHead"));
 
 const SignIn: NextPage = () => {
   const biggerScreen = useMediaQuery(`(min-width: ${screenSizes.sm})`);
@@ -41,7 +42,7 @@ const SignIn: NextPage = () => {
     if (token.errors || token.length > 0) {
       setLoginError(token);
     } else {
-      const encryptedToken = ecrypt(token.accessToken);
+      const encryptedToken = encrypt(token.accessToken);
       setCookie("login", encryptedToken, {
         path: "/",
         expires: new Date(token.expiresAt),
@@ -64,6 +65,7 @@ const SignIn: NextPage = () => {
 
   return (
     <MainFrame>
+      <PageHead title="Sign In - Sommni" />
       {!isLoggedIn && (
         <>
           <form

@@ -13,7 +13,6 @@ import {
 
 import dynamic from "next/dynamic";
 import ComingSoon from "../../../components/shared/comingSoon";
-import Head from "next/head";
 import { useEffect, useState } from "react";
 import Loading from "../../../components/shared/loading";
 
@@ -22,6 +21,7 @@ const AlertCard = dynamic(() => import("../../../components/shared/alertCard"));
 const ProductCardsSection = dynamic(
   () => import("../../../components/shared/productCards")
 );
+const PageHead = dynamic(() => import("../../../components/shared/pageHead"));
 
 const ProductsInCollection: NextPage = ({
   collectionProducts,
@@ -37,14 +37,7 @@ const ProductsInCollection: NextPage = ({
 
   return (
     <>
-      <Head>
-        <title>{`Sommni - ${params.collectionHandle}`}</title>
-        <meta
-          name="description"
-          content={`Sommni - ${params.collectionHandle}`}
-        />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+      <PageHead title={`${params.collectionHandle} - Sommni`} />
       <MainFrame>
         {isLoading ? (
           <Loading height="80vh" text="Getting our products..." />

@@ -37,6 +37,7 @@ const ModalUpdatePassword = dynamic(
 const Loading = dynamic(() => import("../components/shared/loading"));
 const AlertCard = dynamic(() => import("../components/shared/alertCard"));
 const TitleSection = dynamic(() => import("../components/shared/titleSection"));
+const PageHead = dynamic(() => import("../components/shared/pageHead"));
 
 const Profile: NextPage = () => {
   const [hasCookie, setHasCookie] = useState<boolean | null>(null);
@@ -84,6 +85,7 @@ const Profile: NextPage = () => {
 
   return (
     <MainFrame>
+      <PageHead title="Profile - Sommni" />
       {hasCookie === null && (
         <>
           <Loading height="80vh" text="Checking local data..." />
@@ -343,7 +345,7 @@ const AddressBox: FC<AddressBoxProps> = ({ address, isDefault = "false" }) => {
           color: themes.colors.gray[7],
         }}
       >
-        {address.city && <Text size="sm">{address.city},</Text>}
+        {address.city && <Text size="sm">{address.city}</Text>}
         {address.zip && <Text size="sm">{address.zip},</Text>}
         {address.province && <Text size="sm">{address.province},</Text>}
         {address.country && <Text size="sm">{address.country},</Text>}

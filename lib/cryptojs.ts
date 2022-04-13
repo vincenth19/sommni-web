@@ -2,7 +2,7 @@ import CryptoJS from "crypto-js";
 
 const key = process.env.SECRET_KEY;
 
-export function ecrypt(data: any) {
+export function encrypt(data: any) {
   if (key) {
     const encrypted = CryptoJS.AES.encrypt(
       JSON.stringify(data),

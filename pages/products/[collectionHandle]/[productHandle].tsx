@@ -1,7 +1,6 @@
 import { Button, Group, Text } from "@mantine/core";
 import { GetServerSideProps, NextPage } from "next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
-import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -21,6 +20,7 @@ const ProductPage = dynamic(
   () => import("../../../components/product/productPage")
 );
 const MainFrame = dynamic(() => import("../../../components/shared/mainFrame"));
+const PageHead = dynamic(() => import("../../../components/shared/pageHead"));
 
 const mattressSpecs: TAccordionItem[] = [
   {
@@ -159,11 +159,7 @@ const ProductView: NextPage = () => {
 
   return (
     <>
-      <Head>
-        <title>{`Sommni - ${productTitle}`}</title>
-        <meta name="description" content={`Sommni - ${productTitle}`} />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+      <PageHead title={`${productTitle} - Sommni`} />
       <MainFrame>
         {isLoading ? (
           <Loading height="80vh" text="Getting our product..." />

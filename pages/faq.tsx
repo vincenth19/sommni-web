@@ -1,13 +1,14 @@
 import { Accordion, Text, Group, Select, Box } from "@mantine/core";
 import { GetStaticProps, NextPage } from "next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
-import Head from "next/head";
+
 import { FC, useEffect, useState } from "react";
 import { TAccordionItem } from "../types";
 
 import dynamic from "next/dynamic";
 
 const MainFrame = dynamic(() => import("../components/shared/mainFrame"));
+const PageHead = dynamic(() => import("../components/shared/pageHead"));
 interface IFaqData extends FaqCategoryProps {
   value: string;
 }
@@ -79,11 +80,7 @@ const Faq: NextPage = () => {
 
   return (
     <>
-      <Head>
-        <title>Sommni - FAQ</title>
-        <meta name="description" content="Sommni - FAQ" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+      <PageHead title="FAQ - Sommni" />
       <MainFrame>
         <Group
           position="center"

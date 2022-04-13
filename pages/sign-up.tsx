@@ -24,6 +24,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { RiCheckboxCircleLine } from "react-icons/ri";
 
 const MainFrame = dynamic(() => import("../components/shared/mainFrame"));
+const PageHead = dynamic(() => import("../components/shared/pageHead"));
 const AlertCard = dynamic(() => import("../components/shared/alertCard"));
 
 const SignUp: NextPage = () => {
@@ -69,6 +70,7 @@ const SignUp: NextPage = () => {
 
   return (
     <MainFrame>
+      <PageHead title="Sign Up - Sommni" />
       <form
         onSubmit={handleSubmit(onSubmit)}
         style={{ width: "100%", padding: "4rem 0" }}

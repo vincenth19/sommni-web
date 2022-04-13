@@ -14,7 +14,7 @@ const NavDrawer = dynamic(() => import("./drawer"));
 const BtnNavLinks = dynamic(() => import("./btnNavLinks"));
 
 const Navbar = () => {
-  const { user, totalCart, setUser } = useContextData();
+  const { user, totalCart, setUser, cartTotalUpdater } = useContextData();
   const [cookies, setCookie, removeCookie] = useCookies(["login"]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -45,6 +45,10 @@ const Navbar = () => {
       setIsLoading(false);
     }
   }, [cookies.login, setUser]);
+
+  useEffect(() => {
+    cartTotalUpdater();
+  }, [cartTotalUpdater]);
 
   return (
     <>

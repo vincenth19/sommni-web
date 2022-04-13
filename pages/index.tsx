@@ -10,8 +10,6 @@ import {
 } from "@mantine/core";
 import type { GetStaticProps, NextPage } from "next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
-import Head from "next/head";
-
 import dynamic from "next/dynamic";
 import { screenSizes, TExtraInfo } from "../types";
 import Link from "next/link";
@@ -23,6 +21,7 @@ const AlternatingSections = dynamic(
   () => import("../components/shared/alternatingSections")
 );
 const WhySection = dynamic(() => import("../components/shared/whySection"));
+const PageHead = dynamic(() => import("../components/shared/pageHead"));
 
 const cardItems: TCardItem[] = [
   // {
@@ -110,11 +109,7 @@ const Home: NextPage = () => {
 
   return (
     <div>
-      <Head>
-        <title>Sommni</title>
-        <meta name="description" content="Sommni Malaysia" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+      <PageHead title="Sommni Malaysia" />
       <MainFrame>
         <MantineImage
           height={"500px"}

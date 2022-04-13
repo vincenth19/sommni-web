@@ -18,6 +18,7 @@ import {
 } from "../../types";
 import dynamic from "next/dynamic";
 import { useContextData } from "../../AppContext";
+import { decrypt, encrypt } from "../../lib/cryptojs";
 
 const Carousel = dynamic(() => import("./carousel"));
 const InfoSection = dynamic(() => import("../home/infoSection"));
@@ -51,8 +52,29 @@ const ProductPage: FC<ProductPageProps> = ({
     null
   );
   const [isVariantEmpty, setIsVariantEmpty] = useState<boolean>(true);
+  const [cartTotalUpdateTrigger, setCartTotalUpdateTrigger] = useState(0);
 
-  const { setTotalCart } = useContextData();
+  const { cartTotalUpdater } = useContextData();
+
+  const cartObjectGenerator = (
+    imageUrl: string,
+    productVariant: TProductVariant
+  ) => {
+    return {
+      product: {
+        id: productVariant.node.id,
+        imageUrl: imageUrl,
+        name: productVariant.node.title,
+        currency: productVariant.node.priceV2.currencyCode,
+        price: productVariant.node.priceV2.amount,
+      },
+      quantity: 1,
+    };
+  };
+
+  useEffect(() => {
+    cartTotalUpdater();
+  }, [cartTotalUpdateTrigger]);
 
   useEffect(() => {
     setIsScreenBig(biggerScreen);
@@ -182,27 +204,44 @@ const ProductPage: FC<ProductPageProps> = ({
               style={{ margin: "1rem 0" }}
               disabled={isVariantEmpty}
               onClick={() => {
-                setTotalCart((prev) => prev + 1);
                 if (localStorage.getItem("cartItem")) {
-                  const prevCart = localStorage.getItem("cartItem");
-                  if (prevCart) {
-                    let newCart = JSON.parse(prevCart);
-                    let selectedItemID = selectedItem?.node.id;
-
-                    for (let i = 0; i < newCart.length; i++) {
-                      if (newCart[i].product.node.id === selectedItemID) {
-                        newCart[i].quantity++;
-                        break;
-                      } else {
-                        newCart.push({ product: selectedItem, quantity: 1 });
-                        break;
+                  const prevCartEncrypted = localStorage.getItem("cartItem");
+                  if (prevCartEncrypted) {
+                    const cartItemDecrypted = decrypt(prevCartEncrypted);
+                    if (cartItemDecrypted) {
+                      let newCart = JSON.parse(cartItemDecrypted);
+                      let selectedItemID = selectedItem?.node.id;
+                      for (let i = 0; i <= newCart.length; i++) {
+                        if (newCart[i] === undefined) {
+                          const newItem = cartObjectGenerator(
+                            productData.featuredImage.url,
+                            selectedItem!
+                          );
+                          newCart.push(newItem);
+                          break;
+                        } else if (newCart[i].product.id === selectedItemID) {
+                          newCart[i].quantity++;
+                          break;
+                        }
+                      }
+                      const encryptedCart = encrypt(newCart);
+                      if (encryptedCart) {
+                        localStorage.setItem("cartItem", encryptedCart);
+                        setCartTotalUpdateTrigger((prev) => prev + 1);
                       }
                     }
-                    localStorage.setItem("cartItem", JSON.stringify(newCart));
                   }
                 } else {
-                  const newCart = [{ product: selectedItem, quantity: 1 }];
-                  localStorage.setItem("cartItem", JSON.stringify(newCart));
+                  const newItem = cartObjectGenerator(
+                    productData.featuredImage.url,
+                    selectedItem!
+                  );
+                  let cartArr = [newItem];
+                  const encryptedCartItems = encrypt(cartArr);
+                  if (encryptedCartItems) {
+                    localStorage.setItem("cartItem", encryptedCartItems);
+                    setCartTotalUpdateTrigger((prev) => prev + 1);
+                  }
                 }
               }}
             >

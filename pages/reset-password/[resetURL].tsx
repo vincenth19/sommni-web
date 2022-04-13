@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { ecrypt } from "../../lib/cryptojs";
+import { encrypt } from "../../lib/cryptojs";
 import { customerResetByUrl } from "../../lib/shopify";
 import { screenSizes } from "../../types";
 
@@ -15,6 +15,7 @@ import dynamic from "next/dynamic";
 const MainFrame = dynamic(() => import("../../components/shared/mainFrame"));
 const AlertCard = dynamic(() => import("../../components/shared/alertCard"));
 const Loading = dynamic(() => import("../../components/shared/loading"));
+const PageHead = dynamic(() => import("../../components/shared/pageHead"));
 
 type TFormInput = {
   password: string;
@@ -51,7 +52,7 @@ const ResetPassword: NextPage = () => {
       setUpdateError(res);
     } else {
       hasCookie && removeCookie("login", { path: "/" });
-      const encryptedToken = ecrypt(res.accessToken);
+      const encryptedToken = encrypt(res.accessToken);
       setCookie("login", encryptedToken, {
         path: "/",
         expires: new Date(res.expiresAt),
@@ -85,6 +86,7 @@ const ResetPassword: NextPage = () => {
 
   return (
     <MainFrame>
+      <PageHead title="Reset Password - Sommni" />
       {isLoading ? (
         <Loading text="Checking..." />
       ) : (

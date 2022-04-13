@@ -1,16 +1,14 @@
 import { GetStaticProps, NextPage } from "next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
-import Head from "next/head";
-import MainFrame from "../components/shared/mainFrame";
+import dynamic from "next/dynamic";
+
+const MainFrame = dynamic(() => import("../components/shared/mainFrame"));
+const PageHead = dynamic(() => import("../components/shared/pageHead"));
 
 const AboutUs: NextPage = () => {
   return (
     <MainFrame>
-      <Head>
-        <title>Sommni - About Us</title>
-        <meta name="description" content="Sommni - About Us" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+      <PageHead title="About Us - Sommni" />
       <p>about us</p>
     </MainFrame>
   );
