@@ -39,7 +39,6 @@ const ModalUpdateProfile: FC<ModalUpdateProfileProps> = ({
     let formattedData = JSON.parse(JSON.stringify(data));
     formattedData.phone = `+${formattedData.phone}`;
 
-    console.log("data", formattedData);
     const res = await customerUpdate(formattedData, token);
     if (res.errors || Array.isArray(res)) {
       setUpdateError(res);

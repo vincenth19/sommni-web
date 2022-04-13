@@ -103,7 +103,6 @@ const ModalAddEditAddress: FC<EditAddressModalProps> = ({
   ) => {
     if (mode === "add") {
       setValue("country", "Malaysia");
-      console.log("add", data);
       const res = await customerAddressCreate(data, token);
       if (res.errors || Array.isArray(res)) {
         setUpdateError(res);

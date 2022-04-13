@@ -80,7 +80,7 @@ const Profile: NextPage = () => {
     } else {
       setUser(null);
     }
-  }, [userData]);
+  }, [userData, setUser]);
 
   return (
     <MainFrame>
@@ -279,7 +279,6 @@ const ProfileInfo: FC<ProfileInfoProps> = ({
                                       token,
                                       address.node.id
                                     );
-                                    console.log("res", res);
                                     if (Array.isArray(res)) {
                                       setErrors(res);
                                     } else {

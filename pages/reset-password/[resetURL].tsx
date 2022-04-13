@@ -61,7 +61,6 @@ const ResetPassword: NextPage = () => {
   };
 
   useEffect(() => {
-    console.log("a", router.query);
     if (!router.query[""]) {
       router.push("/");
     } else {
@@ -70,7 +69,7 @@ const ResetPassword: NextPage = () => {
         setIsLoading(false);
       }
     }
-  }, []);
+  }, [router]);
 
   useEffect(() => {
     setIsScreenBig(biggerScreen);

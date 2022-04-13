@@ -1,7 +1,7 @@
 import { Button, useMantineTheme } from "@mantine/core";
 import { useTranslation } from "next-i18next";
 import Link from "next/link";
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect, useMemo, useState } from "react";
 import { getNavLinks } from "../../../lib/shopify";
 import { TNavLink } from "../../../types";
 import BtnDropdown from "../btnDropdown";
@@ -9,40 +9,43 @@ import BtnDropdown from "../btnDropdown";
 const BtnNavLinks: FC = () => {
   const { t } = useTranslation("common");
   const themes = useMantineTheme();
-  const NavLinks: TNavLink[] = [
-    { path: "/", title: "Home" },
-    { path: "/about-us", title: "About Us" },
-    {
-      path: "/products",
-      title: "Products",
-      dropdownLinks: [
-        {
-          path: "/products/mattress",
-          title: "Mattress",
-        },
-        {
-          path: "/products/topper",
-          title: "Topper",
-        },
-        {
-          path: "/products/pillow",
-          title: "Pillow",
-        },
-      ],
-    },
-    {
-      path: "/faq",
-      title: t("nav-faq"),
-    },
-    {
-      path: "/compare",
-      title: t("nav-compare"),
-    },
-    {
-      path: "/sleep-experience",
-      title: "Sleep Experience",
-    },
-  ];
+  const NavLinks: TNavLink[] = useMemo(
+    () => [
+      { path: "/", title: "Home" },
+      { path: "/about-us", title: "About Us" },
+      {
+        path: "/products",
+        title: "Products",
+        dropdownLinks: [
+          {
+            path: "/products/mattress",
+            title: "Mattress",
+          },
+          {
+            path: "/products/topper",
+            title: "Topper",
+          },
+          {
+            path: "/products/pillow",
+            title: "Pillow",
+          },
+        ],
+      },
+      {
+        path: "/faq",
+        title: t("nav-faq"),
+      },
+      {
+        path: "/compare",
+        title: t("nav-compare"),
+      },
+      {
+        path: "/sleep-experience",
+        title: "Sleep Experience",
+      },
+    ],
+    [t]
+  );
 
   const [navbarLinks, setNavbarLinks] = useState<TNavLink[]>(NavLinks);
 
@@ -59,7 +62,8 @@ const BtnNavLinks: FC = () => {
       };
       getRunner();
     }
-  }, []);
+  }, [NavLinks]);
+
   return (
     <>
       {navbarLinks.map((link) => {

@@ -56,7 +56,7 @@ const SignIn: NextPage = () => {
     } else {
       setIsLoggedIn(false);
     }
-  }, []);
+  }, [cookies.login, router]);
 
   useEffect(() => {
     setIsScreenBig(biggerScreen);

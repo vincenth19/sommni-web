@@ -105,22 +105,23 @@ const ProductPage: FC<ProductPageProps> = ({
           });
         } else {
           // initial displayed price when variant(s) is not selected
-          if (
-            productData.priceRange.minVariantPrice.amount ===
-            productData.priceRange.maxVariantPrice.amount
-          ) {
-            setDisplayedPrice(productData.priceRange.minVariantPrice.amount);
-          } else {
-            setDisplayedPrice(
-              `${productData.priceRange.minVariantPrice.amount} - ${productData.priceRange.maxVariantPrice.amount}`
-            );
-          }
+          setDisplayedPrice(productData.priceRange.minVariantPrice.amount);
+          // if (
+          //   productData.priceRange.minVariantPrice.amount ===
+          //   productData.priceRange.maxVariantPrice.amount
+          // ) {
+          //   setDisplayedPrice(productData.priceRange.minVariantPrice.amount);
+          // } else {
+          //   setDisplayedPrice(
+          //     `${productData.priceRange.minVariantPrice.amount} - ${productData.priceRange.maxVariantPrice.amount}`
+          //   );
+          // }
         }
       } else {
         setDisplayedPrice(productData.priceRange.minVariantPrice.amount);
       }
     }
-  }, [valueState]);
+  }, [valueState, productData, variantNames]);
 
   return (
     <>

@@ -27,6 +27,14 @@ const Navbar = () => {
   };
 
   useEffect(() => {
+    const getData = async (token: string) => {
+      const res = await getCustomer(token);
+      if (res) {
+        setUser(res.displayName);
+        setIsLoading(false);
+      }
+    };
+
     if (cookies.login) {
       const decryptedID = decrypt(cookies.login);
       if (decryptedID) {
@@ -36,7 +44,7 @@ const Navbar = () => {
     } else {
       setIsLoading(false);
     }
-  }, []);
+  }, [cookies.login, setUser]);
 
   return (
     <>

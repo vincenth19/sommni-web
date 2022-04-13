@@ -65,7 +65,7 @@ const SignUp: NextPage = () => {
 
   useEffect(() => {
     setCheckpassword(watch("password"));
-  }, [watch("password")]);
+  }, [watch("password"), watch]);
 
   return (
     <MainFrame>

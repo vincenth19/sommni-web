@@ -5,7 +5,7 @@ const ResetPasswordIndex = () => {
   const router = useRouter();
   useEffect(() => {
     router.push("/");
-  }, []);
+  }, [router]);
   return <></>;
 };
 
