@@ -163,9 +163,15 @@ const ModalAddEditAddress: FC<EditAddressModalProps> = ({
                   label="First Name"
                   placeholder="John"
                   style={{ width: "100%" }}
-                  {...register("firstName", { required: true, maxLength: 40 })}
+                  {...register("firstName", {
+                    required: "First name is required",
+                    maxLength: {
+                      value: 30,
+                      message: "Reached max characters limit",
+                    },
+                  })}
+                  error={errors.firstName && errors.firstName.message}
                 />
-                {errors.firstName && <span>This field is required</span>}
               </>
               <>
                 <TextInput
@@ -173,9 +179,15 @@ const ModalAddEditAddress: FC<EditAddressModalProps> = ({
                   label="Last Name"
                   placeholder="Doe"
                   style={{ width: "100%" }}
-                  {...register("lastName", { required: true, maxLength: 60 })}
+                  {...register("lastName", {
+                    required: "Last name is required",
+                    maxLength: {
+                      value: 60,
+                      message: "Reached max characters limit",
+                    },
+                  })}
+                  error={errors.lastName && errors.lastName.message}
                 />
-                {errors.lastName && <span>This field is required</span>}
               </>
             </div>
 
@@ -194,13 +206,19 @@ const ModalAddEditAddress: FC<EditAddressModalProps> = ({
                   setValue("phone", phone);
                 }}
               />
-              {errors.phone && <span>This field is required</span>}
+              {errors.phone && <Text color="red">This field is required</Text>}
             </Box>
 
             <TextInput
               label="Company"
               style={{ width: "100%" }}
-              {...register("company")}
+              {...register("company", {
+                maxLength: {
+                  value: 30,
+                  message: "Reach max characters limit",
+                },
+              })}
+              error={errors.company && errors.company.message}
             />
 
             <NativeSelect
@@ -224,9 +242,15 @@ const ModalAddEditAddress: FC<EditAddressModalProps> = ({
               required
               label="City"
               placeholder="Kuala Lumpur"
-              {...register("city", { required: true, maxLength: 30 })}
+              {...register("city", {
+                required: "City is required",
+                maxLength: {
+                  value: 30,
+                  message: "Reached max characters limit",
+                },
+              })}
+              error={errors.city && errors.city.message}
             />
-            {errors.city && <span>This field is required</span>}
 
             <TextInput
               required
@@ -235,15 +259,11 @@ const ModalAddEditAddress: FC<EditAddressModalProps> = ({
               {...register("zip", {
                 required: true,
                 minLength: 5,
-                maxLength: 6,
+                maxLength: 5,
                 pattern: /^[0-9]*$/,
               })}
+              error={errors.zip && "Invalid Malaysian ZIP code"}
             />
-            {errors.zip && (
-              <Text size="sm" color="red">
-                You need 5 numbers
-              </Text>
-            )}
 
             <Group position="center" mt="md">
               <Button fullWidth type="submit">

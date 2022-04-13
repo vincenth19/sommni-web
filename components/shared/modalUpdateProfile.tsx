@@ -64,9 +64,15 @@ const ModalUpdateProfile: FC<ModalUpdateProfileProps> = ({
                 label="First Name"
                 placeholder="John"
                 style={{ width: "100%" }}
-                {...register("firstName", { required: true, maxLength: 40 })}
+                {...register("firstName", {
+                  required: "First name is required",
+                  maxLength: {
+                    value: 30,
+                    message: "Reached max characters limit",
+                  },
+                })}
+                error={errors.firstName && errors.firstName.message}
               />
-              {errors.firstName && <span>This field is required</span>}
             </>
             <>
               <TextInput
@@ -74,20 +80,31 @@ const ModalUpdateProfile: FC<ModalUpdateProfileProps> = ({
                 label="Last Name"
                 placeholder="Doe"
                 style={{ width: "100%" }}
-                {...register("lastName", { required: true, maxLength: 60 })}
+                {...register("lastName", {
+                  required: "Last name is required",
+                  maxLength: {
+                    value: 60,
+                    message: "Reached max characters limit",
+                  },
+                })}
+                error={errors.lastName && errors.lastName.message}
               />
-              {errors.lastName && <span>This field is required</span>}
             </>
           </div>
 
           <TextInput
-            required
             label="Email"
-            placeholder="johndoe@gmail.com"
-            style={{ width: "100%" }}
-            {...register("email", { required: true, maxLength: 30 })}
+            required
+            placeholder="your@email.com"
+            {...register("email", {
+              required: "Email is required",
+              pattern: {
+                value: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+                message: "Please enter valid email",
+              },
+            })}
+            error={errors.email && errors.email.message}
           />
-          {errors.firstName && <span>This field is required</span>}
 
           <Box>
             <Text size="sm" weight={500}>
@@ -104,7 +121,7 @@ const ModalUpdateProfile: FC<ModalUpdateProfileProps> = ({
                 setValue("phone", phone);
               }}
             />
-            {errors.phone && <span>This field is required</span>}
+            {errors.phone && <Text color="red">Phone is required</Text>}
           </Box>
 
           <Group position="center" mt="md">

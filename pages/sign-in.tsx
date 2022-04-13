@@ -91,12 +91,15 @@ const SignIn: NextPage = () => {
                 />
               )}
               <TextInput
-                id="#input1"
                 label="Email"
                 required
                 placeholder="your@email.com"
                 {...register("email", {
                   required: "Email is required",
+                  pattern: {
+                    value: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+                    message: "Please enter valid email",
+                  },
                 })}
                 error={errors.email && errors.email.message}
                 style={{ width: isScreenBig ? "50%" : "100%" }}
