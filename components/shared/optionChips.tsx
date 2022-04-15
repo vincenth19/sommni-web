@@ -19,12 +19,9 @@ const OptionChips: FC<ProductOptionsProps> = ({
     <>
       {options.map((option) => {
         return (
-          <>
-            <Text key={option.id} weight={500}>
-              {option.name}
-            </Text>
+          <span key={option.id}>
+            <Text weight={500}>{option.name}</Text>
             <Chips
-              key={option.name}
               size={chipSize}
               style={{ padding: "1rem 0" }}
               multiple={false}
@@ -43,7 +40,7 @@ const OptionChips: FC<ProductOptionsProps> = ({
                 );
               })}
             </Chips>
-          </>
+          </span>
         );
       })}
     </>

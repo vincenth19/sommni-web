@@ -38,7 +38,6 @@ const ModalUpdateProfile: FC<ModalUpdateProfileProps> = ({
   const onSubmit: SubmitHandler<TInputCustomerUpdateProfile> = async (data) => {
     let formattedData = JSON.parse(JSON.stringify(data));
     formattedData.phone = `+${formattedData.phone}`;
-
     const res = await customerUpdate(formattedData, token);
     if (res.errors || Array.isArray(res)) {
       setUpdateError(res);

@@ -5,6 +5,7 @@ import {
   Card,
   Divider,
   Group,
+  Modal,
   Text,
   useMantineTheme,
 } from "@mantine/core";
@@ -12,10 +13,10 @@ import { GetStaticProps, NextPage } from "next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { FC, useEffect, useState } from "react";
+import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import { useContextData } from "../AppContext";
-import { decrypt } from "../lib/cryptojs";
+import { decrypt, encrypt } from "../lib/cryptojs";
 import dynamic from "next/dynamic";
 import {
   customerAddressDelete,
@@ -44,8 +45,9 @@ const Profile: NextPage = () => {
   const [userData, setUserData] = useState<TCustomer | null>();
   const [cookies, setCookie, removeCookie] = useCookies(["login"]);
   const [usertoken, setUsertoken] = useState<string | null>(null);
+  const [profileError, setProfileError] = useState<any>();
 
-  const { setUser } = useContextData();
+  const { setUser, setUsername } = useContextData();
   const router = useRouter();
 
   const cookieRemover = () => {
@@ -53,10 +55,17 @@ const Profile: NextPage = () => {
   };
 
   useEffect(() => {
+    const abortCont = new AbortController();
     const getData = async (token: string) => {
-      const res = await getCustomer(token);
-      if (res) {
+      const res = await getCustomer(token, abortCont);
+      if (res.errors || null) {
+        setProfileError(res);
+      } else if (res.displayName) {
         setUserData(res);
+        const encryptedUser = encrypt(res);
+        if (encryptedUser) {
+          localStorage.setItem("user", encryptedUser);
+        }
       } else {
         setHasCookie(false);
       }
@@ -77,18 +86,27 @@ const Profile: NextPage = () => {
 
   useEffect(() => {
     if (userData) {
-      setUser(userData.displayName);
+      setUsername(userData.displayName);
     } else {
-      setUser(null);
+      setUsername(null);
     }
   }, [userData, setUser]);
 
   return (
     <MainFrame>
       <PageHead title="Profile - Sommni" />
+      <TitleSection title={"profile"} />
+      {profileError && (
+        <AlertCard
+          title="Oops... there is something wrong when getting your profile."
+          errors={profileError}
+        >
+          <Text>Please contact us regarding this issue.</Text>
+        </AlertCard>
+      )}
       {hasCookie === null && (
         <>
-          <Loading height="80vh" text="Checking local data..." />
+          <Loading height="51vh" text="Checking local data..." />
         </>
       )}
       {hasCookie === false ? (
@@ -111,7 +129,6 @@ const Profile: NextPage = () => {
         <>
           {userData && usertoken ? (
             <>
-              <TitleSection title={"profile"} />
               <ProfileInfo
                 userdata={userData}
                 token={usertoken}
@@ -124,6 +141,8 @@ const Profile: NextPage = () => {
                 style={{ margin: "1rem 0" }}
                 onClick={() => {
                   removeCookie("login", { path: "/" });
+                  localStorage.removeItem("cartItem");
+                  localStorage.removeItem("user");
                   setUser((prev) => (prev = null));
                   router.push("/sign-in");
                 }}
@@ -259,10 +278,11 @@ const ProfileInfo: FC<ProfileInfoProps> = ({
                                 variant="subtle"
                                 onClick={async () => {
                                   if (address.node.id) {
-                                    const res = customerDefaultAddressUpdate(
-                                      token,
-                                      address.node.id
-                                    );
+                                    const res =
+                                      await customerDefaultAddressUpdate(
+                                        token,
+                                        address.node.id
+                                      );
                                     if (Array.isArray(res)) {
                                       setErrors(res);
                                     } else {
@@ -273,24 +293,12 @@ const ProfileInfo: FC<ProfileInfoProps> = ({
                               >
                                 Set as default
                               </Button>
-                              <Button
-                                variant="subtle"
-                                onClick={async () => {
-                                  if (address.node.id) {
-                                    const res = customerAddressDelete(
-                                      token,
-                                      address.node.id
-                                    );
-                                    if (Array.isArray(res)) {
-                                      setErrors(res);
-                                    } else {
-                                      router.reload();
-                                    }
-                                  }
-                                }}
-                              >
-                                Delete
-                              </Button>
+
+                              <ModalDeleteAddress
+                                token={token}
+                                addressID={address.node.id!}
+                                setterError={setErrors}
+                              />
                             </Group>
                           </Card>
                         );
@@ -371,6 +379,60 @@ const SimpleInfo: FC<SimpleInfoProps> = ({
       <Text style={{ color: themes.colors.gray[6] }}>{label}</Text>
       <Text style={{ color: colorData }}>{data ? data : "-"}</Text>
     </Group>
+  );
+};
+
+interface ModalDeleteAddressProps {
+  token: string;
+  setterError: Dispatch<SetStateAction<any>>;
+  addressID: string;
+}
+
+const ModalDeleteAddress: FC<ModalDeleteAddressProps> = ({
+  token,
+  addressID,
+  setterError,
+}) => {
+  const [opened, setOpened] = useState(false);
+  const router = useRouter();
+  return (
+    <>
+      <Modal
+        opened={opened}
+        withCloseButton
+        centered
+        onClose={() => setOpened(false)}
+        title={`Delete address?`}
+      >
+        <Text>Do you want to delete this address?</Text>
+
+        <Group position="right">
+          <Button compact variant="subtle" onClick={() => setOpened(false)}>
+            Cancel
+          </Button>
+          <Button
+            variant="subtle"
+            color="red"
+            onClick={async () => {
+              if (addressID) {
+                const res = await customerAddressDelete(token, addressID);
+                if (Array.isArray(res)) {
+                  setterError(res);
+                } else {
+                  router.reload();
+                }
+              }
+            }}
+          >
+            Delete
+          </Button>
+        </Group>
+      </Modal>
+
+      <Button compact variant="subtle" onClick={() => setOpened(true)}>
+        Delete
+      </Button>
+    </>
   );
 };
 

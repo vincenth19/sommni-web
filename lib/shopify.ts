@@ -1,9 +1,9 @@
 import {
   TBasicAddress,
   THeaderOptions,
-  TInputAddressDelete,
   TInputCustomerCreate,
   TInputCustomerUpdateProfile,
+  TLineItem,
   TNavLink,
   TUserCred,
 } from "../types";
@@ -14,7 +14,7 @@ const URL = `https://${domain}/api/2022-04/graphql.json`;
 // GraphQL is in types.ts file located at root
 // Modify the type if query on respective function changes
 
-async function ShopifyData(query: string) {
+async function ShopifyData(query: string, abortController?: AbortController) {
   const options: THeaderOptions = {
     endpoint: URL,
     method: "POST",
@@ -24,6 +24,7 @@ async function ShopifyData(query: string) {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({ query }),
+    signal: abortController?.signal,
   };
 
   try {
@@ -33,11 +34,15 @@ async function ShopifyData(query: string) {
 
     return data;
   } catch (error) {
-    throw new Error("API error occurred.");
+    console.error("API error(s)", error);
+    //throw new Error("API error occurred.");
   }
 }
 
-export async function getNavLinks(defaultNavLinks: TNavLink[]) {
+export async function getNavLinks(
+  defaultNavLinks: TNavLink[],
+  abortController: AbortController
+) {
   const query = `
   {
     collections(first: 50) {
@@ -50,9 +55,9 @@ export async function getNavLinks(defaultNavLinks: TNavLink[]) {
     }
   }`;
 
-  const response = await ShopifyData(query);
+  const response = await ShopifyData(query, abortController);
 
-  if (!response.errors) {
+  if (response && !response.errors) {
     const serverCollections = response.data.collections.edges.map((el: any) => {
       return {
         path: `/products/${el.node.handle}`,
@@ -62,7 +67,7 @@ export async function getNavLinks(defaultNavLinks: TNavLink[]) {
     const copied = JSON.stringify(defaultNavLinks);
     let newNavLinks = JSON.parse(copied);
     newNavLinks[2].dropdownLinks = serverCollections;
-    sessionStorage.setItem("navbarlinks", JSON.stringify(newNavLinks));
+    sessionStorage.setItem("navbarLinks", JSON.stringify(newNavLinks));
     return newNavLinks;
   } else {
     return null;
@@ -208,7 +213,10 @@ export async function getProductsByCollection(
   }
 }
 
-export async function getProduct(handle: string | string[] | undefined) {
+export async function getProduct(
+  handle: string | string[] | undefined,
+  abortController: AbortController
+) {
   if (handle) {
     if (Array.isArray(handle)) {
       throw new Error("Too many product names. Please give 1 name only");
@@ -260,7 +268,7 @@ export async function getProduct(handle: string | string[] | undefined) {
         }
       }
     `;
-      const response = await ShopifyData(query);
+      const response = await ShopifyData(query, abortController);
 
       if ("errors" in response) {
         return response;
@@ -306,7 +314,10 @@ export async function customerAccessTokenCreate(userCred: TUserCred) {
   }
 }
 
-export async function getCustomer(accessToken: string) {
+export async function getCustomer(
+  accessToken: string,
+  abortController: AbortController
+) {
   const query = `
   {
     customer(customerAccessToken: "${accessToken}") {
@@ -374,11 +385,25 @@ export async function getCustomer(accessToken: string) {
     }
   }
   `;
-  const response = await ShopifyData(query);
+  const response = await ShopifyData(query, abortController);
+  // if (response && response.errors) {
+  //   return response;
+  // } else {
+  //   if (response) {
+  //     return response.data.customer;
+  //   }
+  // }
+
   if (response.errors) {
     return response;
-  } else {
+  } else if (!response.data.customer) {
+    return null;
+  } else if (response.errors) {
+    return response;
+  } else if (response.data.customer.id) {
     return response.data.customer;
+  } else {
+    return null;
   }
 }
 
@@ -706,6 +731,119 @@ export async function customerResetByUrl(password: string, url: string) {
 }
 
 // END customer APIs
+
+// START Checkout APIs
+
+export async function checkoutCreate(lineItems: TLineItem[]) {
+  const query = `
+  mutation {
+    checkoutCreate(input: {
+      allowPartialAddresses: "true",
+      lineItems: ${lineItems}
+    }) {
+      checkout {
+        id
+        ready
+        lineItems(first: 20){
+          edges{
+            node{
+              id
+              title
+              variant{
+                id
+                title
+                availableForSale
+              }
+              quantity
+              unitPrice{
+                amount
+                currencyCode
+              }
+            }
+          }
+        }
+        paymentDueV2{
+          amount
+        }
+      }
+      checkoutUserErrors {
+        message
+        code
+        field
+      }
+    }
+  }
+  `;
+
+  const response = await ShopifyData(query);
+  if (response.data.checkoutCreate.checkout.id) {
+    return response.data.checkoutCreate.checkout.id;
+  } else if (response.data.checkoutCreate.checkoutUserErrors.length > 0) {
+    return response.data.checkoutCreate.checkoutUserErrors;
+  } else if (response.errors) {
+    return response;
+  } else {
+    return [];
+  }
+}
+
+export async function checkoutLineItemsReplace(
+  lineItems: TLineItem[],
+  checkoutId: string
+) {
+  const query = `
+    mutation {
+      checkoutLineItemsReplace(
+        lineItems: ${lineItems},
+        checkoutId: "${checkoutId}"
+      ) {
+        checkout {
+          id
+          ready
+          lineItems(first: 20){
+            edges{
+              node{
+                id
+                title
+                variant{
+                  id
+                  title
+                  availableForSale
+                }
+                quantity
+                unitPrice{
+                  amount
+                  currencyCode
+                }
+              }
+            }
+          }
+          paymentDueV2{
+            amount
+          }
+        }
+        userErrors {
+          message
+          code
+          field
+        }
+      }
+    }
+    `;
+
+  const response = await ShopifyData(query);
+  if (response.data.checkoutLineItemsReplace.checkout.id) {
+    return response.data.checkoutLineItemsReplace.checkout.id;
+  } else if (response.data.checkoutLineItemsReplace.userErrors.length > 0) {
+    return response.data.checkoutLineItemsReplace.userErrors;
+  } else if (response.errors) {
+    return response;
+  } else {
+    return [];
+  }
+}
+
+// END checkout APIs
 
 // more complete query for getProduct()
 /*

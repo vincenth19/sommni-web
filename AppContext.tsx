@@ -1,12 +1,17 @@
 import { createContext, ReactNode, useContext, useState } from "react";
-import { decrypt } from "./lib/cryptojs";
-import { TAppContext } from "./types";
+import { decrypt, encrypt } from "./lib/cryptojs";
+import { TAppContext, TCartItem, TCustomer } from "./types";
 
 const contextDefaultValues: TAppContext = {
   user: null,
   setUser: () => {},
-  totalCart: 0,
-  cartTotalUpdater: () => {},
+  username: null,
+  setUsername: () => {},
+  cartItems: [],
+  setCartItems: () => {},
+  cartUpdater: () => {},
+  updateItemQuantity: (action: string, id: string) => {},
+  updateLocalStorageCart: (items: TCartItem[]) => {},
 };
 
 const AppContext = createContext<TAppContext>(contextDefaultValues);
@@ -20,29 +25,80 @@ type AppProviderProps = {
 };
 
 export function AppProvider({ children }: AppProviderProps) {
-  const [user, setUser] = useState<string | null>(null);
-  const [totalCart, setTotalCart] = useState<number>(0);
+  const [user, setUser] = useState<TCustomer | null>(null);
+  const [username, setUsername] = useState<string | null>(null);
+  const [cartItems, setCartItems] = useState<TCartItem[]>([]);
 
-  const cartTotalUpdater = () => {
+  const getLocalStorageCart = () => {
     if (localStorage.getItem("cartItem")) {
       const encryptedCart = localStorage.getItem("cartItem");
 
       if (encryptedCart) {
-        const decryptedCart = decrypt(encryptedCart);
-        console.log("dec", decryptedCart);
-        if (decryptedCart) {
-          const itemsParsed = JSON.parse(decryptedCart);
-          setTotalCart((prev) => (prev = itemsParsed.length));
+        const decryptedCartString = decrypt(encryptedCart);
+
+        if (decryptedCartString) {
+          const cartItemsParsed = JSON.parse(decryptedCartString);
+          return cartItemsParsed;
         }
       }
     }
   };
 
+  const cartUpdater = () => {
+    setCartItems(getLocalStorageCart());
+  };
+
+  const updateLocalStorageCart = (items: TCartItem[]) => {
+    setCartItems(items);
+    const encryptedCartItems = encrypt(items);
+    if (encryptedCartItems) {
+      localStorage.setItem("cartItem", encryptedCartItems);
+    }
+  };
+
+  const getItemIndex = (items: TCartItem[], itemID: string) => {
+    let index = 0;
+    for (let i = 0; i < items.length; i++) {
+      if (items[i].product.id === itemID) {
+        index = i;
+        break;
+      }
+    }
+    return index;
+  };
+
+  const updateItemQuantity = (action: string, id: string) => {
+    let items: TCartItem[] = getLocalStorageCart();
+    let index: number = getItemIndex(items, id);
+
+    if (action === "delete") {
+      items.splice(index, 1);
+    } else {
+      switch (action) {
+        case "add":
+          items[index].quantity++;
+          break;
+        case "reduce":
+          items[index].quantity--;
+          break;
+        default:
+          throw new Error("Cart quantity handling error");
+      }
+    }
+
+    updateLocalStorageCart(items);
+  };
+
   const value = {
     user,
     setUser,
-    totalCart,
-    cartTotalUpdater,
+    username,
+    setUsername,
+    cartItems,
+    setCartItems,
+    cartUpdater,
+    updateItemQuantity,
+    updateLocalStorageCart,
   };
 
   return (

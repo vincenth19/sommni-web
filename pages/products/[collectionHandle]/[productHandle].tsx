@@ -123,9 +123,10 @@ const ProductView: NextPage = () => {
   const router = useRouter();
 
   useEffect(() => {
+    const abortCont = new AbortController();
     setCollectionHandle(router.query.collectionHandle);
     const fetchProduct = async () => {
-      const res = await getProduct(router.query.productHandle);
+      const res = await getProduct(router.query.productHandle, abortCont);
       if (res) {
         setFetchedProduct(res);
         setProductTitle(res.title);

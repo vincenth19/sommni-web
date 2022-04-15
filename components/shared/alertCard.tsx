@@ -24,7 +24,7 @@ interface ApiErrorProps {
 
 const AlertCard: FC<ApiErrorProps> = ({
   icon = <RiErrorWarningLine />,
-  title = "Oops... something wrong",
+  title = "Oops... there is something wrong",
   color = "red",
   children,
   errors = null,
@@ -50,7 +50,7 @@ const AlertCard: FC<ApiErrorProps> = ({
               {errors.map((el: TCustomerUserError) => {
                 return (
                   <>
-                    <p>{el.message}</p>
+                    <p key={el.code}>{el.message}</p>
                   </>
                 );
               })}

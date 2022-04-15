@@ -101,6 +101,7 @@ const ModalAddEditAddress: FC<EditAddressModalProps> = ({
   const onSubmit: SubmitHandler<TBasicAddress> = async (
     data: TBasicAddress
   ) => {
+    console.log("ada", data);
     if (mode === "add") {
       setValue("country", "Malaysia");
       const res = await customerAddressCreate(data, token);
@@ -125,7 +126,11 @@ const ModalAddEditAddress: FC<EditAddressModalProps> = ({
 
   useEffect(() => {
     const newStates = State.getStatesOfCountry("MY").map((el) => {
-      return { value: el.name, label: el.name };
+      if (el.name === "Malacca") {
+        return { value: "Melaka", label: "Melaka" };
+      } else {
+        return { value: el.name, label: el.name };
+      }
     });
     setStates(newStates);
   }, []);

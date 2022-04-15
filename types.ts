@@ -4,10 +4,15 @@ import footer from "./public/locales/en/footer.json";
 import { Dispatch, ReactElement, SetStateAction } from "react";
 
 export type TAppContext = {
-  user: string | null;
-  totalCart: number;
-  setUser: Dispatch<SetStateAction<string | null>>;
-  cartTotalUpdater: () => void;
+  user: TCustomer | null;
+  setUser: Dispatch<SetStateAction<TCustomer | null>>;
+  username: string | null;
+  setUsername: Dispatch<SetStateAction<string | null>>;
+  cartItems: TCartItem[];
+  setCartItems: Dispatch<SetStateAction<TCartItem[]>>;
+  cartUpdater: () => void;
+  updateItemQuantity: (action: string, itemID: string) => void;
+  updateLocalStorageCart: (items: TCartItem[]) => void;
 };
 export interface Resources {
   common: typeof common;
@@ -48,6 +53,7 @@ export type THeaderOptions = {
   method: string;
   headers: any;
   body: string;
+  signal?: AbortSignal;
 };
 
 export type TAccordionItem = {
@@ -60,6 +66,19 @@ export type TExtraInfo = {
   imageURL: string;
   title: string;
   content: string | ReactElement | string[] | ReactElement[];
+};
+
+// cart items type
+
+export type TCartItem = {
+  product: {
+    id: string;
+    imageUrl: string;
+    name: string;
+    currency: string;
+    price: string;
+  };
+  quantity: number;
 };
 
 // START Shopify GraphQL Types
@@ -122,7 +141,7 @@ export type TProductVariant = {
   node: {
     id: string;
     priceV2: {
-      amount: number;
+      amount: string;
       currencyCode: string;
     };
     availableForSale: boolean;
@@ -337,4 +356,8 @@ export type TInputCustomerUpdatePassword = {
   password: string;
 };
 
+export type TLineItem = {
+  variantId: string;
+  quantity: number;
+};
 // END Shopify GraphQL Types

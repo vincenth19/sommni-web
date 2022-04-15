@@ -33,36 +33,39 @@ const BtnNavLinks: FC = () => {
       },
       {
         path: "/faq",
-        title: t("nav-faq"),
+        title: "FAQ",
       },
       {
         path: "/compare",
-        title: t("nav-compare"),
+        title: "Compare",
       },
       {
         path: "/sleep-experience",
         title: "Sleep Experience",
       },
     ],
-    [t]
+    []
   );
 
   const [navbarLinks, setNavbarLinks] = useState<TNavLink[]>(NavLinks);
 
   useEffect(() => {
+    const abortCont = new AbortController();
     if (sessionStorage.getItem("navbarLinks")) {
       const links = sessionStorage.getItem("navbarLinks");
       if (links) setNavbarLinks(JSON.parse(links));
     } else {
       const getRunner = async () => {
-        const data = await getNavLinks(NavLinks);
+        const data = await getNavLinks(NavLinks, abortCont);
         if (data) {
           setNavbarLinks(data);
         }
       };
       getRunner();
     }
-  }, [NavLinks]);
+
+    return () => abortCont.abort();
+  }, []);
 
   return (
     <>

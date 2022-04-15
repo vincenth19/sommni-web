@@ -21,7 +21,7 @@ const NavDrawer = () => {
   const title = opened ? "Close drawer" : "Open drawer";
   const themes = useMantineTheme();
 
-  const { user, totalCart } = useContextData();
+  const { user } = useContextData();
 
   return (
     <>
@@ -59,23 +59,6 @@ const NavDrawer = () => {
               </Link>
             </>
           )}
-          <Link href={"/cart"} passHref>
-            <Button component="a" size="md" variant="light">
-              <RiShoppingCartLine style={{ marginRight: totalCart ? 10 : 0 }} />
-              {totalCart !== 0 && (
-                <Text
-                  color="white"
-                  style={{
-                    backgroundColor: "crimson",
-                    borderRadius: "100%",
-                    padding: "0 10px",
-                  }}
-                >
-                  {totalCart}
-                </Text>
-              )}
-            </Button>
-          </Link>
           <BtnNavLinks />
         </Group>
       </Drawer>
