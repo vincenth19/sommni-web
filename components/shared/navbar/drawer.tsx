@@ -20,7 +20,7 @@ const NavDrawer = () => {
   const title = opened ? "Close drawer" : "Open drawer";
   const themes = useMantineTheme();
 
-  const { user } = useContextData();
+  const { username } = useContextData();
 
   return (
     <>
@@ -43,10 +43,10 @@ const NavDrawer = () => {
         size="md"
       >
         <Group direction="column">
-          {user ? (
+          {username ? (
             <Link href="/profile" passHref>
               <Button size="md" component="a" variant="light">
-                Hi, {user}
+                Hi, {username}
               </Button>
             </Link>
           ) : (
