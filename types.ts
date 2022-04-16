@@ -254,7 +254,7 @@ export type TCustomerAddress = {
   longitude: null | number;
 };
 
-type TCustomerAddressWithNode = {
+export type TCustomerAddressWithNode = {
   node: TCustomerAddress;
 };
 

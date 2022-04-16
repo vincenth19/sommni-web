@@ -46,6 +46,7 @@ const Profile: NextPage = () => {
   const [cookies, setCookie, removeCookie] = useCookies(["login"]);
   const [usertoken, setUsertoken] = useState<string | null>(null);
   const [profileError, setProfileError] = useState<any>();
+  const [redirectPage, setRedirectPage] = useState("");
 
   const { setUser, setUsername } = useContextData();
   const router = useRouter();
@@ -55,6 +56,15 @@ const Profile: NextPage = () => {
   };
 
   useEffect(() => {
+    if (sessionStorage.getItem("prevPage")) {
+      const page = sessionStorage.getItem("prevPage");
+      if (page) {
+        setRedirectPage(page);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
     const abortCont = new AbortController();
     const getData = async (token: string) => {
       const res = await getCustomer(token, abortCont);
@@ -62,9 +72,15 @@ const Profile: NextPage = () => {
         setProfileError(res);
       } else if (res.displayName) {
         setUserData(res);
+        setUser(res);
+        setUsername(res.displayName);
         const encryptedUser = encrypt(res);
         if (encryptedUser) {
           localStorage.setItem("user", encryptedUser);
+        }
+
+        if (redirectPage !== "") {
+          router.push(redirectPage);
         }
       } else {
         setHasCookie(false);
@@ -82,15 +98,13 @@ const Profile: NextPage = () => {
     } else {
       setHasCookie(false);
     }
-  }, [cookies.login]);
 
-  useEffect(() => {
-    if (userData) {
-      setUsername(userData.displayName);
-    } else {
-      setUsername(null);
-    }
-  }, [userData, setUser]);
+    return () => {
+      sessionStorage.removeItem("prevPage");
+      setRedirectPage("");
+      abortCont.abort();
+    };
+  }, [cookies.login]);
 
   return (
     <MainFrame>
@@ -143,7 +157,9 @@ const Profile: NextPage = () => {
                   removeCookie("login", { path: "/" });
                   localStorage.removeItem("cartItem");
                   localStorage.removeItem("user");
+                  sessionStorage.removeItem("checkout");
                   setUser((prev) => (prev = null));
+                  setUsername(null);
                   router.push("/sign-in");
                 }}
               >
@@ -263,10 +279,7 @@ const ProfileInfo: FC<ProfileInfoProps> = ({
                             shadow="sm"
                             style={{ width: "100%" }}
                           >
-                            <AddressBox
-                              address={address.node}
-                              isDefault={false}
-                            />
+                            <AddressBox address={address.node} />
                             <Group style={{ marginTop: "0.5rem" }}>
                               {/* <Button variant="subtle">Edit</Button> */}
                               <ModalAddEditAddress
@@ -323,40 +336,56 @@ const ProfileInfo: FC<ProfileInfoProps> = ({
 interface AddressBoxProps {
   address: TCustomerAddress;
   isDefault?: boolean;
+  isSelected?: boolean;
 }
 
-const AddressBox: FC<AddressBoxProps> = ({ address, isDefault = "false" }) => {
+export const AddressBox: FC<AddressBoxProps> = ({
+  address,
+  isDefault = false,
+  isSelected = false,
+}) => {
   const themes = useMantineTheme();
 
   return (
-    <Group direction="column" spacing={"xs"}>
+    <Group
+      direction="column"
+      spacing={"xs"}
+      style={{
+        backgroundColor: isSelected ? themes.colors.brand[0] : "",
+        borderRadius: "10px",
+        width: "100%",
+        padding: "0.5rem",
+      }}
+    >
       <Group>
         <h4>{address.name}</h4>
         {isDefault && <Badge>Default</Badge>}
       </Group>
+      <Text size="sm">+{address.phone}</Text>
 
-      <div
-        style={{
-          display: "flex",
-          columnGap: "5px",
-        }}
-      >
-        <Text>{address.address1},</Text>
-        <Text>{address.address2}</Text>
-      </div>
-
-      <Text size="sm">{address.phone}</Text>
-      <div
-        style={{
-          display: "flex",
-          columnGap: "5px",
-          color: themes.colors.gray[7],
-        }}
-      >
-        {address.city && <Text size="sm">{address.city}</Text>}
-        {address.zip && <Text size="sm">{address.zip},</Text>}
-        {address.province && <Text size="sm">{address.province},</Text>}
-        {address.country && <Text size="sm">{address.country},</Text>}
+      <div style={{ display: "flex", gap: "0", flexDirection: "column" }}>
+        <div
+          style={{
+            display: "flex",
+            columnGap: "5px",
+            color: themes.colors.gray[7],
+          }}
+        >
+          <Text size="sm">{address.address1},</Text>
+          <Text size="sm">{address.address2}</Text>
+        </div>
+        <div
+          style={{
+            display: "flex",
+            columnGap: "5px",
+            color: themes.colors.gray[7],
+          }}
+        >
+          {address.city && <Text size="sm">{address.city}</Text>}
+          {address.zip && <Text size="sm">{address.zip},</Text>}
+          {address.province && <Text size="sm">{address.province},</Text>}
+          {address.country && <Text size="sm">{address.country},</Text>}
+        </div>
       </div>
     </Group>
   );

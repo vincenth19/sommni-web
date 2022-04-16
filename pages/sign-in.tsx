@@ -11,6 +11,7 @@ import { screenSizes, TCustomerUserError, TUserCred } from "../types";
 import { useRouter } from "next/router";
 import { encrypt } from "../lib/cryptojs";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { useContextData } from "../AppContext";
 
 const MainFrame = dynamic(() => import("../components/shared/mainFrame"));
 const AlertCard = dynamic(() => import("../components/shared/alertCard"));
@@ -24,6 +25,8 @@ const SignIn: NextPage = () => {
   const [loginError, setLoginError] = useState<TCustomerUserError[]>();
 
   const router = useRouter();
+
+  const { setUser, setUsername } = useContextData();
 
   const {
     register,

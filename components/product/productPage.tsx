@@ -21,7 +21,6 @@ import dynamic from "next/dynamic";
 import { useContextData } from "../../AppContext";
 import { decrypt, encrypt } from "../../lib/cryptojs";
 import { useRouter } from "next/router";
-import { route } from "next/dist/server/router";
 
 const Carousel = dynamic(() => import("./carousel"));
 const InfoSection = dynamic(() => import("../home/infoSection"));
@@ -30,7 +29,7 @@ const WhySection = dynamic(() => import("../shared/whySection"));
 const AlternatingSections = dynamic(
   () => import("../shared/alternatingSections")
 );
-// const ShopifyBuyButon = dynamic(() => import("./shopifyBuyButton"));
+const ShopifyBuyButon = dynamic(() => import("./shopifyBuyButton"));
 
 interface ProductPageProps {
   productData: TGetProduct;

@@ -16,7 +16,8 @@ const NavDrawer = dynamic(() => import("./drawer"));
 const BtnNavLinks = dynamic(() => import("./btnNavLinks"));
 
 const Navbar = () => {
-  const { username, cartItems, setUsername, cartUpdater } = useContextData();
+  const { username, cartItems, setUsername, setUser, cartUpdater } =
+    useContextData();
   const [cookies, setCookie, removeCookie] = useCookies(["login"]);
 
   const biggerScreen = useMediaQuery(`(min-width: ${screenSizes.md})`);
@@ -47,6 +48,7 @@ const Navbar = () => {
         if (decryptedUserString) {
           const userdata = JSON.parse(decryptedUserString);
           setUsername(userdata.displayName);
+          setUser(userdata);
         }
       } else {
         if (cookies.login) {
@@ -62,7 +64,7 @@ const Navbar = () => {
     }
 
     return () => abortCont.abort();
-  }, [username, cookies.login]);
+  }, [cookies.login]);
 
   useEffect(() => {
     cartUpdater();

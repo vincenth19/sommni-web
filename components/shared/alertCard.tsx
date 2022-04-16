@@ -43,17 +43,28 @@ const AlertCard: FC<ApiErrorProps> = ({
       title={title}
       color={color}
     >
-      {errors && (
+      {errors ? (
         <>
           {Array.isArray(errors) ? (
             <>
-              {errors.map((el: TCustomerUserError) => {
-                return (
-                  <>
-                    <p key={el.code}>{el.message}</p>
-                  </>
-                );
-              })}
+              {errors.length > 0 ? (
+                <>
+                  {errors.map((el: TCustomerUserError) => {
+                    return (
+                      <>
+                        <p key={el.code}>{el.message}</p>
+                      </>
+                    );
+                  })}
+                </>
+              ) : (
+                <>
+                  <p>
+                    Unknown error occurred. Please contact us and let us know
+                    what happened.
+                  </p>
+                </>
+              )}
             </>
           ) : (
             <>
@@ -63,6 +74,11 @@ const AlertCard: FC<ApiErrorProps> = ({
             </>
           )}
         </>
+      ) : (
+        <p>
+          Unknown error occurred. Please contact us and let us know what
+          happened.
+        </p>
       )}
       {children}
     </Alert>

@@ -1,5 +1,6 @@
 import {
   TBasicAddress,
+  TCustomerAddress,
   THeaderOptions,
   TInputCustomerCreate,
   TInputCustomerUpdateProfile,
@@ -394,13 +395,13 @@ export async function getCustomer(
   //   }
   // }
 
-  if (response.errors) {
+  if (response && response.errors) {
     return response;
-  } else if (!response.data.customer) {
+  } else if (response && !response.data.customer) {
     return null;
-  } else if (response.errors) {
+  } else if (response && response.errors) {
     return response;
-  } else if (response.data.customer.id) {
+  } else if (response && response.data.customer.id) {
     return response.data.customer;
   } else {
     return null;
@@ -734,12 +735,34 @@ export async function customerResetByUrl(password: string, url: string) {
 
 // START Checkout APIs
 
-export async function checkoutCreate(lineItems: TLineItem[]) {
+export async function checkoutCreate(
+  lineItems: TLineItem[],
+  email: string,
+  abortController: AbortController,
+  address?: TBasicAddress | TCustomerAddress
+) {
+  let items: any = [];
+  lineItems.forEach((item) => {
+    items.push(`{variantId: "${item.variantId}", quantity: ${item.quantity}}`);
+  });
   const query = `
   mutation {
     checkoutCreate(input: {
-      allowPartialAddresses: "true",
-      lineItems: ${lineItems}
+      allowPartialAddresses: true,
+      lineItems: [${items}]
+      email : "${email}"
+      shippingAddress: {
+        address1: "${address?.address1}",
+        address2: "${address?.address2}",
+        city: "${address?.city}",
+        company: "${address?.company}",
+        country: "${address ? address.country : "Malaysia"}",
+        firstName: "${address?.firstName}",
+        lastName: "${address?.lastName}",
+        phone: "${address?.phone}",
+        province: "${address?.province}",
+        zip: "${address?.zip}"
+      }
     }) {
       checkout {
         id
@@ -775,13 +798,13 @@ export async function checkoutCreate(lineItems: TLineItem[]) {
   }
   `;
 
-  const response = await ShopifyData(query);
-  if (response.data.checkoutCreate.checkout.id) {
-    return response.data.checkoutCreate.checkout.id;
+  const response = await ShopifyData(query, abortController);
+  if (response && response.errors) {
+    return response;
   } else if (response.data.checkoutCreate.checkoutUserErrors.length > 0) {
     return response.data.checkoutCreate.checkoutUserErrors;
-  } else if (response.errors) {
-    return response;
+  } else if (response && response.data.checkoutCreate.checkout.id) {
+    return response.data.checkoutCreate.checkout.id;
   } else {
     return [];
   }
@@ -789,12 +812,17 @@ export async function checkoutCreate(lineItems: TLineItem[]) {
 
 export async function checkoutLineItemsReplace(
   lineItems: TLineItem[],
-  checkoutId: string
+  checkoutId: string,
+  abortController: AbortController
 ) {
+  let items: any = [];
+  lineItems.forEach((item) => {
+    items.push(`{variantId: "${item.variantId}", quantity: ${item.quantity}}`);
+  });
   const query = `
     mutation {
       checkoutLineItemsReplace(
-        lineItems: ${lineItems},
+        lineItems: [${items}],
         checkoutId: "${checkoutId}"
       ) {
         checkout {
@@ -831,13 +859,97 @@ export async function checkoutLineItemsReplace(
     }
     `;
 
-  const response = await ShopifyData(query);
-  if (response.data.checkoutLineItemsReplace.checkout.id) {
-    return response.data.checkoutLineItemsReplace.checkout.id;
+  const response = await ShopifyData(query, abortController);
+  if (response && response.errors) {
+    return response;
   } else if (response.data.checkoutLineItemsReplace.userErrors.length > 0) {
     return response.data.checkoutLineItemsReplace.userErrors;
-  } else if (response.errors) {
+  } else if (response.data.checkoutLineItemsReplace.checkout.id) {
+    return response.data.checkoutLineItemsReplace.checkout.id;
+  } else {
+    return [];
+  }
+}
+
+export async function checkoutShippingAddressUpdateV2(
+  checkoutId: string,
+  address: TBasicAddress | TCustomerAddress,
+  abortController: AbortController
+) {
+  const query = `
+    mutation {
+      checkoutShippingAddressUpdateV2(
+        checkoutId: "${checkoutId}"
+        shippingAddress: {
+          address1: "${address.address1}",
+          address2: "${address.address2}",
+          city: "${address.city}",
+          company: "${address.company}",
+          country: "${address.country}",
+          firstName: "${address.firstName}",
+          lastName: "${address.lastName}",
+          phone: "${address.phone}",
+          province: "${address.province}",
+          zip: "${address.zip}"
+        }
+      ) {
+        checkout {
+          id
+          ready
+          shippingAddress{
+            id
+            address1
+            address2
+            zip
+            firstName
+            lastName
+            phone
+            city
+            province
+            country
+            company
+          }
+          lineItems(first: 20){
+            edges{
+              node{
+                id
+                title
+                variant{
+                  id
+                  title
+                  availableForSale
+                }
+                quantity
+                unitPrice{
+                  amount
+                  currencyCode
+                }
+              }
+            }
+          }
+          paymentDueV2{
+            amount
+          }
+        }
+        checkoutUserErrors {
+          message
+          code
+          field
+        }
+      }
+    }
+    `;
+
+  const response = await ShopifyData(query, abortController);
+  console.log("up", response);
+  if (response && response.errors) {
     return response;
+  } else if (
+    response.data.checkoutShippingAddressUpdateV2.checkoutUserErrors.length > 0
+  ) {
+    return response.data.checkoutShippingAddressUpdateV2.checkoutUserErrors;
+  } else if (response.data.checkoutShippingAddressUpdateV2.checkout.id) {
+    return response.data.checkoutShippingAddressUpdateV2.checkout.id;
   } else {
     return [];
   }

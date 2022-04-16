@@ -101,7 +101,6 @@ const ModalAddEditAddress: FC<EditAddressModalProps> = ({
   const onSubmit: SubmitHandler<TBasicAddress> = async (
     data: TBasicAddress
   ) => {
-    console.log("ada", data);
     if (mode === "add") {
       setValue("country", "Malaysia");
       const res = await customerAddressCreate(data, token);

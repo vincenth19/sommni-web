@@ -25,9 +25,10 @@ const Cart: NextPage = () => {
   const [hasItem, setHasItem] = useState<boolean | null>(null);
   const [checkoutError, setCheckoutError] = useState<any>();
   const [subtotal, setSubtotal] = useState<any>(0.0);
+  const [loginModal, setLoginModal] = useState(false);
 
   const router = useRouter();
-  const { user, cartItems } = useContextData();
+  const { user, cartItems, cartUpdater } = useContextData();
 
   const generateLineItems = (items: TCartItem[]) => {
     let lineItems: TLineItem[] = [];
@@ -43,9 +44,11 @@ const Cart: NextPage = () => {
   }, [biggerScreen]);
 
   useEffect(() => {
-    console.log(user);
+    // console.log(user);
     return () => {
+      console.log("unmounting cart");
       sessionStorage.setItem("prevPage", router.pathname);
+      cartUpdater();
     };
   }, []);
 
@@ -85,6 +88,29 @@ const Cart: NextPage = () => {
     <MainFrame>
       <PageHead title="Cart - Sommni " />
       <TitleSection title={"Cart"} />
+      <Modal
+        opened={loginModal}
+        withCloseButton
+        centered
+        onClose={() => setLoginModal(false)}
+        title={`Need Sign In`}
+      >
+        <Group direction="column">
+          <Text>
+            You need to
+            <span style={{ textDecoration: "underline", margin: "0 0.25rem" }}>
+              sign in &#38; add an address
+            </span>
+            in your account before checkout.
+          </Text>
+
+          <Link href={"/sign-in"} passHref>
+            <Button fullWidth component="a">
+              Sign In &#38; Add Address
+            </Button>
+          </Link>
+        </Group>
+      </Modal>
       {isLoading ? (
         <>
           <Loading text="Checking your cart..." />
@@ -137,7 +163,7 @@ const Cart: NextPage = () => {
                 shadow={"sm"}
                 style={{ width: isDesktop ? "30%" : "100%" }}
               >
-                <Group style={{ marginTop: "1rem" }} direction="column">
+                <Group direction="column">
                   <Text size="xl">{cartItems.length} item(s)</Text>
                   <Group style={{ width: "100%" }}>
                     <Text size="md" color="gray">
@@ -150,6 +176,7 @@ const Cart: NextPage = () => {
                       fullWidth
                       onClick={async () => {
                         if (sessionStorage.getItem("checkout")) {
+                          console.log("has checkout");
                           const encryptedCheckoutID =
                             sessionStorage.getItem("checkout");
                           if (encryptedCheckoutID) {
@@ -159,34 +186,52 @@ const Cart: NextPage = () => {
                               const cleanedCheckoutID =
                                 decryptCheckoutID.replace(/['"]+/g, "");
                               const lineItems = generateLineItems(cartItems);
+                              const abortCont = new AbortController();
                               const res = await checkoutLineItemsReplace(
                                 lineItems,
-                                cleanedCheckoutID
+                                cleanedCheckoutID,
+                                abortCont
                               );
 
                               if (res.errors || Array.isArray(res)) {
                                 setCheckoutError(res);
                               } else {
-                                router.push(`/checkout/${res}`);
+                                router.push(`/checkout`);
                               }
                             }
                           }
                         } else {
+                          console.log("no checkout");
                           if (user) {
-                            const lineItems = generateLineItems(cartItems);
-                            const res = await checkoutCreate(lineItems);
-                            if (res.errors || Array.isArray(res)) {
-                              setCheckoutError(res);
-                            } else {
-                              const encryptedCheckoutID = encrypt(res);
-                              if (encryptedCheckoutID) {
-                                sessionStorage.setItem(
-                                  "checkout",
-                                  encryptedCheckoutID
-                                );
-                                router.push(`/checkout/${res}`);
+                            console.log("has user");
+                            if (user.defaultAddress) {
+                              const lineItems = generateLineItems(cartItems);
+                              const abortCont = new AbortController();
+                              const res = await checkoutCreate(
+                                lineItems,
+                                user.email,
+                                abortCont,
+                                user.defaultAddress
+                              );
+                              if (res.errors || Array.isArray(res)) {
+                                setCheckoutError(res);
+                              } else {
+                                const encryptedCheckoutID = encrypt(res);
+                                if (encryptedCheckoutID) {
+                                  sessionStorage.setItem(
+                                    "checkout",
+                                    encryptedCheckoutID
+                                  );
+                                  router.push(`/checkout`);
+                                }
                               }
+                            } else {
+                              console.log("no address user");
+                              setLoginModal(true);
                             }
+                          } else {
+                            console.log("no user");
+                            setLoginModal(true);
                           }
                         }
                       }}

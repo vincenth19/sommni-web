@@ -13,7 +13,6 @@ import Link from "next/link";
 
 import dynamic from "next/dynamic";
 import { useContextData } from "../../../AppContext";
-import { RiShoppingCartLine } from "react-icons/ri";
 const BtnNavLinks = dynamic(() => import("./btnNavLinks"));
 
 const NavDrawer = () => {
