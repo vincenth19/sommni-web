@@ -1,4 +1,4 @@
-import { Group, Card, Text, Button, Modal } from "@mantine/core";
+import { Group, Card, Text, Button, Modal, Divider } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import { GetStaticProps, NextPage } from "next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
@@ -7,6 +7,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { FC, useEffect, useState } from "react";
+import { RiDeleteBinLine } from "react-icons/ri";
 import { useContextData } from "../AppContext";
 import AlertCard from "../components/shared/alertCard";
 import { decrypt, encrypt } from "../lib/cryptojs";
@@ -141,12 +142,13 @@ const Cart: NextPage = () => {
                 paddingBottom: "2rem",
               }}
             >
-              <Card
-                shadow={"sm"}
-                style={{ width: isDesktop ? "68.7%" : "100%" }}
-              >
+              <Card shadow={"sm"} style={{ width: "100%" }}>
                 <h2>Your Items</h2>
-                <Group style={{ marginTop: "1rem" }} direction="column">
+                <Group
+                  style={{ marginTop: "1rem" }}
+                  spacing="xl"
+                  direction="column"
+                >
                   {cartItems.map((item) => {
                     return (
                       <CartItem
@@ -157,88 +159,88 @@ const Cart: NextPage = () => {
                     );
                   })}
                 </Group>
-              </Card>
-              <Card
-                // className={isDesktop ? "" : "mobileBottomButton"}
-                shadow={"sm"}
-                style={{ width: isDesktop ? "30%" : "100%" }}
-              >
-                <Group direction="column">
+                <Divider style={{ width: "100%" }} my="sm" />
+                <Group direction="column" position="right" spacing={"xs"}>
                   <Text size="xl">{cartItems.length} item(s)</Text>
-                  <Group style={{ width: "100%" }}>
+                  <Group position="right" spacing={"xs"}>
                     <Text size="md" color="gray">
                       Subtotal:
                     </Text>
                     <Text size="lg" weight={700}>
                       {`${cartItems[0].product.currency} ${subtotal}`}
                     </Text>
-                    <Button
-                      fullWidth
-                      onClick={async () => {
-                        if (sessionStorage.getItem("checkout")) {
-                          console.log("has checkout");
-                          const encryptedCheckoutID =
-                            sessionStorage.getItem("checkout");
-                          if (encryptedCheckoutID) {
-                            const decryptCheckoutID =
-                              decrypt(encryptedCheckoutID);
-                            if (decryptCheckoutID) {
-                              const cleanedCheckoutID =
-                                decryptCheckoutID.replace(/['"]+/g, "");
-                              const lineItems = generateLineItems(cartItems);
-                              const abortCont = new AbortController();
-                              const res = await checkoutLineItemsReplace(
-                                lineItems,
-                                cleanedCheckoutID,
-                                abortCont
-                              );
+                  </Group>
+                  <Text size="sm" color="gray">
+                    Taxes and shipping calculated at checkout
+                  </Text>
+                  <Button
+                    fullWidth={!isDesktop}
+                    onClick={async () => {
+                      if (sessionStorage.getItem("checkout")) {
+                        console.log("has checkout");
+                        const encryptedCheckoutID =
+                          sessionStorage.getItem("checkout");
+                        if (encryptedCheckoutID) {
+                          const decryptCheckoutID =
+                            decrypt(encryptedCheckoutID);
+                          if (decryptCheckoutID) {
+                            const cleanedCheckoutID = decryptCheckoutID.replace(
+                              /['"]+/g,
+                              ""
+                            );
+                            const lineItems = generateLineItems(cartItems);
+                            const abortCont = new AbortController();
+                            const res = await checkoutLineItemsReplace(
+                              lineItems,
+                              cleanedCheckoutID,
+                              abortCont
+                            );
 
-                              if (res.errors || Array.isArray(res)) {
-                                setCheckoutError(res);
-                              } else {
+                            if (res.errors || Array.isArray(res)) {
+                              setCheckoutError(res);
+                            } else {
+                              router.push(`/checkout`);
+                            }
+                          }
+                        }
+                      } else {
+                        console.log("no checkout");
+                        if (user) {
+                          console.log("has user");
+                          if (user.defaultAddress) {
+                            const lineItems = generateLineItems(cartItems);
+                            const abortCont = new AbortController();
+                            const res = await checkoutCreate(
+                              lineItems,
+                              user.email,
+                              abortCont,
+                              user.defaultAddress
+                            );
+                            if (res.errors || Array.isArray(res)) {
+                              setCheckoutError(res);
+                            } else {
+                              const encryptedCheckoutID = encrypt(res);
+                              if (encryptedCheckoutID) {
+                                sessionStorage.setItem(
+                                  "checkout",
+                                  encryptedCheckoutID
+                                );
                                 router.push(`/checkout`);
                               }
                             }
-                          }
-                        } else {
-                          console.log("no checkout");
-                          if (user) {
-                            console.log("has user");
-                            if (user.defaultAddress) {
-                              const lineItems = generateLineItems(cartItems);
-                              const abortCont = new AbortController();
-                              const res = await checkoutCreate(
-                                lineItems,
-                                user.email,
-                                abortCont,
-                                user.defaultAddress
-                              );
-                              if (res.errors || Array.isArray(res)) {
-                                setCheckoutError(res);
-                              } else {
-                                const encryptedCheckoutID = encrypt(res);
-                                if (encryptedCheckoutID) {
-                                  sessionStorage.setItem(
-                                    "checkout",
-                                    encryptedCheckoutID
-                                  );
-                                  router.push(`/checkout`);
-                                }
-                              }
-                            } else {
-                              console.log("no address user");
-                              setLoginModal(true);
-                            }
                           } else {
-                            console.log("no user");
+                            console.log("no address user");
                             setLoginModal(true);
                           }
+                        } else {
+                          console.log("no user");
+                          setLoginModal(true);
                         }
-                      }}
-                    >
-                      Checkout
-                    </Button>
-                  </Group>
+                      }
+                    }}
+                  >
+                    Checkout
+                  </Button>
                 </Group>
               </Card>
             </Group>
@@ -258,54 +260,50 @@ const CartItem: FC<CartItemProps> = ({ item, isDesktop }) => {
   const { updateItemQuantity } = useContextData();
   return (
     <Group position="apart" spacing={"xs"} style={{ width: "100%" }}>
-      <Group style={{ flexGrow: 1 }}>
+      <Group spacing={"xs"} style={{ width: isDesktop ? "75%" : "100%" }}>
         <span style={{ borderRadius: "10px" }}>
           <Image
             src={item.product.imageUrl}
-            width={300}
-            height={200}
+            width={200}
+            height={150}
             alt="product thumbnail"
           />
         </span>
-
-        <Group
-          direction="column"
-          spacing={"xs"}
-          style={{ width: isDesktop ? "45%" : "100%" }}
-        >
-          <Text size="lg">{item.product.name}</Text>
-          <Group position="apart" style={{ width: "100%" }}>
-            <Group>
-              <Button
-                onClick={() => updateItemQuantity("reduce", item.product.id)}
-                disabled={item.quantity === 1}
-                compact
-                variant="light"
-              >
-                -
-              </Button>
-              <Text>{item.quantity}</Text>
-              <Button
-                onClick={() => updateItemQuantity("add", item.product.id)}
-                compact
-                variant="light"
-                disabled={item.quantity > 9}
-              >
-                +
-              </Button>
-            </Group>
-            <ModalDeleteItem
-              itemID={item.product.id}
-              itemName={item.product.name}
-            />
-          </Group>
-        </Group>
+        <Text size="lg">{item.product.name}</Text>
       </Group>
 
-      <Text
-        weight={700}
-        style={{ width: isDesktop ? "auto" : "100%", textAlign: "right" }}
-      >{`${item.product.currency} ${item.product.price}`}</Text>
+      <Group position="apart" style={{ flexGrow: 1 }}>
+        <Group>
+          <Group>
+            <Button
+              onClick={() => updateItemQuantity("reduce", item.product.id)}
+              disabled={item.quantity === 1}
+              compact
+              variant="light"
+            >
+              -
+            </Button>
+            <Text>{item.quantity}</Text>
+            <Button
+              onClick={() => updateItemQuantity("add", item.product.id)}
+              compact
+              variant="light"
+              disabled={item.quantity > 9}
+            >
+              +
+            </Button>
+          </Group>
+          <ModalDeleteItem
+            itemID={item.product.id}
+            itemName={item.product.name}
+          />
+        </Group>
+
+        <Text
+          weight={700}
+          style={{ textAlign: "right" }}
+        >{`${item.product.currency} ${item.product.price}`}</Text>
+      </Group>
     </Group>
   );
 };
@@ -347,7 +345,9 @@ const ModalDeleteItem: FC<ModalDeleteItemProps> = ({ itemID, itemName }) => {
       </Modal>
 
       <Button compact variant="subtle" onClick={() => setOpened(true)}>
-        Delete
+        <Text size="lg">
+          <RiDeleteBinLine />
+        </Text>
       </Button>
     </>
   );

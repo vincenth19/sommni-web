@@ -198,7 +198,7 @@ const CheckoutPage: NextPage = () => {
             <Card shadow={"sm"} style={{ width: isDesktop ? "30%" : "100%" }}>
               <Group direction="column">
                 <Text size="xl">
-                  {cartItems.length} {`item ${cartItems.length > 1 ? "s" : ""}`}
+                  {cartItems.length} {`item${cartItems.length > 1 ? "s" : ""}`}
                 </Text>
                 <Group style={{ width: "100%" }} position="apart">
                   <Text size="md" color="gray">

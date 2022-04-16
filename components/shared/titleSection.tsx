@@ -1,21 +1,29 @@
 import { Group, useMantineTheme } from "@mantine/core";
-import { FC } from "react";
+import { useMediaQuery } from "@mantine/hooks";
+import { FC, useEffect, useState } from "react";
+import { screenSizes } from "../../types";
 
 interface TitleSectionProps {
   title: string | string[];
-  fontSize?: number;
 }
 
-const TitleSection: FC<TitleSectionProps> = ({ title, fontSize = 48 }) => {
-  const themes = useMantineTheme();
+const TitleSection: FC<TitleSectionProps> = ({ title }) => {
+  const biggerScreen = useMediaQuery(`(min-width: ${screenSizes.sm})`);
+  const [isDesktop, setIsDesktop] = useState<boolean>();
+
+  useEffect(() => {
+    setIsDesktop(biggerScreen);
+  }, [biggerScreen]);
   return (
     <Group
       position="center"
       style={{
-        height: "150px",
+        height: isDesktop ? "150px" : "60px",
       }}
     >
-      <h1 style={{ fontSize: `${fontSize}px`, textTransform: "capitalize" }}>
+      <h1
+        style={{ fontSize: isDesktop ? 48 : 36, textTransform: "capitalize" }}
+      >
         {title}
       </h1>
     </Group>

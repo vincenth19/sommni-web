@@ -1,7 +1,9 @@
 import { Button, Group, Text, useMantineTheme } from "@mantine/core";
+import { useMediaQuery } from "@mantine/hooks";
 import { useTranslation } from "next-i18next";
 import Link from "next/link";
-import { TFooterLink } from "../../../types";
+import { useEffect, useState } from "react";
+import { screenSizes, TFooterLink } from "../../../types";
 
 type TFooterLinkGroup = {
   linkGroup: TFooterLink[];
@@ -17,34 +19,42 @@ const Footer = () => {
         { path: "/mattress", title: t("p-mattress") },
         { path: "/pillow", title: t("p-pillow") },
         { path: "/topper", title: t("p-topper") },
-        { path: "/kids", title: t("p-kids") },
+        // { path: "/kids", title: t("p-kids") },
       ],
     },
     {
       linkGroup: [
         { title: t("h-company") },
         { path: "/about-us", title: t("c-about-us") },
-        { path: "/instalment", title: t("c-instalment") },
-        { path: "/warranty", title: t("c-warranty") },
-        { path: "/nights-trial", title: t("c-nights-trial") },
-        { path: "/reviews", title: t("c-reviews") },
-        { path: "/tnc", title: t("c-tnc") },
+        // { path: "/instalment", title: t("c-instalment") },
+        // { path: "/warranty", title: t("c-warranty") },
+        { path: "/sleep-experience", title: "Sleep Experience" },
+        // { path: "/reviews", title: t("c-reviews") },
+        // { path: "/tnc", title: t("c-tnc") },
       ],
     },
     {
       linkGroup: [
-        { title: t("h-support") },
+        // { title: t("h-support") },
         { path: "/contact-us", title: t("s-contact-us") },
         { path: "/faq", title: t("s-faq") },
         { path: "/tracking", title: t("s-tracking") },
-        { path: "/covid19", title: t("s-covid19") },
+        // { path: "/covid19", title: t("s-covid19") },
       ],
     },
   ];
+
+  const biggerScreen = useMediaQuery(`(min-width: ${screenSizes.sm})`);
+  const [isDesktop, setIsDesktop] = useState<boolean>();
+
+  useEffect(() => {
+    setIsDesktop(biggerScreen);
+  }, [biggerScreen]);
+
   return (
     <footer
       style={{
-        padding: 20,
+        padding: isDesktop ? 20 : "20px 20px 100px 20px",
         backgroundColor: themes.colors.brand[9],
         color: "white",
       }}
