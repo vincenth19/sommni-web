@@ -74,7 +74,7 @@ const Navbar = () => {
     <>
       <Group
         style={{
-          padding: "15px 0",
+          padding: "1rem",
           position: "sticky",
           top: 0,
           zIndex: 5,

@@ -5,12 +5,16 @@ import dynamic from "next/dynamic";
 
 const MainFrame = dynamic(() => import("../components/shared/mainFrame"));
 const PageHead = dynamic(() => import("../components/shared/pageHead"));
+const TitleSection = dynamic(() => import("../components/shared/titleSection"));
 
 const Compare: NextPage = () => {
   return (
     <MainFrame>
       <PageHead title="Compare - Sommni" />
-      <p>compare page</p>
+      <TitleSection title={"Compare"} />
+      <div style={{ minHeight: "48vh" }}>
+        <p>compare page</p>
+      </div>
     </MainFrame>
   );
 };

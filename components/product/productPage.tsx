@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
 import {
   Accordion,
   Box,
@@ -7,6 +7,7 @@ import {
   Divider,
   Image,
   Button,
+  Drawer,
 } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import {
@@ -20,7 +21,7 @@ import {
 import dynamic from "next/dynamic";
 import { useContextData } from "../../AppContext";
 import { decrypt, encrypt } from "../../lib/cryptojs";
-import { useRouter } from "next/router";
+import Link from "next/link";
 
 const Carousel = dynamic(() => import("./carousel"));
 const InfoSection = dynamic(() => import("../home/infoSection"));
@@ -29,7 +30,7 @@ const WhySection = dynamic(() => import("../shared/whySection"));
 const AlternatingSections = dynamic(
   () => import("../shared/alternatingSections")
 );
-const ShopifyBuyButon = dynamic(() => import("./shopifyBuyButton"));
+// const ShopifyBuyButon = dynamic(() => import("./shopifyBuyButton"));
 
 interface ProductPageProps {
   productData: TGetProduct;
@@ -54,9 +55,10 @@ const ProductPage: FC<ProductPageProps> = ({
     null
   );
   const [isVariantEmpty, setIsVariantEmpty] = useState<boolean>(true);
+  const [cartAddOk, setCardAddOk] = useState(false);
 
   const { cartUpdater } = useContextData();
-  const router = useRouter();
+
   const cartObjectGenerator = (
     imageUrl: string,
     productVariant: TProductVariant
@@ -65,7 +67,11 @@ const ProductPage: FC<ProductPageProps> = ({
       product: {
         id: productVariant.node.id,
         imageUrl: imageUrl,
-        name: `${productData.title} - ${productVariant.node.title}`,
+        name: `${productData.title}${
+          productVariant.node.title === "Default Title"
+            ? ""
+            : ` - ${productVariant.node.title}`
+        }`,
         currency: productVariant.node.priceV2.currencyCode,
         price: productVariant.node.priceV2.amount,
       },
@@ -90,6 +96,7 @@ const ProductPage: FC<ProductPageProps> = ({
   //setting displayed price based on selected variants
   useEffect(() => {
     if (valueState) {
+      // for multi variants
       if (variantNames.length > 0) {
         let counterVariantSelected = 0;
         variantNames.forEach((variant) => {
@@ -111,17 +118,35 @@ const ProductPage: FC<ProductPageProps> = ({
           } else {
             throw new Error("Product variant error.");
           }
-          productData.variants.edges.forEach((variant) => {
-            if (variant.node.title === stringSelectedVariant) {
-              setDisplayedPrice((prev) => (prev = variant.node.priceV2.amount));
-              if (variant.node.availableForSale) {
-                setSelectedItem(variant);
+          for (let i = 0; i < productData.variants.edges.length; i++) {
+            if (
+              productData.variants.edges[i].node.title === stringSelectedVariant
+            ) {
+              setDisplayedPrice(
+                (prev) =>
+                  (prev = productData.variants.edges[i].node.priceV2.amount)
+              );
+              if (productData.variants.edges[i].node.availableForSale) {
+                setSelectedItem(productData.variants.edges[i]);
               }
               setIsVariantEmpty(
-                (prev) => (prev = !variant.node.availableForSale)
+                (prev) =>
+                  (prev = !productData.variants.edges[i].node.availableForSale)
               );
+              break;
             }
-          });
+          }
+          // productData.variants.edges.forEach((variant) => {
+          //   if (variant.node.title === stringSelectedVariant) {
+          //     setDisplayedPrice((prev) => (prev = variant.node.priceV2.amount));
+          //     if (variant.node.availableForSale) {
+          //       setSelectedItem(variant);
+          //     }
+          //     setIsVariantEmpty(
+          //       (prev) => (prev = !variant.node.availableForSale)
+          //     );
+          //   }
+          // });
         } else {
           // initial displayed price when variant(s) is not selected
           setDisplayedPrice(productData.priceRange.minVariantPrice.amount);
@@ -139,12 +164,27 @@ const ProductPage: FC<ProductPageProps> = ({
       } else {
         setDisplayedPrice(productData.priceRange.minVariantPrice.amount);
       }
+    } else {
+      console.log("no var");
+      // without variants
+      setDisplayedPrice(productData.priceRange.maxVariantPrice.amount);
+      setSelectedItem(productData.variants.edges[0]);
+      setIsVariantEmpty(!productData.variants.edges[0].node.availableForSale);
     }
   }, [valueState, productData, variantNames]);
 
   return (
     <>
       <>
+        {selectedItem && (
+          <DrawerAddSuccess
+            opened={cartAddOk}
+            setOpened={setCardAddOk}
+            variant={selectedItem}
+            productTitle={productData.title}
+            thumbnail={productData.featuredImage.url}
+          />
+        )}
         <div
           style={{
             display: "flex",
@@ -225,6 +265,7 @@ const ProductPage: FC<ProductPageProps> = ({
                         if (encryptedCart) {
                           localStorage.setItem("cartItem", encryptedCart);
                           cartUpdater();
+                          setCardAddOk(true);
                         }
                       }
                     }
@@ -238,6 +279,7 @@ const ProductPage: FC<ProductPageProps> = ({
                     if (encryptedCartItems) {
                       localStorage.setItem("cartItem", encryptedCartItems);
                       cartUpdater();
+                      setCardAddOk(true);
                     }
                   }
                 }}
@@ -245,10 +287,10 @@ const ProductPage: FC<ProductPageProps> = ({
                 Add to Cart
               </Button>
             </div>
-            <Box style={{ padding: "1rem 0" }}>
-              {/* <ShopifyBuyButon merchandiseID={productData.id} /> */}
+            {/* <Box style={{ padding: "1rem 0" }}>
+              <ShopifyBuyButon merchandiseID={productData.id} />
               <InfoSection />
-            </Box>
+            </Box> */}
             {/* {selectedItemID && <pre>{JSON.stringify(selectedItemID)}</pre>} */}
             {productData.descriptionHtml && (
               <ProductDescription
@@ -266,6 +308,53 @@ const ProductPage: FC<ProductPageProps> = ({
   );
 };
 
+interface DrawerAddSucess {
+  opened: boolean;
+  setOpened: Dispatch<SetStateAction<boolean>>;
+  variant: TProductVariant;
+  productTitle: string;
+  thumbnail: string;
+}
+
+const DrawerAddSuccess: FC<DrawerAddSucess> = ({
+  opened,
+  setOpened,
+  variant,
+  productTitle,
+  thumbnail,
+}) => {
+  return (
+    <Drawer
+      opened={opened}
+      onClose={() => setOpened(false)}
+      title="Added to Cart"
+      padding="xl"
+      withCloseButton
+      position="right"
+      size="lg"
+    >
+      <Group direction="column" spacing={"lg"}>
+        <Group>
+          <Image alt="product-image" src={thumbnail} width={100} height={70} />
+          <Group direction="column">
+            <Text size="lg">{`${productTitle}${
+              variant.node.title === "Default Title"
+                ? ""
+                : ` - ${variant.node.title}`
+            }`}</Text>
+            <Text>{`${variant.node.priceV2.currencyCode} ${variant.node.priceV2.amount}`}</Text>
+          </Group>
+        </Group>
+        <Link href="/cart" passHref>
+          <Button fullWidth component="a">
+            View Cart
+          </Button>
+        </Link>
+      </Group>
+    </Drawer>
+  );
+};
+
 interface ProductDescriptionProps {
   descriptionHtml: string;
 }
@@ -277,6 +366,7 @@ const ProductDescription: FC<ProductDescriptionProps> = ({
     <>
       {descriptionHtml && (
         <div
+          style={{ margin: "1rem 0" }}
           dangerouslySetInnerHTML={{
             __html: descriptionHtml,
           }}

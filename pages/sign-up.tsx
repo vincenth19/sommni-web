@@ -56,6 +56,7 @@ const SignUp: NextPage = () => {
     if (res.errors || res.length > 0) {
       setSignUpError(res);
     } else {
+      setSignUpError(undefined);
       setSignUpSuccess(true);
     }
   };

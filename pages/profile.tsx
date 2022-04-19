@@ -46,7 +46,6 @@ const Profile: NextPage = () => {
   const [cookies, setCookie, removeCookie] = useCookies(["login"]);
   const [usertoken, setUsertoken] = useState<string | null>(null);
   const [profileError, setProfileError] = useState<any>();
-  const [redirectPage, setRedirectPage] = useState("");
 
   const { setUser, setUsername } = useContextData();
   const router = useRouter();
@@ -56,19 +55,10 @@ const Profile: NextPage = () => {
   };
 
   useEffect(() => {
-    if (sessionStorage.getItem("prevPage")) {
-      const page = sessionStorage.getItem("prevPage");
-      if (page) {
-        setRedirectPage(page);
-      }
-    }
-  }, []);
-
-  useEffect(() => {
     const abortCont = new AbortController();
     const getData = async (token: string) => {
       const res = await getCustomer(token, abortCont);
-      if (res.errors || null) {
+      if (res.errors || res === null) {
         setProfileError(res);
       } else if (res.displayName) {
         setUserData(res);
@@ -77,10 +67,6 @@ const Profile: NextPage = () => {
         const encryptedUser = encrypt(res);
         if (encryptedUser) {
           localStorage.setItem("user", encryptedUser);
-        }
-
-        if (redirectPage !== "") {
-          router.push(redirectPage);
         }
       } else {
         setHasCookie(false);
@@ -98,28 +84,25 @@ const Profile: NextPage = () => {
     } else {
       setHasCookie(false);
     }
-
-    return () => {
-      sessionStorage.removeItem("prevPage");
-      setRedirectPage("");
-      abortCont.abort();
-    };
   }, [cookies.login]);
 
   return (
     <MainFrame>
       <PageHead title="Profile - Sommni" />
-      <TitleSection title={"profile"} />
       {profileError && (
-        <AlertCard
-          title="Oops... there is something wrong when getting your profile."
-          errors={profileError}
-        >
-          <Text>Please contact us regarding this issue.</Text>
-        </AlertCard>
+        <>
+          <TitleSection title={"profile"} />
+          <AlertCard
+            title="Oops... there is something wrong when getting your profile."
+            errors={profileError}
+          >
+            <Text>Please contact us regarding this issue.</Text>
+          </AlertCard>
+        </>
       )}
       {hasCookie === null && (
         <>
+          <TitleSection title={"profile"} />
           <Loading height="51vh" text="Checking local data..." />
         </>
       )}
@@ -143,6 +126,7 @@ const Profile: NextPage = () => {
         <>
           {userData && usertoken ? (
             <>
+              <TitleSection title={"profile"} />
               <ProfileInfo
                 userdata={userData}
                 token={usertoken}
@@ -167,7 +151,7 @@ const Profile: NextPage = () => {
               </Button>
             </>
           ) : (
-            <Loading height="51vh" text="Getting your profile..." />
+            <Loading height="80vh" text="Getting your profile..." />
           )}
         </>
       )}

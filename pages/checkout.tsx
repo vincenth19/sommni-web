@@ -32,7 +32,7 @@ import { checkoutShippingAddressUpdateV2, getCustomer } from "../lib/shopify";
 import AlertCard from "../components/shared/alertCard";
 
 const CheckoutPage: NextPage = () => {
-  const biggerScreen = useMediaQuery(`(min-width: ${screenSizes.sm})`);
+  const biggerScreen = useMediaQuery(`(min-width: ${screenSizes.md})`);
   const [isDesktop, setIsDesktop] = useState<boolean>();
   const [token, setToken] = useState("");
   const [checkoutId, setCheckoutId] = useState<string | null>(null);

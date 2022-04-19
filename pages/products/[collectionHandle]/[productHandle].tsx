@@ -162,42 +162,44 @@ const ProductView: NextPage = () => {
     <>
       <PageHead title={`${productTitle} - Sommni`} />
       <MainFrame>
-        {isLoading ? (
-          <Loading height="80vh" text="Getting our product..." />
-        ) : (
-          <>
-            {fetchedProduct ? (
-              "errors" in fetchedProduct ? (
-                <div style={{ padding: "3rem 0" }}>
-                  <AlertCard errors={fetchedProduct} />
-                </div>
+        <div style={{ minHeight: "65vh" }}>
+          {isLoading ? (
+            <Loading height="80vh" text="Getting our product..." />
+          ) : (
+            <>
+              {fetchedProduct ? (
+                "errors" in fetchedProduct ? (
+                  <div style={{ padding: "3rem 0" }}>
+                    <AlertCard errors={fetchedProduct} />
+                  </div>
+                ) : (
+                  <>
+                    <ProductPage
+                      productData={fetchedProduct}
+                      valueState={variants}
+                      valueSetter={setVariants}
+                      prodSpecs={productSpec}
+                      extraInfos={productExtraInfo}
+                    />
+                  </>
+                )
               ) : (
                 <>
-                  <ProductPage
-                    productData={fetchedProduct}
-                    valueState={variants}
-                    valueSetter={setVariants}
-                    prodSpecs={productSpec}
-                    extraInfos={productExtraInfo}
-                  />
+                  <div style={{ padding: "3rem 0" }}>
+                    <AlertCard
+                      title={`Oops... '${router.query.productHandle}' is not found`}
+                    >
+                      <p>Try search other product.</p>
+                      <Link href="/products" passHref>
+                        <Button component="a">Go to Products</Button>
+                      </Link>
+                    </AlertCard>
+                  </div>
                 </>
-              )
-            ) : (
-              <>
-                <div style={{ padding: "3rem 0" }}>
-                  <AlertCard
-                    title={`Oops... '${router.query.productHandle}' is not found`}
-                  >
-                    <p>Try search other product.</p>
-                    <Link href="/products" passHref>
-                      <Button component="a">Go to Products</Button>
-                    </Link>
-                  </AlertCard>
-                </div>
-              </>
-            )}
-          </>
-        )}
+              )}
+            </>
+          )}
+        </div>
       </MainFrame>
     </>
   );

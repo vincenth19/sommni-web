@@ -39,30 +39,32 @@ const ProductsInCollection: NextPage = ({
     <>
       <PageHead title={`${params.collectionHandle} - Sommni`} />
       <MainFrame>
-        {isLoading ? (
-          <Loading height="80vh" text="Getting our products..." />
-        ) : (
-          <>
-            {"errors" in collectionProducts ? (
-              <AlertCard errors={collectionProducts} />
-            ) : (
-              <>
-                {collectionProducts.length === 0 ? (
-                  <ComingSoon>
-                    <p>Product is coming soon.</p>
-                    <p>Subscribe to our newsletter to get our latest news.</p>
-                  </ComingSoon>
-                ) : (
-                  <ProductCardsSection
-                    collectionHandle={params.collectionHandle}
-                    products={collectionProducts}
-                    collectionTitle={params.collectionHandle}
-                  />
-                )}
-              </>
-            )}
-          </>
-        )}
+        <div style={{ minHeight: "80vh" }}>
+          {isLoading ? (
+            <Loading height="80vh" text="Getting our products..." />
+          ) : (
+            <>
+              {"errors" in collectionProducts ? (
+                <AlertCard errors={collectionProducts} />
+              ) : (
+                <>
+                  {collectionProducts.length === 0 ? (
+                    <ComingSoon>
+                      <p>Product is coming soon.</p>
+                      <p>Subscribe to our newsletter to get our latest news.</p>
+                    </ComingSoon>
+                  ) : (
+                    <ProductCardsSection
+                      collectionHandle={params.collectionHandle}
+                      products={collectionProducts}
+                      collectionTitle={params.collectionHandle}
+                    />
+                  )}
+                </>
+              )}
+            </>
+          )}
+        </div>
       </MainFrame>
     </>
   );

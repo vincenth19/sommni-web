@@ -395,16 +395,23 @@ export async function getCustomer(
   //   }
   // }
 
-  if (response && response.errors) {
-    return response;
-  } else if (response && !response.data.customer) {
-    return null;
-  } else if (response && response.errors) {
-    return response;
-  } else if (response && response.data.customer.id) {
-    return response.data.customer;
+  // if (response && response.errors) {
+  //   return response;
+  // } else if (response && !response.data.customer) {
+  //   return null;
+  // } else if (response && response.errors) {
+  //   return response;
+  // } else if (response && response.data.customer.id) {
+  //   return response.data.customer;
+  // } else {
+  //   return null;
+  // }
+
+  if (response && !response.errors) {
+    const userdata = response.data.customer ? response.data.customer : null;
+    return userdata;
   } else {
-    return null;
+    return response;
   }
 }
 
@@ -433,12 +440,12 @@ export async function customerCreate(signUpInput: TInputCustomerCreate) {
   }
   `;
   const response = await ShopifyData(query);
-  if (response.data.customerCreate.customer.id) {
-    return response.data.customerCreate.customer;
+  if (response.errors) {
+    return response;
   } else if (response.data.customerCreate.customerUserErrors.length > 0) {
     return response.data.customerCreate.customerUserErrors;
-  } else if (response.errors) {
-    return response;
+  } else if (response.data.customerCreate.customer.id) {
+    return response.data.customerCreate.customer;
   } else {
     return [];
   }
@@ -767,6 +774,8 @@ export async function checkoutCreate(
       checkout {
         id
         ready
+        orderStatusUrl
+        webUrl
         lineItems(first: 20){
           edges{
             node{
@@ -804,7 +813,7 @@ export async function checkoutCreate(
   } else if (response.data.checkoutCreate.checkoutUserErrors.length > 0) {
     return response.data.checkoutCreate.checkoutUserErrors;
   } else if (response && response.data.checkoutCreate.checkout.id) {
-    return response.data.checkoutCreate.checkout.id;
+    return response.data.checkoutCreate.checkout;
   } else {
     return [];
   }
@@ -828,6 +837,8 @@ export async function checkoutLineItemsReplace(
         checkout {
           id
           ready
+          orderStatusUrl
+          webUrl
           lineItems(first: 20){
             edges{
               node{
@@ -865,7 +876,7 @@ export async function checkoutLineItemsReplace(
   } else if (response.data.checkoutLineItemsReplace.userErrors.length > 0) {
     return response.data.checkoutLineItemsReplace.userErrors;
   } else if (response.data.checkoutLineItemsReplace.checkout.id) {
-    return response.data.checkoutLineItemsReplace.checkout.id;
+    return response.data.checkoutLineItemsReplace.checkout;
   } else {
     return [];
   }
@@ -941,7 +952,6 @@ export async function checkoutShippingAddressUpdateV2(
     `;
 
   const response = await ShopifyData(query, abortController);
-  console.log("up", response);
   if (response && response.errors) {
     return response;
   } else if (

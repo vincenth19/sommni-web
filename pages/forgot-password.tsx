@@ -53,7 +53,7 @@ const ForgotPassword: NextPage = () => {
       <PageHead title="Forgot Password - Sommni" />
       <form
         onSubmit={handleSubmit(onSubmit)}
-        style={{ width: "100%", padding: "5.05rem 0" }}
+        style={{ width: "100%", padding: "5.05rem 0", minHeight: "65vh" }}
       >
         <Group direction="column" position="center">
           <TitleSection title="Forgot Password" />

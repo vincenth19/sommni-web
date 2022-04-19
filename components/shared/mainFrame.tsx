@@ -49,9 +49,8 @@ const MainFrame: FC<MainFrameProps> = ({
         </Container>
       ) : (
         <>
+          {navbar && <Navbar />}
           <Container size="xl">
-            {navbar && <Navbar />}
-
             {children}
             {signUp && <SignUpSection />}
             {newsletter && <NewsletterSection />}

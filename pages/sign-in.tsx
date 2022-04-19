@@ -6,10 +6,10 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
-import { customerAccessTokenCreate } from "../lib/shopify";
+import { customerAccessTokenCreate, getCustomer } from "../lib/shopify";
 import { screenSizes, TCustomerUserError, TUserCred } from "../types";
 import { useRouter } from "next/router";
-import { encrypt } from "../lib/cryptojs";
+import { decrypt, encrypt } from "../lib/cryptojs";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useContextData } from "../AppContext";
 
@@ -50,13 +50,44 @@ const SignIn: NextPage = () => {
         path: "/",
         expires: new Date(token.expiresAt),
       });
-      router.push("/profile");
+      if (sessionStorage.getItem("prevPage")) {
+        const page = sessionStorage.getItem("prevPage");
+        if (page) router.push(page);
+      } else {
+        router.push("/profile");
+      }
     }
   };
 
   useEffect(() => {
+    const abortCont = new AbortController();
+
+    const getData = async (token: string) => {
+      const res = await getCustomer(token, abortCont);
+      if (res.errors || res === null) {
+        setLoginError(res);
+      } else if (res.displayName) {
+        setUser(res);
+        setUsername(res.displayName);
+        const encryptedUser = encrypt(res);
+        if (encryptedUser) {
+          localStorage.setItem("user", encryptedUser);
+        }
+      }
+    };
+
     if (cookies.login) {
-      router.push("/profile");
+      const decryptedID = decrypt(cookies.login);
+      if (decryptedID) {
+        const cleanedID = decryptedID.replace(/['"]+/g, "");
+        getData(cleanedID);
+        if (sessionStorage.getItem("prevPage")) {
+          const page = sessionStorage.getItem("prevPage");
+          if (page) router.push(page);
+        } else {
+          router.push("/profile");
+        }
+      }
     } else {
       setIsLoggedIn(false);
     }
@@ -64,6 +95,10 @@ const SignIn: NextPage = () => {
 
   useEffect(() => {
     setIsScreenBig(biggerScreen);
+
+    return () => {
+      sessionStorage.removeItem("prevPage");
+    };
   }, [biggerScreen]);
 
   return (
@@ -73,7 +108,7 @@ const SignIn: NextPage = () => {
         <>
           <form
             onSubmit={handleSubmit(onSubmit)}
-            style={{ width: "100%", padding: "4rem 0" }}
+            style={{ width: "100%", padding: "4rem 0", minHeight: "65vh" }}
           >
             <Group direction="column" position="center">
               <h1 style={{ fontSize: "3rem" }}>Sign In</h1>

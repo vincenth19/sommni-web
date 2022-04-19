@@ -4,12 +4,16 @@ import dynamic from "next/dynamic";
 
 const MainFrame = dynamic(() => import("../components/shared/mainFrame"));
 const PageHead = dynamic(() => import("../components/shared/pageHead"));
+const TitleSection = dynamic(() => import("../components/shared/titleSection"));
 
 const AboutUs: NextPage = () => {
   return (
     <MainFrame>
       <PageHead title="About Us - Sommni" />
-      <p>about us</p>
+      <TitleSection title={"About Us"} />
+      <div style={{ minHeight: "48vh" }}>
+        <p>about us</p>
+      </div>
     </MainFrame>
   );
 };

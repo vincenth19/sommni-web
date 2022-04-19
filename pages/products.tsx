@@ -27,20 +27,22 @@ const Products: NextPage = ({
   return (
     <MainFrame>
       <PageHead title="Products - Sommni" />
-      {isLoading ? (
-        <Loading height="80vh" text="Getting our collections..." />
-      ) : (
-        <>
-          <TitleSection title="Our Products" />
-          {collections.errors ? (
-            <div style={{ padding: "3rem 0" }}>
-              <AlertCard errors={collections} />
-            </div>
-          ) : (
-            <ProductsSection collections={collections} />
-          )}
-        </>
-      )}
+      <div style={{ minHeight: "80vh" }}>
+        {isLoading ? (
+          <Loading height="80vh" text="Getting our collections..." />
+        ) : (
+          <>
+            <TitleSection title="Our Products" />
+            {collections.errors ? (
+              <div style={{ padding: "3rem 0" }}>
+                <AlertCard errors={collections} />
+              </div>
+            ) : (
+              <ProductsSection collections={collections} />
+            )}
+          </>
+        )}
+      </div>
     </MainFrame>
   );
 };

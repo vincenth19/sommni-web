@@ -30,6 +30,7 @@ interface EditAddressModalProps {
   token: string;
   id?: string;
   mode?: "add" | "edit"; // please pass ID and address when in "add" mode
+  modalBtnFullWidth?: boolean;
 }
 
 const ModalAddEditAddress: FC<EditAddressModalProps> = ({
@@ -37,6 +38,7 @@ const ModalAddEditAddress: FC<EditAddressModalProps> = ({
   token,
   id,
   mode = "edit",
+  modalBtnFullWidth = false,
 }) => {
   const [opened, setOpened] = useState(false);
   const [states, setStates] = useState<any>([]);
@@ -279,7 +281,12 @@ const ModalAddEditAddress: FC<EditAddressModalProps> = ({
       </Modal>
 
       <Group position="center">
-        <Button variant="subtle" compact onClick={() => setOpened(true)}>
+        <Button
+          fullWidth={modalBtnFullWidth}
+          variant={modalBtnFullWidth ? "filled" : "subtle"}
+          compact={modalBtnFullWidth ? false : true}
+          onClick={() => setOpened(true)}
+        >
           {mode === "add" ? "Add Address" : "Edit"}
         </Button>
       </Group>
