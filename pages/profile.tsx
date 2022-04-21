@@ -84,7 +84,7 @@ const Profile: NextPage = () => {
     } else {
       setHasCookie(false);
     }
-  }, [cookies.login]);
+  }, [cookies.login, setUser, setUsername]);
 
   return (
     <MainFrame>
@@ -111,7 +111,7 @@ const Profile: NextPage = () => {
           <Group
             direction="column"
             position="center"
-            style={{ minHeight: "51vh" }}
+            style={{ minHeight: "65vh" }}
           >
             <TitleSection title={"No Profile"} />
             <Text size="xl">Please sign in to view your profile</Text>

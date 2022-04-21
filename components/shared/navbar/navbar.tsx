@@ -64,10 +64,11 @@ const Navbar = () => {
     }
 
     return () => abortCont.abort();
-  }, [cookies.login]);
+  }, [cookies.login, username, setUser, setUsername]);
 
   useEffect(() => {
     cartUpdater();
+    // dont add this into the dependency
   }, []);
 
   return (

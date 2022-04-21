@@ -91,7 +91,11 @@ const SignIn: NextPage = () => {
     } else {
       setIsLoggedIn(false);
     }
-  }, [cookies.login, router]);
+
+    return () => {
+      sessionStorage.removeItem("prevPage");
+    };
+  }, [cookies.login, router, setUser, setUsername]);
 
   useEffect(() => {
     setIsScreenBig(biggerScreen);
