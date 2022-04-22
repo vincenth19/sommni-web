@@ -4,22 +4,10 @@ import { MantineProvider } from "@mantine/core";
 import { appWithTranslation } from "next-i18next";
 import { CookiesProvider } from "react-cookie";
 import { AppProvider } from "../AppContext";
-import Script from "next/script";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <AppProvider>
-      <Script
-        strategy="beforeInteractive"
-        type="text/javascript"
-        src="//static.queue-it.net/script/queueclient.min.js"
-      ></Script>
-      <Script
-        strategy="beforeInteractive"
-        data-queueit-c="getglove"
-        type="text/javascript"
-        src="//static.queue-it.net/script/queueconfigloader.min.js"
-      ></Script>
       <CookiesProvider>
         <MantineProvider
           theme={{
