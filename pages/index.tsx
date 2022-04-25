@@ -162,7 +162,7 @@ const SleepExperienceSection: FC<SleepExperienceSectionProps> = ({
   return (
     <Box style={{ padding: "1rem 0" }}>
       <h1 style={{ textAlign: "center", padding: "2rem 0" }}>
-        Sommni&prime;s Guaranteed Sleep Experience
+        Sommni&apos;s Guaranteed Sleep Experience
       </h1>
       <div
         style={{
