@@ -11,6 +11,7 @@ import {
 import type { GetStaticProps, NextPage } from "next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import dynamic from "next/dynamic";
+import Image from "next/image";
 import { screenSizes, TExtraInfo } from "../types";
 import Link from "next/link";
 import { useMediaQuery } from "@mantine/hooks";
@@ -24,24 +25,24 @@ const WhySection = dynamic(() => import("../components/shared/whySection"));
 const PageHead = dynamic(() => import("../components/shared/pageHead"));
 
 const cardItems: TCardItem[] = [
-  // {
-  //   imagePath: "/cheap.png",
-  //   title: "Complementary Sleep Trial",
-  //   content:
-  //     "Sommni's guaranteed sleep experience is a 100 nights complementary sleep trial. Through these 100 nights, Malaysians can truly feel and experience The Sommni",
-  // },
   {
-    imagePath: "/cheap.png",
+    imagePath: "/100-nights-blue.png",
+    title: "Complementary Sleep Trial",
+    content:
+      "Sommni's guaranteed sleep experience is a 100 nights complementary sleep trial. Through these 100 nights, Malaysians can truly feel and experience The Sommni",
+  },
+  {
+    imagePath: "/better-price-blue.png",
     title: "Better Price",
     content:
       "Sommni provides the option to exclude the guaranteed sleep experience pack. Hence, allowing you to purchase your Sommni at a reasonable price!",
   },
-  // {
-  //   imagePath: "/cheap.png",
-  //   title: "Upgrade & Worry Free Returns",
-  //   content:
-  //     "Sommni also provides extra nights for your sleep experience pack. Along with the complementary 100 nights, Malaysians may opt for a 125 nights or 150 nights upgrade. If you are not satisfied at the end of your trial, you may return your Sommni for a 100% refund.",
-  // },
+  {
+    imagePath: "/purchase.png",
+    title: "Upgrade & Worry Free Returns",
+    content:
+      "Sommni also provides extra nights for your sleep experience pack. Along with the complementary 100 nights, Malaysians may opt for a 125 nights or 150 nights upgrade. If you are not satisfied at the end of your trial, you may return your Sommni for a 100% refund.",
+  },
 ];
 
 const Home: NextPage = () => {
@@ -188,7 +189,7 @@ const SleepExperienceSection: FC<SleepExperienceSectionProps> = ({
                     backgroundColor: themes.colors.brand[0],
                   }}
                 >
-                  <MantineImage width={"4rem"} src={item.imagePath} />
+                  <Image width={100} height={100} src={item.imagePath} />
                 </Group>
               </Card.Section>
 

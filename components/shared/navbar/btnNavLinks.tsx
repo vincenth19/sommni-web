@@ -21,14 +21,14 @@ const BtnNavLinks: FC = () => {
             path: "/products/mattress",
             title: "Mattress",
           },
-          {
-            path: "/products/topper",
-            title: "Topper",
-          },
-          {
-            path: "/products/pillow",
-            title: "Pillow",
-          },
+          // {
+          //   path: "/products/topper",
+          //   title: "Topper",
+          // },
+          // {
+          //   path: "/products/pillow",
+          //   title: "Pillow",
+          // },
         ],
       },
       {

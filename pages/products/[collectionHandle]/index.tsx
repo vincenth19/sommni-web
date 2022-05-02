@@ -5,7 +5,7 @@ import {
   NextPage,
 } from "next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
-import Router from "next/router";
+import Router, { useRouter } from "next/router";
 import {
   getAllCollectionsHandle,
   getProductsByCollection,
@@ -28,10 +28,18 @@ const ProductsInCollection: NextPage = ({
   params,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const router = useRouter();
 
   useEffect(() => {
     if (collectionProducts) {
-      setIsLoading(false);
+      if (collectionProducts.length === 1) {
+        // console.log(collectionProducts[0]);
+        router.push(
+          `/products/${params.collectionHandle}/${collectionProducts[0].node.handle}`
+        );
+      } else {
+        setIsLoading(false);
+      }
     }
   }, [collectionProducts]);
 

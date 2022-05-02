@@ -26,7 +26,7 @@ const WhySection = () => {
       itemText: "Dual comfort",
     },
     {
-      itemImage: "/radiation.png",
+      itemImage: "/emf-blue.png",
       itemText: "EMF Free",
     },
     {
@@ -83,6 +83,7 @@ const WhySectionItem: FC<IWhySectionItemProps> = ({ itemImage, itemText }) => {
   useEffect(() => {
     setIsDesktop(biggerScreen);
   }, [biggerScreen]);
+
   return (
     <Group
       direction="column"
