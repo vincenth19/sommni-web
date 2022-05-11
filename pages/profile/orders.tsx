@@ -110,6 +110,7 @@ const OrderItem: FC<OrderItemProps> = ({ orderItems }) => {
                   <Button>
                     <a
                       target="_blank"
+                      rel="noreferrer"
                       href={
                         item.node.successfulFulfillments[0].trackingInfo[0].url
                       }

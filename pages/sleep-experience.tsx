@@ -188,7 +188,7 @@ const SleepExperience: NextPage = () => {
             <tbody>
               {tableDifferenceData.map((data) => {
                 return (
-                  <tr>
+                  <tr key={data.title}>
                     <td>
                       <h3>{data.title}</h3>
                     </td>
