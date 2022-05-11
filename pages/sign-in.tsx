@@ -41,7 +41,7 @@ const SignIn: NextPage = () => {
 
   const onSubmit: SubmitHandler<TUserCred> = async (data) => {
     const token = await customerAccessTokenCreate(data);
-
+    console.log("token", token);
     if (token.errors || token.length > 0) {
       setLoginError(token);
     } else {

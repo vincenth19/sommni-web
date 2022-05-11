@@ -292,6 +292,7 @@ const Cart: NextPage = () => {
 
                                 if (res.webUrl) {
                                   setVisible(true);
+                                  localStorage.removeItem("cartItem");
                                   router.push(res.webUrl);
                                 }
                               }

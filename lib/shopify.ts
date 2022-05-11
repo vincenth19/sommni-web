@@ -738,6 +738,167 @@ export async function customerResetByUrl(password: string, url: string) {
   }
 }
 
+export async function customerOrders(
+  accessToken: string,
+  abortController: AbortController
+) {
+  const query = `
+  {
+    customer(customerAccessToken: "${accessToken}") {
+      orders(first:50){
+        edges{
+          node{
+            id
+            cancelReason
+            canceledAt
+            currencyCode
+            currentSubtotalPrice{
+              currencyCode
+              amount
+            }
+            currentTotalDuties{
+              currencyCode
+              amount
+            }
+            currentTotalPrice{
+              currencyCode
+              amount
+            }
+            currentTotalTax{
+              currencyCode
+              amount
+            }
+            customerUrl
+            edited
+            email
+            financialStatus
+            fulfillmentStatus
+            id
+            metafield(namespace: "my_fields", key: "shipmentstatus"){
+              id
+              description
+              key
+              namespace
+              updatedAt
+              value
+            }
+            name
+            orderNumber
+            originalTotalDuties{
+              currencyCode
+              amount
+            }
+            originalTotalPrice{
+              currencyCode
+              amount
+            }
+            phone
+            processedAt
+            shippingDiscountAllocations{
+              allocatedAmount{
+                currencyCode
+                amount
+              }
+              discountApplication{
+                allocationMethod
+                targetSelection
+                targetType
+                value
+              }
+            }
+            statusUrl
+            subtotalPriceV2{
+              currencyCode
+              amount
+            }
+            successfulFulfillments(first: 20){
+              trackingCompany
+              trackingInfo{
+                number
+                url
+              }
+            }
+            totalPriceV2{
+              currencyCode
+              amount
+            }
+            totalRefundedV2{
+              currencyCode
+              amount
+            }
+            totalShippingPriceV2{
+              currencyCode
+              amount
+            }
+            totalTaxV2{
+              currencyCode
+              amount
+            }
+            lineItems(first: 30){
+              edges{
+                node{
+                  title
+                  variant{
+                    id
+                    title
+                    image{
+                      url
+                    }
+                    availableForSale
+                    currentlyNotInStock
+                    priceV2{
+                      currencyCode
+                      amount
+                    }
+                  }
+                  quantity
+                  currentQuantity
+                  originalTotalPrice{
+                    currencyCode
+                    amount
+                  }
+                  discountedTotalPrice{
+                    currencyCode
+                    amount
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  `;
+  const response = await ShopifyData(query, abortController);
+  // if (response && response.errors) {
+  //   return response;
+  // } else {
+  //   if (response) {
+  //     return response.data.customer;
+  //   }
+  // }
+
+  // if (response && response.errors) {
+  //   return response;
+  // } else if (response && !response.data.customer) {
+  //   return null;
+  // } else if (response && response.errors) {
+  //   return response;
+  // } else if (response && response.data.customer.id) {
+  //   return response.data.customer;
+  // } else {
+  //   return null;
+  // }
+
+  if (response && !response.errors) {
+    const userdata = response.data.customer ? response.data.customer : null;
+    return userdata;
+  } else {
+    return response;
+  }
+}
+
 // END customer APIs
 
 // START Checkout APIs

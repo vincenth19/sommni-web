@@ -360,4 +360,13 @@ export type TLineItem = {
   variantId: string;
   quantity: number;
 };
+
+export type TMetafield = {
+  description: string;
+  id: string;
+  key: string;
+  namespace: string;
+  updatedAt: string;
+  value: string;
+};
 // END Shopify GraphQL Types

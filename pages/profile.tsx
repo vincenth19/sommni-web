@@ -207,6 +207,9 @@ const ProfileInfo: FC<ProfileInfoProps> = ({
               </Group>
               <SimpleInfo label="Email" data={userdata.email} />
               <SimpleInfo label="Phone" data={userdata.phone} />
+              <Link href={"/profile/orders"} passHref>
+                <Button component="a">My Orders</Button>
+              </Link>
             </Group>
           </Card>
 
