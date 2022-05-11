@@ -15,7 +15,7 @@ import { TMetafield } from "../../types";
 
 const Orders: NextPage = () => {
   const [hasCookie, setHasCookie] = useState<boolean | null>(null);
-  const [orders, setOrders] = useState<any>();
+  const [orders, setOrders] = useState<any>([]);
   const [cookies, setCookie, removeCookie] = useCookies(["login"]);
   const [usertoken, setUsertoken] = useState<string | null>(null);
   const [orderError, setOrderError] = useState<any>();
@@ -24,10 +24,10 @@ const Orders: NextPage = () => {
     const abortCont = new AbortController();
     const getData = async (token: string) => {
       const res = await customerOrders(token, abortCont);
-      console.log(res.orders.edges);
+      console.log(res);
       if (res.errors || res === null) {
         setOrderError(res);
-      } else if (res.orders) {
+      } else if (res.orders.edges.length > 0) {
         setOrders(res.orders.edges.reverse());
       } else {
         setHasCookie(false);
@@ -53,7 +53,31 @@ const Orders: NextPage = () => {
       {orderError ? (
         <AlertCard errors={orderError} />
       ) : (
-        <>{orders ? <OrderItem orderItems={orders} /> : <Loading />}</>
+        <>
+          {orders ? (
+            orders.length > 0 ? (
+              <OrderItem orderItems={orders} />
+            ) : (
+              <>
+                <Group
+                  direction="column"
+                  position="center"
+                  style={{ minHeight: "48vh", justifyContent: "center" }}
+                >
+                  <Text size="xl" color="gray" weight={500}>
+                    You don't have any order yet. Check out our products here
+                    and shop!
+                  </Text>
+                  <Link href={"/products"} passHref>
+                    <Button component="a">Our Products</Button>
+                  </Link>
+                </Group>
+              </>
+            )
+          ) : (
+            <Loading />
+          )}
+        </>
       )}
     </MainFrame>
   );
