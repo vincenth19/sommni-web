@@ -292,7 +292,8 @@ const OrderStatusBadge: FC<OrderStatusBadgeProps> = ({
           {financialStatus}
         </Badge>
       )}
-      {financialStatus !== "REFUNDED" ? (
+      {financialStatus !== "REFUNDED" &&
+      financialStatus !== "PARTIALLY_PAID" ? (
         <Badge color={badgeColor} variant="filled">
           {status}
         </Badge>

@@ -43,6 +43,10 @@ const BtnNavLinks: FC = () => {
         path: "/sleep-experience",
         title: "Sleep Experience",
       },
+      {
+        path: "/tracking",
+        title: "Tracking",
+      },
     ],
     []
   );
