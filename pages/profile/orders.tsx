@@ -29,15 +29,19 @@ import {
 import { GiFactory } from "react-icons/gi";
 import { useMediaQuery } from "@mantine/hooks";
 import { screenSizes } from "../../types";
+import { RiArrowLeftSLine } from "react-icons/ri";
+import { useRouter } from "next/router";
 
 const Orders: NextPage = () => {
   const biggerScreen = useMediaQuery(`(min-width: ${screenSizes.sm})`);
   const [isDesktop, setIsDesktop] = useState<boolean>(false);
   const [hasCookie, setHasCookie] = useState<boolean | null>(null);
-  const [orders, setOrders] = useState<any>([]);
+  const [orders, setOrders] = useState<any>(null);
   const [cookies, setCookie, removeCookie] = useCookies(["login"]);
   const [usertoken, setUsertoken] = useState<string | null>(null);
   const [orderError, setOrderError] = useState<any>();
+
+  // const router = useRouter();
 
   useEffect(() => {
     setIsDesktop(biggerScreen);
@@ -72,6 +76,14 @@ const Orders: NextPage = () => {
   return (
     <MainFrame>
       <PageHead title="My Orders - Sommni" />
+      {/* <Button onClick={() => router.back()} variant="subtle">
+        <Group position="center" spacing={"xs"}>
+          <span style={{ marginRight: "0.5rem" }}>
+            <RiArrowLeftSLine />
+          </span>
+          Back
+        </Group>
+      </Button> */}
       <TitleSection title={"My Orders"} />
       {orderError ? (
         <AlertCard errors={orderError} />
@@ -88,8 +100,8 @@ const Orders: NextPage = () => {
                   style={{ minHeight: "48vh", justifyContent: "center" }}
                 >
                   <Text size="xl" color="gray" weight={500}>
-                    You don't have any order yet. Check out our products here
-                    and shop!
+                    You don&amp;t have any order yet. Check out our products
+                    here and shop!
                   </Text>
                   <Link href={"/products"} passHref>
                     <Button component="a">Our Products</Button>
@@ -98,7 +110,7 @@ const Orders: NextPage = () => {
               </>
             )
           ) : (
-            <Loading />
+            <Loading text="Getting your orders..." />
           )}
         </>
       )}

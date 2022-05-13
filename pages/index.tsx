@@ -161,7 +161,7 @@ const SleepExperienceSection: FC<SleepExperienceSectionProps> = ({
 }) => {
   const themes = useMantineTheme();
   return (
-    <Box style={{ padding: "1rem 0" }}>
+    <Box style={{ padding: "2rem 0" }}>
       <h1 style={{ textAlign: "center", padding: "2rem 0" }}>
         Sommni&apos;s Guaranteed Sleep Experience
       </h1>
@@ -171,6 +171,7 @@ const SleepExperienceSection: FC<SleepExperienceSectionProps> = ({
           justifyContent: "space-around",
           alignItems: "stretch",
           gap: "1rem",
+          flexDirection: isScreenBig ? "row" : "column",
         }}
       >
         {cardItems.map((item) => {
@@ -210,6 +211,13 @@ const SleepExperienceSection: FC<SleepExperienceSectionProps> = ({
           );
         })}
       </div>
+      <Group position="center" style={{ marginTop: "2rem" }}>
+        <Link href={"/sleep-experience"} passHref>
+          <Button variant="light" fullWidth={!isScreenBig} component="a">
+            Learn More
+          </Button>
+        </Link>
+      </Group>
     </Box>
   );
 };
