@@ -1,4 +1,13 @@
-import { Badge, Button, Card, Group, Image, Text } from "@mantine/core";
+import {
+  Accordion,
+  Badge,
+  Button,
+  Card,
+  Group,
+  Image,
+  Stepper,
+  Text,
+} from "@mantine/core";
 import { GetStaticProps, NextPage } from "next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import Link from "next/link";
@@ -11,9 +20,19 @@ import PageHead from "../../components/shared/pageHead";
 import TitleSection from "../../components/shared/titleSection";
 import { decrypt } from "../../lib/cryptojs";
 import { customerOrders } from "../../lib/shopify";
-import { TMetafield } from "../../types";
+import { BiPackage } from "react-icons/bi";
+import { BsFillCartCheckFill, BsSearch, BsCheckCircle } from "react-icons/bs";
+import {
+  MdPrecisionManufacturing,
+  MdOutlineLocalShipping,
+} from "react-icons/md";
+import { GiFactory } from "react-icons/gi";
+import { useMediaQuery } from "@mantine/hooks";
+import { screenSizes } from "../../types";
 
 const Orders: NextPage = () => {
+  const biggerScreen = useMediaQuery(`(min-width: ${screenSizes.sm})`);
+  const [isDesktop, setIsDesktop] = useState<boolean>(false);
   const [hasCookie, setHasCookie] = useState<boolean | null>(null);
   const [orders, setOrders] = useState<any>([]);
   const [cookies, setCookie, removeCookie] = useCookies(["login"]);
@@ -21,10 +40,14 @@ const Orders: NextPage = () => {
   const [orderError, setOrderError] = useState<any>();
 
   useEffect(() => {
+    setIsDesktop(biggerScreen);
+  }, [biggerScreen]);
+
+  useEffect(() => {
     const abortCont = new AbortController();
     const getData = async (token: string) => {
       const res = await customerOrders(token, abortCont);
-      console.log(res);
+      // console.log(res);
       if (res.errors || res === null) {
         setOrderError(res);
       } else if (res.orders.edges.length > 0) {
@@ -56,7 +79,7 @@ const Orders: NextPage = () => {
         <>
           {orders ? (
             orders.length > 0 ? (
-              <OrderItem orderItems={orders} />
+              <OrderItem orderItems={orders} isDesktop={isDesktop} />
             ) : (
               <>
                 <Group
@@ -85,9 +108,10 @@ const Orders: NextPage = () => {
 
 interface OrderItemProps {
   orderItems: any;
+  isDesktop: boolean;
 }
 
-const OrderItem: FC<OrderItemProps> = ({ orderItems }) => {
+const OrderItem: FC<OrderItemProps> = ({ orderItems, isDesktop }) => {
   return (
     <Group direction="column" style={{ paddingBottom: "4rem" }} spacing="md">
       {orderItems.map((item: any) => {
@@ -95,6 +119,33 @@ const OrderItem: FC<OrderItemProps> = ({ orderItems }) => {
           "en-SG",
           { day: "numeric", month: "long", year: "numeric" }
         );
+        const orderTime = new Date(item.node.processedAt).getTime();
+        const timeNow = new Date().getTime();
+        const diff = Math.abs(timeNow - orderTime) / 3600000;
+
+        let status = "";
+        if (item.node.canceledAt) {
+          status = "Cancelled";
+        } else if (item.node.successfulFulfillments.length > 0) {
+          status = "Shipping";
+        } else {
+          switch (true) {
+            case diff >= 12:
+              status = "Packing";
+              break;
+            case diff < 12 && diff >= 9:
+              status = "Quality Control Check";
+              break;
+            case diff < 9 && diff >= 6:
+              status = "Assembly";
+              break;
+            case diff < 6 && diff >= 3:
+              status = "Manufacturing";
+            case diff < 3:
+              status = "Order Placed";
+          }
+        }
+
         return (
           <Card key={item.node.id} shadow={"sm"} style={{ width: "100%" }}>
             <Group position="apart">
@@ -104,9 +155,19 @@ const OrderItem: FC<OrderItemProps> = ({ orderItems }) => {
                   <span>{orderDate}</span>
                 </div>
               </Text>
-              <div>
-                {item.node.edited && <Badge color="yellow">Edited</Badge>}
-              </div>
+              <Group>
+                {item.node.edited && (
+                  <Badge variant="filled" color="yellow">
+                    Edited
+                  </Badge>
+                )}
+                <OrderStatusBadge
+                  canceledAt={item.node.canceledAt}
+                  cancelReason={item.node.cancelReason}
+                  status={status}
+                  financialStatus={item.node.financialStatus}
+                />
+              </Group>
             </Group>
             <LineItems items={item.node.lineItems.edges} />
             <Group position="apart">
@@ -117,20 +178,8 @@ const OrderItem: FC<OrderItemProps> = ({ orderItems }) => {
                   {item.node.totalPriceV2.amount}
                 </Text>
               </div>
-              {item.node.successfulFulfillments.length > 0 ? (
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                  }}
-                >
-                  <Text
-                    color="gray"
-                    size="sm"
-                    style={{ marginRight: "0.5rem" }}
-                  >
-                    {item.node.successfulFulfillments[0].trackingCompany}
-                  </Text>
+              <Group>
+                {item.node.successfulFulfillments.length > 0 ? (
                   <Button>
                     <a
                       target="_blank"
@@ -142,11 +191,39 @@ const OrderItem: FC<OrderItemProps> = ({ orderItems }) => {
                       Track
                     </a>
                   </Button>
-                </div>
-              ) : (
-                <Button disabled>Track</Button>
-              )}
+                ) : (
+                  <>
+                    {item.node.financialStatus === "PARTIALLY_PAID" && (
+                      <>
+                        <Button>
+                          <a href={item.node.statusUrl} rel="noreferrer">
+                            Complete Payment
+                          </a>
+                        </Button>
+                      </>
+                    )}
+                  </>
+                )}
+                <Button variant="light">
+                  <a rel="noreferrer" href={item.node.statusUrl}>
+                    Order Details
+                  </a>
+                </Button>
+              </Group>
             </Group>
+            {!item.node.cancelReason && item.node.financialStatus === "PAID" && (
+              <>
+                {isDesktop ? (
+                  <OrderStatusStepper status={status} />
+                ) : (
+                  <Accordion>
+                    <Accordion.Item label="Order Progress">
+                      <OrderStatusStepper status={status} />
+                    </Accordion.Item>
+                  </Accordion>
+                )}
+              </>
+            )}
           </Card>
         );
       })}
@@ -155,15 +232,110 @@ const OrderItem: FC<OrderItemProps> = ({ orderItems }) => {
 };
 
 interface OrderStatusBadgeProps {
-  cancelReason?: null | string;
-  canceledAt?: null | string;
+  status: string;
   financialStatus: string;
-  fulfillmentStatus: string;
-  metafield: null | TMetafield;
+  cancelReason: null | string;
+  canceledAt: null | string;
 }
 
-const OrderStatusBadge: FC = () => {
-  return <Badge variant="filled"></Badge>;
+const OrderStatusBadge: FC<OrderStatusBadgeProps> = ({
+  status,
+  cancelReason,
+  canceledAt,
+  financialStatus,
+}) => {
+  const [badgeColor, setBadgeColor] = useState("primary");
+  const [cancelDate, setCancelDate] = useState<null | string>();
+  useEffect(() => {
+    if (cancelReason) setBadgeColor("red");
+    if (canceledAt) {
+      setCancelDate(
+        new Date(canceledAt).toLocaleDateString("en-SG", {
+          day: "numeric",
+          month: "long",
+          year: "numeric",
+        })
+      );
+    }
+  }, [cancelReason, canceledAt]);
+  return (
+    <Group style={{ alignItems: "baseline" }}>
+      {financialStatus !== "PAID" && (
+        <Badge variant="filled" color="orange">
+          {financialStatus}
+        </Badge>
+      )}
+      {financialStatus !== "REFUNDED" ? (
+        <Badge color={badgeColor} variant="filled">
+          {status}
+        </Badge>
+      ) : (
+        cancelReason && (
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "flex-end",
+            }}
+          >
+            <Badge color={badgeColor} variant="filled">
+              {status} {cancelReason && `: ${cancelReason}`}
+            </Badge>
+            <Text size="sm" color="gray">
+              {cancelDate}
+            </Text>
+          </div>
+        )
+      )}
+    </Group>
+  );
+};
+
+interface OrderStatusStepperProps {
+  status: string;
+}
+
+const OrderStatusStepper: FC<OrderStatusStepperProps> = ({ status }) => {
+  const [active, setActive] = useState(1);
+  const steps = [
+    { title: "Order Placed", icon: <BsFillCartCheckFill /> },
+    { title: "Manufacturing", icon: <GiFactory /> },
+    { title: "Assembly", icon: <MdPrecisionManufacturing /> },
+    { title: "Quality Control Check", icon: <BsSearch /> },
+    { title: "Packing", icon: <BiPackage /> },
+    { title: "Shipping", icon: <MdOutlineLocalShipping /> },
+    { title: "Successfully Delivered", icon: <BsCheckCircle /> },
+  ];
+  useEffect(() => {
+    for (let i = 0; i < steps.length; i++) {
+      if (status === "Successfully Delivered" || steps[i].title === status) {
+        setActive(i);
+        return;
+      }
+      if (steps[i].title === status) setActive(i - 1);
+    }
+  }, [status]);
+  return (
+    <>
+      <Stepper
+        breakpoint={"sm"}
+        active={active}
+        size="xs"
+        style={{ padding: "1rem 0", overflowX: "auto" }}
+      >
+        {steps.map((step) => {
+          return (
+            <Stepper.Step
+              key={step.title}
+              size="xs"
+              icon={step.icon}
+              label={step.title}
+            ></Stepper.Step>
+          );
+        })}
+      </Stepper>
+    </>
+  );
 };
 
 type TLineItem = {
@@ -218,7 +390,7 @@ const LineItems: FC<LineItemProps> = ({ items }) => {
                     {item.node.title} - {item.node.variant.title}
                   </Text>
                   <Text color="gray">
-                    {item.node.quantity}{" "}
+                    {item.node.quantity}
                     {`item${item.node.quantity > 1 ? "s" : ""}`}
                   </Text>
                 </div>
