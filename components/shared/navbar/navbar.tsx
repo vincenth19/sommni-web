@@ -1,4 +1,11 @@
-import { Group, Box, Button, Text, Loader } from "@mantine/core";
+import {
+  Group,
+  Box,
+  Button,
+  Text,
+  Loader,
+  Image as MantineImage,
+} from "@mantine/core";
 import Link from "next/link";
 import Image from "next/image";
 // import BtnLanguage from "./btnLanguage";
@@ -87,10 +94,10 @@ const Navbar = () => {
           <NavDrawer />
           <Link href="/" passHref>
             <Box component="a" style={{ cursor: "pointer" }}>
-              <Image
+              <MantineImage
                 width="100%"
-                height="30vh"
-                src="/sommni-blue.png"
+                height="5.5vh"
+                src="/logo-sommni-color.svg"
                 alt="Sommni Logo"
               />
             </Box>

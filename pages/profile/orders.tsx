@@ -5,7 +5,6 @@ import {
   Card,
   Group,
   Image,
-  Stepper,
   Text,
 } from "@mantine/core";
 import { GetStaticProps, NextPage } from "next";
@@ -20,17 +19,14 @@ import PageHead from "../../components/shared/pageHead";
 import TitleSection from "../../components/shared/titleSection";
 import { decrypt } from "../../lib/cryptojs";
 import { customerOrders } from "../../lib/shopify";
-import { BiPackage } from "react-icons/bi";
-import { BsFillCartCheckFill, BsSearch, BsCheckCircle } from "react-icons/bs";
-import {
-  MdPrecisionManufacturing,
-  MdOutlineLocalShipping,
-} from "react-icons/md";
-import { GiFactory } from "react-icons/gi";
+
 import { useMediaQuery } from "@mantine/hooks";
 import { screenSizes } from "../../types";
-import { RiArrowLeftSLine } from "react-icons/ri";
-import { useRouter } from "next/router";
+import StepperTracking, {
+  steps,
+} from "../../components/shared/stepperTracking";
+// import { RiArrowLeftSLine } from "react-icons/ri";
+// import { useRouter } from "next/router";
 
 const Orders: NextPage = () => {
   const biggerScreen = useMediaQuery(`(min-width: ${screenSizes.sm})`);
@@ -85,33 +81,52 @@ const Orders: NextPage = () => {
         </Group>
       </Button> */}
       <TitleSection title={"My Orders"} />
-      {orderError ? (
-        <AlertCard errors={orderError} />
+      {hasCookie ? (
+        <>
+          {orderError ? (
+            <AlertCard errors={orderError} />
+          ) : (
+            <>
+              {orders ? (
+                orders.length > 0 ? (
+                  <OrderItem orderItems={orders} isDesktop={isDesktop} />
+                ) : (
+                  <>
+                    <Group
+                      direction="column"
+                      position="center"
+                      style={{ minHeight: "48vh", justifyContent: "center" }}
+                    >
+                      <Text size="xl" color="gray" weight={500}>
+                        You don&amp;t have any order yet. Check out our products
+                        here and shop!
+                      </Text>
+                      <Link href={"/products"} passHref>
+                        <Button component="a">Our Products</Button>
+                      </Link>
+                    </Group>
+                  </>
+                )
+              ) : (
+                <Loading text="Getting your orders..." />
+              )}
+            </>
+          )}
+        </>
       ) : (
         <>
-          {orders ? (
-            orders.length > 0 ? (
-              <OrderItem orderItems={orders} isDesktop={isDesktop} />
-            ) : (
-              <>
-                <Group
-                  direction="column"
-                  position="center"
-                  style={{ minHeight: "48vh", justifyContent: "center" }}
-                >
-                  <Text size="xl" color="gray" weight={500}>
-                    You don&amp;t have any order yet. Check out our products
-                    here and shop!
-                  </Text>
-                  <Link href={"/products"} passHref>
-                    <Button component="a">Our Products</Button>
-                  </Link>
-                </Group>
-              </>
-            )
-          ) : (
-            <Loading text="Getting your orders..." />
-          )}
+          <Group
+            direction="column"
+            position="center"
+            style={{ minHeight: "45vh", justifyContent: "center" }}
+          >
+            <Text size="xl">Please sign in to view your orders</Text>
+            <Link href="/sign-in" passHref>
+              <Button size="lg" component="a">
+                Sign In
+              </Button>
+            </Link>
+          </Group>
         </>
       )}
     </MainFrame>
@@ -309,15 +324,7 @@ interface OrderStatusStepperProps {
 
 const OrderStatusStepper: FC<OrderStatusStepperProps> = ({ status }) => {
   const [active, setActive] = useState(1);
-  const steps = [
-    { title: "Order Placed", icon: <BsFillCartCheckFill /> },
-    { title: "Manufacturing", icon: <GiFactory /> },
-    { title: "Assembly", icon: <MdPrecisionManufacturing /> },
-    { title: "Quality Control Check", icon: <BsSearch /> },
-    { title: "Packing", icon: <BiPackage /> },
-    { title: "Shipping", icon: <MdOutlineLocalShipping /> },
-    { title: "Successfully Delivered", icon: <BsCheckCircle /> },
-  ];
+
   useEffect(() => {
     for (let i = 0; i < steps.length; i++) {
       if (status === "Successfully Delivered" || steps[i].title === status) {
@@ -328,25 +335,9 @@ const OrderStatusStepper: FC<OrderStatusStepperProps> = ({ status }) => {
     }
   }, [status]);
   return (
-    <>
-      <Stepper
-        breakpoint={"sm"}
-        active={active}
-        size="xs"
-        style={{ padding: "1rem 0", overflowX: "auto" }}
-      >
-        {steps.map((step) => {
-          return (
-            <Stepper.Step
-              key={step.title}
-              size="xs"
-              icon={step.icon}
-              label={step.title}
-            ></Stepper.Step>
-          );
-        })}
-      </Stepper>
-    </>
+    <div style={{ padding: "1rem 0" }}>
+      <StepperTracking defaultActive={active} />
+    </div>
   );
 };
 
