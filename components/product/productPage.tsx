@@ -165,7 +165,7 @@ const ProductPage: FC<ProductPageProps> = ({
         setDisplayedPrice(productData.priceRange.minVariantPrice.amount);
       }
     } else {
-      console.log("no var");
+      // console.log("no var");
       // without variants
       setDisplayedPrice(productData.priceRange.maxVariantPrice.amount);
       setSelectedItem(productData.variants.edges[0]);
