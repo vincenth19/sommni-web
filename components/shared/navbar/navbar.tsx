@@ -94,9 +94,9 @@ const Navbar = () => {
           <NavDrawer />
           <Link href="/" passHref>
             <Box component="a" style={{ cursor: "pointer" }}>
-              <MantineImage
-                width="150px"
-                height="100%"
+              <Image
+                width={150}
+                height="50%"
                 src="/logo-sommni-color.svg"
                 alt="Sommni Logo"
               />
