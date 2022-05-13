@@ -1,5 +1,5 @@
 import { Button, Group, Stepper, Table } from "@mantine/core";
-import { NextPage } from "next";
+import { GetStaticProps, NextPage } from "next";
 import { useEffect, useState } from "react";
 import MainFrame from "../components/shared/mainFrame";
 import PageHead from "../components/shared/pageHead";
@@ -15,6 +15,7 @@ import Link from "next/link";
 import { useMediaQuery } from "@mantine/hooks";
 import { screenSizes } from "../types";
 import StepperTracking from "../components/shared/stepperTracking";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
 type TTableTrackingInfo = {
   title: string;
@@ -97,6 +98,14 @@ const Tracking: NextPage = () => {
       </Group>
     </MainFrame>
   );
+};
+
+export const getStaticProps: GetStaticProps = async ({ locale }) => {
+  return {
+    props: {
+      ...(await serverSideTranslations(locale as string, ["common", "footer"])),
+    },
+  };
 };
 
 export default Tracking;

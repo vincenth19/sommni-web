@@ -8,6 +8,8 @@ export type TAppContext = {
   setUser: Dispatch<SetStateAction<TCustomer | null>>;
   username: string | null;
   setUsername: Dispatch<SetStateAction<string | null>>;
+  navLinks: TNavLink[] | null;
+  setNavLinks: Dispatch<SetStateAction<TNavLink[] | null>>;
   cartItems: TCartItem[];
   setCartItems: Dispatch<SetStateAction<TCartItem[]>>;
   cartUpdater: () => void;

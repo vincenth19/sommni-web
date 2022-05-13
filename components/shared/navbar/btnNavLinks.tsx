@@ -1,7 +1,8 @@
 import { Button, useMantineTheme } from "@mantine/core";
 import { useTranslation } from "next-i18next";
 import Link from "next/link";
-import { FC, useEffect, useMemo, useState } from "react";
+import { FC, useEffect, useState } from "react";
+import { useContextData, DefaltNavLinks } from "../../../AppContext";
 import { getNavLinks } from "../../../lib/shopify";
 import { TNavLink } from "../../../types";
 import BtnDropdown from "../btnDropdown";
@@ -9,58 +10,17 @@ import BtnDropdown from "../btnDropdown";
 const BtnNavLinks: FC = () => {
   const { t } = useTranslation("common");
   const themes = useMantineTheme();
-  const NavLinks: TNavLink[] = useMemo(
-    () => [
-      { path: "/", title: "Home" },
-      { path: "/about-us", title: "About Us" },
-      {
-        path: "/products",
-        title: "Products",
-        dropdownLinks: [
-          {
-            path: "/products/mattress",
-            title: "Mattress",
-          },
-          // {
-          //   path: "/products/topper",
-          //   title: "Topper",
-          // },
-          // {
-          //   path: "/products/pillow",
-          //   title: "Pillow",
-          // },
-        ],
-      },
-      {
-        path: "/faq",
-        title: "FAQ",
-      },
-      {
-        path: "/compare",
-        title: "Compare",
-      },
-      {
-        path: "/sleep-experience",
-        title: "Sleep Experience",
-      },
-      {
-        path: "/tracking",
-        title: "Tracking",
-      },
-    ],
-    []
-  );
+  const { navLinks, setNavLinks } = useContextData();
 
-  const [navbarLinks, setNavbarLinks] = useState<TNavLink[]>(NavLinks);
+  const [navbarLinks, setNavbarLinks] = useState<TNavLink[]>(DefaltNavLinks);
 
   useEffect(() => {
     const abortCont = new AbortController();
-    if (sessionStorage.getItem("navbarLinks")) {
-      const links = sessionStorage.getItem("navbarLinks");
-      if (links) setNavbarLinks(JSON.parse(links));
+    if (navLinks) {
+      setNavLinks(navLinks);
     } else {
       const getRunner = async () => {
-        const data = await getNavLinks(NavLinks, abortCont);
+        const data = await getNavLinks(DefaltNavLinks, abortCont);
         if (data) {
           setNavbarLinks(data);
         }

@@ -30,7 +30,12 @@ const StepperTracking: FC<StepperTrackingProps> = ({ defaultActive = 1 }) => {
   }, [defaultActive]);
 
   return (
-    <Stepper size="sm" breakpoint={"sm"} active={active}>
+    <Stepper
+      size="sm"
+      breakpoint={"sm"}
+      active={active}
+      style={{ overflowX: "auto" }}
+    >
       {steps.map((step) => {
         return (
           <Stepper.Step

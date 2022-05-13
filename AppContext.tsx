@@ -1,12 +1,14 @@
-import { createContext, ReactNode, useContext, useState } from "react";
+import { createContext, ReactNode, useContext, useMemo, useState } from "react";
 import { decrypt, encrypt } from "./lib/cryptojs";
-import { TAppContext, TCartItem, TCustomer } from "./types";
+import { TAppContext, TCartItem, TCustomer, TNavLink } from "./types";
 
 const contextDefaultValues: TAppContext = {
   user: null,
   setUser: () => {},
   username: null,
   setUsername: () => {},
+  navLinks: null,
+  setNavLinks: () => {},
   cartItems: [],
   setCartItems: () => {},
   cartUpdater: () => {},
@@ -15,6 +17,45 @@ const contextDefaultValues: TAppContext = {
 };
 
 const AppContext = createContext<TAppContext>(contextDefaultValues);
+
+export const DefaltNavLinks: TNavLink[] = [
+  { path: "/", title: "Home" },
+  { path: "/about-us", title: "About Us" },
+  {
+    path: "/products",
+    title: "Products",
+    dropdownLinks: [
+      {
+        path: "/products/mattress",
+        title: "Mattress",
+      },
+      // {
+      //   path: "/products/topper",
+      //   title: "Topper",
+      // },
+      // {
+      //   path: "/products/pillow",
+      //   title: "Pillow",
+      // },
+    ],
+  },
+  {
+    path: "/faq",
+    title: "FAQ",
+  },
+  {
+    path: "/compare",
+    title: "Compare",
+  },
+  {
+    path: "/sleep-experience",
+    title: "Sleep Experience",
+  },
+  {
+    path: "/tracking",
+    title: "Tracking",
+  },
+];
 
 export function useContextData() {
   return useContext(AppContext);
@@ -28,6 +69,7 @@ export function AppProvider({ children }: AppProviderProps) {
   const [user, setUser] = useState<TCustomer | null>(null);
   const [username, setUsername] = useState<string | null>(null);
   const [cartItems, setCartItems] = useState<TCartItem[]>([]);
+  const [navLinks, setNavLinks] = useState<TNavLink[] | null>(DefaltNavLinks);
 
   const getLocalStorageCart = () => {
     if (localStorage.getItem("cartItem")) {
@@ -94,6 +136,8 @@ export function AppProvider({ children }: AppProviderProps) {
     setUser,
     username,
     setUsername,
+    navLinks,
+    setNavLinks,
     cartItems,
     setCartItems,
     cartUpdater,
