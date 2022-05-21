@@ -4,7 +4,6 @@ import { getAllCollections } from "../lib/shopify";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { useEffect, useState } from "react";
 
-const MainFrame = dynamic(() => import("../components/shared/mainFrame"));
 const TitleSection = dynamic(() => import("../components/shared/titleSection"));
 const ProductsSection = dynamic(
   () => import("../components/shared/collectionCards")
@@ -25,7 +24,7 @@ const Products: NextPage = ({
   }, [collections]);
 
   return (
-    <MainFrame>
+    <>
       <PageHead title="Products - Sommni" />
       <div style={{ minHeight: "80vh" }}>
         {isLoading ? (
@@ -43,7 +42,7 @@ const Products: NextPage = ({
           </>
         )}
       </div>
-    </MainFrame>
+    </>
   );
 };
 

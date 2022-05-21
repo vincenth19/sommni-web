@@ -9,7 +9,6 @@ import { customerRecover } from "../lib/shopify";
 import { screenSizes } from "../types";
 import dynamic from "next/dynamic";
 
-const MainFrame = dynamic(() => import("../components/shared/mainFrame"));
 const AlertCard = dynamic(() => import("../components/shared/alertCard"));
 const TitleSection = dynamic(() => import("../components/shared/titleSection"));
 const PageHead = dynamic(() => import("../components/shared/pageHead"));
@@ -49,7 +48,7 @@ const ForgotPassword: NextPage = () => {
   }, [biggerScreen]);
 
   return (
-    <MainFrame>
+    <>
       <PageHead title="Forgot Password - Sommni" />
       <form
         onSubmit={handleSubmit(onSubmit)}
@@ -94,7 +93,7 @@ const ForgotPassword: NextPage = () => {
           </Button>
         </Group>
       </form>
-    </MainFrame>
+    </>
   );
 };
 

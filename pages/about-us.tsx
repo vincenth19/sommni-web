@@ -4,13 +4,12 @@ import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import dynamic from "next/dynamic";
 import { RiCheckLine } from "react-icons/ri";
 
-const MainFrame = dynamic(() => import("../components/shared/mainFrame"));
 const PageHead = dynamic(() => import("../components/shared/pageHead"));
 const TitleSection = dynamic(() => import("../components/shared/titleSection"));
 
 const AboutUs: NextPage = () => {
   return (
-    <MainFrame>
+    <>
       <PageHead title="About Us - Sommni" />
       <TitleSection title={"About Us"} />
       <Group
@@ -110,7 +109,7 @@ const AboutUs: NextPage = () => {
           </List>
         </Group>
       </Group>
-    </MainFrame>
+    </>
   );
 };
 

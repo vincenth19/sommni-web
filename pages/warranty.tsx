@@ -1,7 +1,6 @@
 import { Group, List } from "@mantine/core";
 import { GetStaticProps, NextPage } from "next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
-import MainFrame from "../components/shared/mainFrame";
 import PageHead from "../components/shared/pageHead";
 import TitleSection from "../components/shared/titleSection";
 
@@ -24,7 +23,7 @@ const listItems = [
 
 const Warranty: NextPage = () => {
   return (
-    <MainFrame>
+    <>
       <PageHead title="Sleep Experience - Sommni" />
       <TitleSection title={"Warranty"} />
       <Group
@@ -42,7 +41,7 @@ const Warranty: NextPage = () => {
           </List.Item>
         </List>
       </Group>
-    </MainFrame>
+    </>
   );
 };
 

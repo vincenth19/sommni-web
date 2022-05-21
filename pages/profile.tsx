@@ -25,7 +25,6 @@ import {
 } from "../lib/shopify";
 import { TCustomer, TCustomerAddress } from "../types";
 
-const MainFrame = dynamic(() => import("../components/shared/mainFrame"));
 const ModalAddEditAddress = dynamic(
   () => import("../components/shared/modalAddEditAddress")
 );
@@ -87,7 +86,7 @@ const Profile: NextPage = () => {
   }, [cookies.login, setUser, setUsername]);
 
   return (
-    <MainFrame>
+    <>
       <PageHead title="Profile - Sommni" />
       {profileError && (
         <>
@@ -155,7 +154,7 @@ const Profile: NextPage = () => {
           )}
         </>
       )}
-    </MainFrame>
+    </>
   );
 };
 

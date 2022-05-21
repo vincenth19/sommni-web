@@ -32,7 +32,6 @@ import {
 } from "../types";
 import { AddressBox } from "./profile";
 
-const MainFrame = dynamic(() => import("../components/shared/mainFrame"));
 const PageHead = dynamic(() => import("../components/shared/pageHead"));
 const TitleSection = dynamic(() => import("../components/shared/titleSection"));
 const Loading = dynamic(() => import("../components/shared/loading"));
@@ -140,7 +139,7 @@ const Cart: NextPage = () => {
   }, [cartItems]);
 
   return (
-    <MainFrame>
+    <>
       <PageHead title="Cart - Sommni " />
       <div style={{ position: "relative" }}>
         <TitleSection title={"Cart"} />
@@ -311,7 +310,7 @@ const Cart: NextPage = () => {
           </>
         )}
       </div>
-    </MainFrame>
+    </>
   );
 };
 

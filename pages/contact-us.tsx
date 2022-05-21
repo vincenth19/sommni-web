@@ -1,6 +1,5 @@
 import { GetStaticProps, NextPage } from "next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
-import MainFrame from "../components/shared/mainFrame";
 import PageHead from "../components/shared/pageHead";
 import TitleSection from "../components/shared/titleSection";
 import { Container, Group, Text } from "@mantine/core";
@@ -9,7 +8,7 @@ import Image from "next/image";
 
 const ContactUs: NextPage = () => {
   return (
-    <MainFrame>
+    <>
       <PageHead title="Contact Us - Sommni" />
       <TitleSection title={"Contact Us"} />
       <Container size={"md"} style={{ padding: "4rem 0" }}>
@@ -36,7 +35,7 @@ const ContactUs: NextPage = () => {
           </div>
         </Group>
       </Container>
-    </MainFrame>
+    </>
   );
 };
 

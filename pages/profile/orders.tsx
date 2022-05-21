@@ -14,7 +14,6 @@ import { FC, useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import AlertCard from "../../components/shared/alertCard";
 import Loading from "../../components/shared/loading";
-import MainFrame from "../../components/shared/mainFrame";
 import PageHead from "../../components/shared/pageHead";
 import TitleSection from "../../components/shared/titleSection";
 import { decrypt } from "../../lib/cryptojs";
@@ -70,7 +69,7 @@ const Orders: NextPage = () => {
     }
   }, []);
   return (
-    <MainFrame>
+    <>
       <PageHead title="My Orders - Sommni" />
       {/* <Button onClick={() => router.back()} variant="subtle">
         <Group position="center" spacing={"xs"}>
@@ -129,7 +128,7 @@ const Orders: NextPage = () => {
           </Group>
         </>
       )}
-    </MainFrame>
+    </>
   );
 };
 

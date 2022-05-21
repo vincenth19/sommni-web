@@ -23,7 +23,6 @@ import dynamic from "next/dynamic";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { RiCheckboxCircleLine } from "react-icons/ri";
 
-const MainFrame = dynamic(() => import("../components/shared/mainFrame"));
 const PageHead = dynamic(() => import("../components/shared/pageHead"));
 const AlertCard = dynamic(() => import("../components/shared/alertCard"));
 
@@ -70,7 +69,7 @@ const SignUp: NextPage = () => {
   }, [watch("password"), watch]);
 
   return (
-    <MainFrame>
+    <>
       <PageHead title="Sign Up - Sommni" />
       <form
         onSubmit={handleSubmit(onSubmit)}
@@ -179,7 +178,7 @@ const SignUp: NextPage = () => {
           </Button>
         </Group>
       </form>
-    </MainFrame>
+    </>
   );
 };
 

@@ -5,7 +5,6 @@ import {
   Text,
   Image as MantineImage,
   Select,
-  Divider,
 } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import { GetStaticProps, NextPage } from "next";
@@ -17,7 +16,6 @@ import { FC, useEffect, useState } from "react";
 import { RiCheckLine, RiCloseLine } from "react-icons/ri";
 import { screenSizes } from "../types";
 
-const MainFrame = dynamic(() => import("../components/shared/mainFrame"));
 const PageHead = dynamic(() => import("../components/shared/pageHead"));
 const TitleSection = dynamic(() => import("../components/shared/titleSection"));
 
@@ -152,7 +150,7 @@ const Compare: NextPage = () => {
   }, [biggerScreen]);
 
   return (
-    <MainFrame>
+    <>
       <PageHead title="Compare - Sommni" />
       <TitleSection title={"Compare"} />
       <Group direction="column" position="center">
@@ -208,7 +206,7 @@ const Compare: NextPage = () => {
         </Group>
       </Group>
       <TableMaterial isDesktop={isDesktop} />
-    </MainFrame>
+    </>
   );
 };
 

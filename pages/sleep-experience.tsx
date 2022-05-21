@@ -7,7 +7,6 @@ import { useEffect, useState } from "react";
 import { useMediaQuery } from "@mantine/hooks";
 import { screenSizes } from "../types";
 
-const MainFrame = dynamic(() => import("../components/shared/mainFrame"));
 const PageHead = dynamic(() => import("../components/shared/pageHead"));
 const TitleSection = dynamic(() => import("../components/shared/titleSection"));
 
@@ -110,7 +109,7 @@ const SleepExperience: NextPage = () => {
   }, [biggerScreen]);
 
   return (
-    <MainFrame>
+    <>
       <PageHead title="Sleep Experience - Sommni" />
       <TitleSection title={"Sleep Experience"} />
       <Group direction="column" spacing={"xl"} style={{ minHeight: "48vh" }}>
@@ -201,7 +200,7 @@ const SleepExperience: NextPage = () => {
           </Table>
         </Group>
       </Group>
-    </MainFrame>
+    </>
   );
 };
 

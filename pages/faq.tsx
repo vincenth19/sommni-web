@@ -7,7 +7,6 @@ import { TAccordionItem } from "../types";
 
 import dynamic from "next/dynamic";
 
-const MainFrame = dynamic(() => import("../components/shared/mainFrame"));
 const PageHead = dynamic(() => import("../components/shared/pageHead"));
 interface IFaqData extends FaqCategoryProps {
   value: string;
@@ -231,7 +230,7 @@ const Faq: NextPage = () => {
   return (
     <>
       <PageHead title="FAQ - Sommni" />
-      <MainFrame>
+      <>
         <Group
           position="center"
           direction="column"
@@ -268,7 +267,7 @@ const Faq: NextPage = () => {
             key={data.value}
           />
         ))}
-      </MainFrame>
+      </>
     </>
   );
 };

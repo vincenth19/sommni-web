@@ -13,7 +13,6 @@ import { decrypt, encrypt } from "../lib/cryptojs";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useContextData } from "../AppContext";
 
-const MainFrame = dynamic(() => import("../components/shared/mainFrame"));
 const AlertCard = dynamic(() => import("../components/shared/alertCard"));
 const PageHead = dynamic(() => import("../components/shared/pageHead"));
 
@@ -106,7 +105,7 @@ const SignIn: NextPage = () => {
   }, [biggerScreen]);
 
   return (
-    <MainFrame>
+    <>
       <PageHead title="Sign In - Sommni" />
       {!isLoggedIn && (
         <>
@@ -171,7 +170,7 @@ const SignIn: NextPage = () => {
           </form>
         </>
       )}
-    </MainFrame>
+    </>
   );
 };
 

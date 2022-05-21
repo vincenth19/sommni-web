@@ -13,7 +13,6 @@ import Image from "next/image";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
 import { useContextData } from "../AppContext";
-import MainFrame from "../components/shared/mainFrame";
 import PageHead from "../components/shared/pageHead";
 import TitleSection from "../components/shared/titleSection";
 import {
@@ -153,7 +152,7 @@ const CheckoutPage: NextPage = () => {
   }, []);
 
   return (
-    <MainFrame>
+    <>
       <PageHead title="Checkout - Sommni " />
       <TitleSection title={"Checkout"} />
       {checkoutError && <AlertCard errors={checkoutError} />}
@@ -275,7 +274,7 @@ const CheckoutPage: NextPage = () => {
           </Group>
         </>
       )}
-    </MainFrame>
+    </>
   );
 };
 

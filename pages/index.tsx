@@ -111,37 +111,28 @@ const Home: NextPage = () => {
   return (
     <div>
       <PageHead title="Sommni Malaysia" />
-      <MainFrame>
-        <MantineImage
-          height={"500px"}
-          src="https://www.thespruce.com/thmb/rmDEwUoAgwucuusBRvFoE4JBc0o=/4000x2250/smart/filters:no_upscale()/master-bedroom-in-new-luxury-home-with-chandelier-and-large-bank-of-windows-with-view-of-trees-1222623844-212940f4f89e4b69b6ce56fd968e9351.jpg"
-          alt="Swiper Image"
+      <MantineImage
+        height={"500px"}
+        src="https://www.thespruce.com/thmb/rmDEwUoAgwucuusBRvFoE4JBc0o=/4000x2250/smart/filters:no_upscale()/master-bedroom-in-new-luxury-home-with-chandelier-and-large-bank-of-windows-with-view-of-trees-1222623844-212940f4f89e4b69b6ce56fd968e9351.jpg"
+        alt="Swiper Image"
+      />
+      <Group direction="column" position="center" style={{ padding: "2rem 0" }}>
+        <Divider
+          size={"xs"}
+          color="gray"
+          style={{ width: "100%", textAlign: "center" }}
+          label={<h1>9 Years of Manufacturing Experience!</h1>}
+          labelPosition="center"
         />
-        <Group
-          direction="column"
-          position="center"
-          style={{ padding: "2rem 0" }}
-        >
-          <Divider
-            size={"xs"}
-            color="gray"
-            style={{ width: "100%", textAlign: "center" }}
-            label={<h1>9 Years of Manufacturing Experience!</h1>}
-            labelPosition="center"
-          />
 
-          <p style={{ textAlign: "center" }}>
-            For many years, we have focused on OEM exports. <br /> Now, we are
-            proud to serve Malaysia for a better sleep!
-          </p>
-        </Group>
-        <AlternatingSections infos={homeInfos} />
-        <WhySection />
-        <SleepExperienceSection
-          isScreenBig={isScreenBig}
-          cardItems={cardItems}
-        />
-      </MainFrame>
+        <p style={{ textAlign: "center" }}>
+          For many years, we have focused on OEM exports. <br /> Now, we are
+          proud to serve Malaysia for a better sleep!
+        </p>
+      </Group>
+      <AlternatingSections infos={homeInfos} />
+      <WhySection />
+      <SleepExperienceSection isScreenBig={isScreenBig} cardItems={cardItems} />
     </div>
   );
 };

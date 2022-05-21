@@ -4,6 +4,7 @@ import { MantineProvider } from "@mantine/core";
 import { appWithTranslation } from "next-i18next";
 import { CookiesProvider } from "react-cookie";
 import { AppProvider } from "../AppContext";
+import MainFrame from "../components/shared/mainFrame";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
@@ -34,7 +35,9 @@ function MyApp({ Component, pageProps }: AppProps) {
             primaryColor: "brand",
           }}
         >
-          <Component {...pageProps} />
+          <MainFrame>
+            <Component {...pageProps} />
+          </MainFrame>
         </MantineProvider>
       </CookiesProvider>
     </AppProvider>

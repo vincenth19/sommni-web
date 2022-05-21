@@ -7,8 +7,6 @@ const contextDefaultValues: TAppContext = {
   setUser: () => {},
   username: null,
   setUsername: () => {},
-  navLinks: null,
-  setNavLinks: () => {},
   cartItems: [],
   setCartItems: () => {},
   cartUpdater: () => {},
@@ -69,7 +67,6 @@ export function AppProvider({ children }: AppProviderProps) {
   const [user, setUser] = useState<TCustomer | null>(null);
   const [username, setUsername] = useState<string | null>(null);
   const [cartItems, setCartItems] = useState<TCartItem[]>([]);
-  const [navLinks, setNavLinks] = useState<TNavLink[] | null>(DefaltNavLinks);
 
   const getLocalStorageCart = () => {
     if (localStorage.getItem("cartItem")) {
@@ -136,8 +133,6 @@ export function AppProvider({ children }: AppProviderProps) {
     setUser,
     username,
     setUsername,
-    navLinks,
-    setNavLinks,
     cartItems,
     setCartItems,
     cartUpdater,

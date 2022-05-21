@@ -1,15 +1,7 @@
-import { Button, Group, Stepper, Table } from "@mantine/core";
+import { Button, Group, Table } from "@mantine/core";
 import { GetStaticProps, NextPage } from "next";
 import { useEffect, useState } from "react";
-import MainFrame from "../components/shared/mainFrame";
 import PageHead from "../components/shared/pageHead";
-import { BiPackage } from "react-icons/bi";
-import { BsFillCartCheckFill, BsSearch, BsCheckCircle } from "react-icons/bs";
-import {
-  MdPrecisionManufacturing,
-  MdOutlineLocalShipping,
-} from "react-icons/md";
-import { GiFactory } from "react-icons/gi";
 import TitleSection from "../components/shared/titleSection";
 import Link from "next/link";
 import { useMediaQuery } from "@mantine/hooks";
@@ -70,7 +62,7 @@ const Tracking: NextPage = () => {
   }, [biggerScreen]);
 
   return (
-    <MainFrame>
+    <>
       <PageHead title="Tracking - Sommni" />
       <TitleSection title={"Tracking"} />
       <StepperTracking defaultActive={-1} />
@@ -96,7 +88,7 @@ const Tracking: NextPage = () => {
           </Button>
         </Link>
       </Group>
-    </MainFrame>
+    </>
   );
 };
 

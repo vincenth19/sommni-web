@@ -20,7 +20,6 @@ const AlertCard = dynamic(() => import("../../../components/shared/alertCard"));
 const ProductPage = dynamic(
   () => import("../../../components/product/productPage")
 );
-const MainFrame = dynamic(() => import("../../../components/shared/mainFrame"));
 const PageHead = dynamic(() => import("../../../components/shared/pageHead"));
 
 const mattressSpecs: TAccordionItem[] = [
@@ -172,7 +171,7 @@ const ProductView: NextPage = () => {
       ></Script>
 
       <PageHead title={`${productTitle} - Sommni`} />
-      <MainFrame>
+      <>
         <div style={{ minHeight: "65vh" }}>
           {isLoading ? (
             <Loading height="80vh" text="Getting our product..." />
@@ -211,7 +210,7 @@ const ProductView: NextPage = () => {
             </>
           )}
         </div>
-      </MainFrame>
+      </>
     </>
   );
 };
