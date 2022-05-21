@@ -5,6 +5,7 @@ import {
   Text,
   Loader,
   Image as MantineImage,
+  Container,
 } from "@mantine/core";
 import Link from "next/link";
 import Image from "next/image";
@@ -39,7 +40,7 @@ const Navbar = () => {
 
   useEffect(() => {
     setIsMobile(mobile);
-  }, []);
+  }, [mobile]);
 
   useEffect(() => {
     const abortCont = new AbortController();
@@ -85,69 +86,71 @@ const Navbar = () => {
   }, []);
 
   return (
-    <>
-      <Group
-        style={{
-          padding: "1rem",
-          position: "sticky",
-          top: 0,
-          zIndex: 5,
-          backgroundColor: "white",
-        }}
-        position="apart"
-      >
-        <Group>
-          <NavDrawer />
-          <Link href="/" passHref>
-            <Box component="a" style={{ cursor: "pointer" }}>
-              <Image
-                width={150}
-                height="50%"
-                src="/logo-sommni-color.svg"
-                alt="Sommni Logo"
-              />
-            </Box>
-          </Link>
-        </Group>
-        <Group
-          position="center"
-          spacing="lg"
-          style={{ display: isDesktop ? "block" : "none" }}
-        >
-          <BtnNavLinks />
-        </Group>
+    <Box
+      style={{
+        boxShadow: "0 2px 30px rgb(0 0 0 / 10%)",
+        padding: "1rem 0",
+        position: "sticky",
+        top: 0,
+        zIndex: 5,
+        backgroundColor: "white",
+      }}
+    >
+      <Container size={"xl"}>
+        <Group position="apart">
+          <Group>
+            <NavDrawer />
+            <Link href="/" passHref>
+              <Box component="a" style={{ cursor: "pointer" }}>
+                <Image
+                  width={150}
+                  height="50%"
+                  src="/logo-sommni-color.svg"
+                  alt="Sommni Logo"
+                />
+              </Box>
+            </Link>
+          </Group>
+          <Group
+            position="center"
+            spacing="lg"
+            style={{ display: isDesktop ? "block" : "none" }}
+          >
+            <BtnNavLinks />
+          </Group>
 
-        <Group position="right" spacing="xs">
-          <Box style={{ display: isMobile ? "block" : "none" }}>
-            {username ? (
-              <Link href="/profile" passHref>
-                <Button size="md" component="a" compact variant="light">
-                  Hi, {username}
-                </Button>
-              </Link>
-            ) : (
-              <>
-                {isLoading ? (
-                  <Loader size={"sm"} />
-                ) : (
-                  <Link href={"/sign-up"} passHref>
-                    <Button component="a" compact variant="light" size="md">
-                      Sign Up / Sign In
-                    </Button>
-                  </Link>
-                )}
-              </>
-            )}
-          </Box>
-          <Link href={"/cart"} passHref>
-            <Button component="a" size="md" variant="light" compact>
-              <RiShoppingCartLine style={{ marginRight: cartItems && 10 }} />
-              <Text>{cartItems && cartItems.length}</Text>
-            </Button>
-          </Link>
+          <Group position="right" spacing="xs">
+            <Box style={{ display: isMobile ? "block" : "none" }}>
+              {username ? (
+                <Link href="/profile" passHref>
+                  <Button size="md" component="a" compact variant="light">
+                    Hi, {username}
+                  </Button>
+                </Link>
+              ) : (
+                <>
+                  {isLoading ? (
+                    <Loader size={"sm"} />
+                  ) : (
+                    <Link href={"/sign-up"} passHref>
+                      <Button component="a" compact variant="light" size="md">
+                        Sign Up / Sign In
+                      </Button>
+                    </Link>
+                  )}
+                </>
+              )}
+            </Box>
+            <Link href={"/cart"} passHref>
+              <Button component="a" size="md" variant="light" compact>
+                <RiShoppingCartLine style={{ marginRight: cartItems && 10 }} />
+                <Text>{cartItems && cartItems.length}</Text>
+              </Button>
+            </Link>
+          </Group>
         </Group>
-      </Group>
-    </>
+      </Container>
+    </Box>
   );
 };
 

@@ -1,4 +1,4 @@
-import { Button, Group, Text, useMantineTheme } from "@mantine/core";
+import { Button, Container, Group, Text, useMantineTheme } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import { useTranslation } from "next-i18next";
 import Link from "next/link";
@@ -59,32 +59,34 @@ const Footer = () => {
         color: "white",
       }}
     >
-      <div style={{ display: "flex", gap: "2rem" }}>
-        {FooterLinks.map((links, index) => (
-          <Group direction="column" key={index}>
-            {links.linkGroup.map((link) => {
-              if (!link.path) {
-                return (
-                  <Text key={link.title} weight="700" transform="uppercase">
-                    {link.title}
-                  </Text>
-                );
-              } else {
-                return (
-                  <Link key={link.path} href={link.path} passHref>
-                    <Text component="a" style={{ cursor: "pointer" }}>
+      <Container size="xl">
+        <div style={{ display: "flex", gap: "2rem" }}>
+          {FooterLinks.map((links, index) => (
+            <Group direction="column" key={index}>
+              {links.linkGroup.map((link) => {
+                if (!link.path) {
+                  return (
+                    <Text key={link.title} weight="700" transform="uppercase">
                       {link.title}
                     </Text>
-                  </Link>
-                );
-              }
-            })}
-          </Group>
-        ))}
-      </div>
-      <Text color={themes.colors.gray[4]} style={{ marginTop: "30px" }}>
-        {t("copyright")}
-      </Text>
+                  );
+                } else {
+                  return (
+                    <Link key={link.path} href={link.path} passHref>
+                      <Text component="a" style={{ cursor: "pointer" }}>
+                        {link.title}
+                      </Text>
+                    </Link>
+                  );
+                }
+              })}
+            </Group>
+          ))}
+        </div>
+        <Text color={themes.colors.gray[4]} style={{ marginTop: "30px" }}>
+          {t("copyright")}
+        </Text>
+      </Container>
     </footer>
   );
 };

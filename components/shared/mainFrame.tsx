@@ -37,29 +37,15 @@ const MainFrame: FC<MainFrameProps> = ({
 
   return (
     <>
-      {isDesktop ? (
-        <Container size="xl">
-          {navbar && <Navbar />}
+      {navbar && <Navbar />}
+      <Container size="xl">
+        {children}
+        {signUp && <SignUpSection />}
+        {newsletter && <NewsletterSection />}
+        {scrollToTop && <ScrollToTop />}
+      </Container>
 
-          {children}
-          {signUp && <SignUpSection />}
-          {newsletter && <NewsletterSection />}
-          {scrollToTop && <ScrollToTop />}
-          {footer && <Footer />}
-        </Container>
-      ) : (
-        <>
-          {navbar && <Navbar />}
-          <Container size="xl">
-            {children}
-            {signUp && <SignUpSection />}
-            {newsletter && <NewsletterSection />}
-            {scrollToTop && <ScrollToTop />}
-          </Container>
-
-          {footer && <Footer />}
-        </>
-      )}
+      {footer && <Footer />}
     </>
   );
 };
