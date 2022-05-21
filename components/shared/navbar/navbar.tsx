@@ -27,13 +27,19 @@ const Navbar = () => {
     useContextData();
   const [cookies, setCookie, removeCookie] = useCookies(["login"]);
 
-  const biggerScreen = useMediaQuery(`(min-width: ${screenSizes.md})`);
-  const [isScreenBig, setIsScreenBig] = useState<boolean>();
+  const desktop = useMediaQuery(`(min-width: ${screenSizes.xl})`);
+  const mobile = useMediaQuery(`(min-width: ${screenSizes.sm})`);
+  const [isDesktop, setIsDesktop] = useState<boolean>();
+  const [isMobile, setIsMobile] = useState<boolean>();
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    setIsScreenBig(biggerScreen);
-  }, [biggerScreen]);
+    setIsDesktop(desktop);
+  }, [desktop]);
+
+  useEffect(() => {
+    setIsMobile(mobile);
+  }, []);
 
   useEffect(() => {
     const abortCont = new AbortController();
@@ -106,13 +112,13 @@ const Navbar = () => {
         <Group
           position="center"
           spacing="lg"
-          style={{ display: isScreenBig ? "block" : "none" }}
+          style={{ display: isDesktop ? "block" : "none" }}
         >
           <BtnNavLinks />
         </Group>
 
         <Group position="right" spacing="xs">
-          <Box style={{ display: isScreenBig ? "block" : "none" }}>
+          <Box style={{ display: isMobile ? "block" : "none" }}>
             {username ? (
               <Link href="/profile" passHref>
                 <Button size="md" component="a" compact variant="light">
