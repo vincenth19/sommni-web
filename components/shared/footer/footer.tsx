@@ -3,6 +3,7 @@ import { useMediaQuery } from "@mantine/hooks";
 import { useTranslation } from "next-i18next";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { RiMailLine } from "react-icons/ri";
 import { screenSizes, TFooterLink } from "../../../types";
 
 type TFooterLinkGroup = {
@@ -60,29 +61,46 @@ const Footer = () => {
       }}
     >
       <Container size="xl">
-        <div style={{ display: "flex", gap: "2rem" }}>
-          {FooterLinks.map((links, index) => (
-            <Group direction="column" key={index}>
-              {links.linkGroup.map((link) => {
-                if (!link.path) {
-                  return (
-                    <Text key={link.title} weight="700" transform="uppercase">
-                      {link.title}
-                    </Text>
-                  );
-                } else {
-                  return (
-                    <Link key={link.path} href={link.path} passHref>
-                      <Text component="a" style={{ cursor: "pointer" }}>
+        <Group position="apart" spacing={"xl"}>
+          <div style={{ display: "flex", gap: "2rem" }}>
+            {FooterLinks.map((links, index) => (
+              <Group direction="column" key={index}>
+                {links.linkGroup.map((link) => {
+                  if (!link.path) {
+                    return (
+                      <Text key={link.title} weight="700" transform="uppercase">
                         {link.title}
                       </Text>
-                    </Link>
-                  );
-                }
-              })}
-            </Group>
-          ))}
-        </div>
+                    );
+                  } else {
+                    return (
+                      <Link key={link.path} href={link.path} passHref>
+                        <Text component="a" style={{ cursor: "pointer" }}>
+                          {link.title}
+                        </Text>
+                      </Link>
+                    );
+                  }
+                })}
+              </Group>
+            ))}
+          </div>
+          <div>
+            <Text weight={700}>Sommni Bedding </Text>
+            <Text weight={700}>Dommus Concept (Asia) Sdn. Bhd.</Text>
+            <Text>
+              Lot 1707-1, Sungai Long, Batu 11, Cheras, 43000 Kajang, Selangor
+            </Text>
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <p style={{ fontSize: "1.4rem" }}>
+                <RiMailLine />
+              </p>
+              <Text style={{ marginBottom: "8px", marginLeft: "5px" }}>
+                <a href="mailto:support@sommni.com">support@sommni.com</a>
+              </Text>
+            </div>
+          </div>
+        </Group>
         <Text color={themes.colors.gray[4]} style={{ marginTop: "30px" }}>
           {t("copyright")}
         </Text>
