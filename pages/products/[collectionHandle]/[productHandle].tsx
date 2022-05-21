@@ -161,19 +161,16 @@ const ProductView: NextPage = () => {
 
   return (
     <>
-      {/*
       <Script
-        strategy="beforeInteractive"
         type="text/javascript"
         src="//static.queue-it.net/script/queueclient.min.js"
       ></Script>
       <Script
-        strategy="beforeInteractive"
         data-queueit-c="getglove"
         type="text/javascript"
         src="//static.queue-it.net/script/queueconfigloader.min.js"
       ></Script>
-      */}
+
       <PageHead title={`${productTitle} - Sommni`} />
       <MainFrame>
         <div style={{ minHeight: "65vh" }}>
