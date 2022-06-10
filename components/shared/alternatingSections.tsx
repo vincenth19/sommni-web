@@ -23,7 +23,7 @@ const AlternatingSections: FC<AlternatingSectionsProps> = ({ infos }) => {
   }, [biggerScreen]);
 
   return (
-    <>
+    <Group direction="column">
       {infos.map((info, index) => {
         return (
           <div
@@ -106,7 +106,7 @@ const AlternatingSections: FC<AlternatingSectionsProps> = ({ infos }) => {
           </div>
         );
       })}
-    </>
+    </Group>
   );
 };
 

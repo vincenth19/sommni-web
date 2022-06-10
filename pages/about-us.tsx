@@ -15,7 +15,7 @@ const AboutUs: NextPage = () => {
       <Group
         position="center"
         spacing={"xl"}
-        style={{ minHeight: "48vh", padding: "4rem 0" }}
+        style={{ minHeight: "48vh", padding: "4rem 0", textAlign: "center" }}
       >
         <Group
           direction="column"

@@ -23,7 +23,7 @@ const OptionChips: FC<ProductOptionsProps> = ({
             <Text weight={500}>{option.name}</Text>
             <Chips
               size={chipSize}
-              style={{ padding: "1rem 0" }}
+              style={{ paddingTop: "0.5rem", paddingBottom: "1rem" }}
               multiple={false}
               value={valueState[option.name]}
               onChange={(value) =>

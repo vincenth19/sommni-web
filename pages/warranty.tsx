@@ -19,6 +19,7 @@ const listItems = [
   "Sommni reserves the right to repair or replace either parts of the mattress or base or the entire mattress or base at its option.",
   "There is not a comfort or sleeping satisfaction guarantee, it covers manufacturing faults only. A bed that is not suitable to your comfort (i.e. too soft or too hard) is not a manufacturer's warranty fault.",
   "All mattresses will show body impressions as the upholstery settles. This is not a structural defect covered by this limited warranty. The upholstery is intended to provide cushioning and body impression is unavoidable, body impressions of 1.5 inch or 38 mm is considered as normal.",
+  "Our Company will not be held responsible for repairs done outside of our factory.",
 ];
 
 const Warranty: NextPage = () => {
@@ -32,13 +33,11 @@ const Warranty: NextPage = () => {
         style={{ minHeight: "48vh", padding: "4rem 0" }}
       >
         <List>
-          {listItems.map((item, index) => {
-            return <List.Item key={index}>{item}</List.Item>;
-          })}
-          <List.Item>
-            Our Company will not be held responsible for repairs done outside of
-            our factory.
-          </List.Item>
+          <Group direction="column">
+            {listItems.map((item, index) => {
+              return <List.Item key={index}>{item}</List.Item>;
+            })}
+          </Group>
         </List>
       </Group>
     </>

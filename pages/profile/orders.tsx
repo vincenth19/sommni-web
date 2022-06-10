@@ -150,8 +150,6 @@ const OrderItem: FC<OrderItemProps> = ({ orderItems, isDesktop }) => {
         const timeNow = new Date().getTime();
         const diff = Math.abs(timeNow - orderTime) / 3600000;
 
-        console.log(item);
-
         let status = "";
         if (item.node.canceledAt) {
           status = "Cancelled";

@@ -18,7 +18,7 @@ const TitleSection: FC<TitleSectionProps> = ({ title }) => {
     <Group
       position="center"
       style={{
-        height: isDesktop ? "150px" : "60px",
+        height: isDesktop ? "150px" : "100px",
       }}
     >
       <h1

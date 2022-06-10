@@ -179,7 +179,7 @@ const mattressSpecs: TAccordionItem[] = [
         </li>
         <li>
           Certification
-          <p>Density</p>
+          <p>Eco-Institute certified</p>
         </li>
         <li>
           Country of Origin
@@ -294,7 +294,7 @@ const ProductView: NextPage = () => {
                     <AlertCard errors={fetchedProduct} />
                   </div>
                 ) : (
-                  <>
+                  <div style={{ padding: "2rem 0" }}>
                     <ProductPage
                       productData={fetchedProduct}
                       valueState={variants}
@@ -302,7 +302,7 @@ const ProductView: NextPage = () => {
                       prodSpecs={productSpec}
                       extraInfos={productExtraInfo}
                     />
-                  </>
+                  </div>
                 )
               ) : (
                 <>

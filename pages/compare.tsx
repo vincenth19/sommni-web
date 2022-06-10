@@ -160,32 +160,34 @@ const Compare: NextPage = () => {
       >
         <h2>Benefits of Natural Latex</h2>
         <List>
-          <List.Item>
-            One of the finest natural products in the world. Precious gift from
-            out mother nature.
-          </List.Item>
-          <List.Item>
-            Providing the perfect balance of comfort and support. No other
-            material can match natural latex in giving your body the ideal
-            pressure relief and conforms naturally to our body contour.
-          </List.Item>
-          <List.Item>Naturally anti-bacterial and non-allergenic.</List.Item>
-          <List.Item>
-            Perfectly clean and hygienic. All of our products will be pre-washed
-            by washing of certain residual substances improves the quality and
-            hygiene of the product.
-          </List.Item>
-          <List.Item>
-            Bodily heat is easily dispersed while sleeping on natural latex
-            mattress. This is because the structure of the latex cells is open
-            and interconnected, unlike the conentional foam propoerties.
-          </List.Item>
-          <List.Item>
-            No sleep disturbance, minimal partner disturbance, enjoy a restful
-            slumber every night. As each point of the latex surface reacts to
-            weight and pressure independently.
-          </List.Item>
-          <List.Item>Environmentally friendly and biodegradable.</List.Item>
+          <Group direction="column">
+            <List.Item>
+              One of the finest natural products in the world. Precious gift
+              from out mother nature.
+            </List.Item>
+            <List.Item>
+              Providing the perfect balance of comfort and support. No other
+              material can match natural latex in giving your body the ideal
+              pressure relief and conforms naturally to our body contour.
+            </List.Item>
+            <List.Item>Naturally anti-bacterial and non-allergenic.</List.Item>
+            <List.Item>
+              Perfectly clean and hygienic. All of our products will be
+              pre-washed by washing of certain residual substances improves the
+              quality and hygiene of the product.
+            </List.Item>
+            <List.Item>
+              Bodily heat is easily dispersed while sleeping on natural latex
+              mattress. This is because the structure of the latex cells is open
+              and interconnected, unlike the conentional foam propoerties.
+            </List.Item>
+            <List.Item>
+              No sleep disturbance, minimal partner disturbance, enjoy a restful
+              slumber every night. As each point of the latex surface reacts to
+              weight and pressure independently.
+            </List.Item>
+            <List.Item>Environmentally friendly and biodegradable.</List.Item>
+          </Group>
         </List>
       </Group>
       <Group

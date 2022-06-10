@@ -117,6 +117,11 @@ const Home: NextPage = () => {
         height={"500px"}
         src="https://www.thespruce.com/thmb/rmDEwUoAgwucuusBRvFoE4JBc0o=/4000x2250/smart/filters:no_upscale()/master-bedroom-in-new-luxury-home-with-chandelier-and-large-bank-of-windows-with-view-of-trees-1222623844-212940f4f89e4b69b6ce56fd968e9351.jpg"
         alt="Swiper Image"
+        style={{
+          position: "relative",
+          width: "99vw",
+          left: "calc(-50vw + 50%)",
+        }}
       />
       <Group direction="column" position="center" style={{ padding: "4rem 0" }}>
         <Divider
@@ -211,6 +216,7 @@ const SingleProductShowcase: FC = () => {
                   productData={fetchedProduct}
                   valueState={variants}
                   valueSetter={setVariants}
+                  stickyAddToCart={false}
                 />
               </>
             ))}
