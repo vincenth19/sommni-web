@@ -159,14 +159,28 @@ const Navbar = () => {
   );
 };
 
+const infoText = [
+  "100 nights complimentary trial",
+  "| 10 years warranty",
+  "| 100% certified natural latex",
+  "| Free delivery",
+];
 const InfoBar = () => {
   return (
     <div style={{ backgroundColor: "#4284F3", padding: "5px", color: "white" }}>
-      <Group position="center">
-        <Text size="sm">
-          100 nights complimentary trial | 10 years warranty | 100% certified
-          natural latex | Free delivery
-        </Text>
+      <Group position="center" style={{ gap: "0px" }}>
+        {infoText.map((text) => {
+          return (
+            <Text
+              style={{ paddingRight: "5px" }}
+              key={text}
+              size="sm"
+              align="center"
+            >
+              {text}
+            </Text>
+          );
+        })}
       </Group>
     </div>
   );
