@@ -294,7 +294,7 @@ const ProductView: NextPage = () => {
                     <AlertCard errors={fetchedProduct} />
                   </div>
                 ) : (
-                  <>
+                  <div style={{ padding: "2rem 0" }}>
                     <ProductPage
                       productData={fetchedProduct}
                       valueState={variants}
@@ -302,7 +302,7 @@ const ProductView: NextPage = () => {
                       prodSpecs={productSpec}
                       extraInfos={productExtraInfo}
                     />
-                  </>
+                  </div>
                 )
               ) : (
                 <>

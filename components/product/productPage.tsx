@@ -39,6 +39,7 @@ interface ProductPageProps {
   prodSpecs?: TAccordionItem[] | null;
   extraInfos?: TExtraInfo[] | null;
   showWhySommni?: boolean;
+  stickyAddToCart?: boolean;
 }
 
 const ProductPage: FC<ProductPageProps> = ({
@@ -48,6 +49,7 @@ const ProductPage: FC<ProductPageProps> = ({
   prodSpecs,
   extraInfos,
   showWhySommni = true,
+  stickyAddToCart = true,
 }) => {
   const biggerScreen = useMediaQuery(`(min-width: ${screenSizes.sm})`);
   const [isScreenBig, setIsScreenBig] = useState<boolean>();
@@ -200,7 +202,7 @@ const ProductPage: FC<ProductPageProps> = ({
             style={{
               width: isScreenBig ? "35vw" : "100%",
               position: isScreenBig ? "sticky" : "unset",
-              top: "4rem",
+              top: "8rem",
               zIndex: 2,
               height: "100%",
             }}
@@ -217,7 +219,9 @@ const ProductPage: FC<ProductPageProps> = ({
               <Carousel slides={productData.images.edges} />
             )}
           </Box>
-          <Box style={{ width: "100%" }}>
+
+          {/* right column */}
+          <Group direction="column" spacing={"xs"} style={{ width: "100%" }}>
             <h1 style={{ fontSize: "2.5rem" }}>{productData.title}</h1>
             <Group>
               <Text size="xl">
@@ -237,7 +241,15 @@ const ProductPage: FC<ProductPageProps> = ({
                 )}
               </>
             )}
-            <div className={!isScreenBig ? "mobileBottomButton" : ""}>
+            <div
+              className={
+                stickyAddToCart
+                  ? !isScreenBig
+                    ? "mobileBottomButton"
+                    : ""
+                  : ""
+              }
+            >
               <Button
                 fullWidth={isScreenBig ? false : true}
                 size="lg"
@@ -299,9 +311,9 @@ const ProductPage: FC<ProductPageProps> = ({
                 descriptionHtml={productData.descriptionHtml}
               />
             )}
-            <Divider size="xs" style={{ margin: "1rem 0" }} />
+            {/* <Divider size="xs" style={{ margin: "1rem 0" }} /> */}
             {prodSpecs && <ProductSpecification specs={prodSpecs} />}
-          </Box>
+          </Group>
         </div>
 
         {showWhySommni && (

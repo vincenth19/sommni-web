@@ -17,7 +17,7 @@ const Footer = () => {
     {
       linkGroup: [
         { title: t("h-product") },
-        { path: "/mattress", title: t("p-mattress") },
+        { path: "/products/mattress", title: t("p-mattress") },
         // { path: "/pillow", title: t("p-pillow") },
         // { path: "/topper", title: t("p-topper") },
         // { path: "/kids", title: t("p-kids") },
