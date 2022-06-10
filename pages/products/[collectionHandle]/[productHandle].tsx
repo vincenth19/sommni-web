@@ -54,50 +54,161 @@ const mattressSpecs: TAccordionItem[] = [
     label: "Weight & Dimension",
     content: (
       <Group spacing={"xl"} direction="column">
+        <Text underline weight={700}>
+          L x W x H
+        </Text>
         <Group spacing={"xl"}>
           <div style={{ display: "flex", flexDirection: "column" }}>
             <strong>Single</strong>
-            <Text>90cm W x 190cm L x 15cm H</Text>
-            <Text>10 kg</Text>
+            <Text>190cm x 90cm x 23cm</Text>
+            {/* <Text>10 kg</Text>
             <Text>35.43” W x 74.8” L x 5.91” H </Text>
-            <Text>22.05 pounds</Text>
+            <Text>22.05 pounds</Text> */}
           </div>
           <div style={{ display: "flex", flexDirection: "column" }}>
             <strong>Super Single</strong>
-            <Text>106cm W x 190cm L x 15cm H</Text>
-            <Text>12 kg</Text>
+            <Text>106cm x 90cm x 23cm</Text>
+            {/* <Text>12 kg</Text>
             <Text>41.73” W x 74.8” L x 5.91” H </Text>
-            <Text>24.26 pounds</Text>
+            <Text>24.26 pounds</Text> */}
           </div>
         </Group>
         <Group spacing={"xl"}>
           <div style={{ display: "flex", flexDirection: "column" }}>
             <strong>Queen</strong>
-            <Text>9170cm W x 190cm L x 15cm H</Text>
-            <Text>13.4 kg</Text>
+            <Text>106cm x 90cm x 23cm</Text>
+            {/* <Text>13.4 kg</Text>
             <Text>66.93” W x 74.8” L x 5.91” H</Text>
-            <Text>29.54 pounds</Text>
+            <Text>29.54 pounds</Text> */}
           </div>
           <div style={{ display: "flex", flexDirection: "column" }}>
             <strong>King</strong>
-            <Text>180cm W x 190cm L x 15cm H</Text>
-            <Text>14 kg</Text>
+            <Text>106cm x 90cm x 23cm</Text>
+            {/* <Text>14 kg</Text>
             <Text>70.87” W x 74.8” L x 5.91” H</Text>
-            <Text>30.86 pounds</Text>
+            <Text>30.86 pounds</Text> */}
           </div>
         </Group>
       </Group>
+    ),
+  },
+  {
+    label: "Core",
+    content: (
+      <ol>
+        <li>
+          <strong>Sommni's Miracle Memory</strong>
+          <p>
+            Sommni's special memory foam is soft to touch and provides
+            remarkable plush comfort as it moulds to your body
+          </p>
+        </li>
+        <li>
+          <strong> Sommni's Miracle Memory </strong>
+          <p>
+            Sommni's special memory foam is soft to touch and provides
+            remarkable plush comfort as it moulds to your body
+          </p>
+        </li>
+        <li>
+          <strong>HD Support</strong>
+          <p>
+            The third and middle layer consists of a High density support foam
+            which enables your Sommni to balance your body weight distribution
+            and in the same time providing a long term durability
+          </p>
+        </li>
+        <li>
+          <strong>HD Firm Cushion</strong>
+          <p>
+            Sommni's High Density Firm Cushion is firm yet comfortable. It is
+            added to provide optimal firm feel and support to the firm side of
+            the mattress.
+          </p>
+        </li>
+        <li>
+          <strong>3D Natural Latex</strong>
+          <p>
+            Different from the second layer of The Sommni Mattress, The bottom
+            layer consist of a different blend of Sommni';s in house certified
+            100% Natural Latex. The 3D Natural Latex is firmer at feel with a
+            larger pinhole design. Sleepers who prefer dozing off on the firm
+            side would get to enjoy the best of Mother Nature.
+          </p>
+        </li>
+      </ol>
+    ),
+  },
+  {
+    label: "Packaging",
+    content: (
+      <ol>
+        <li>Compressed and rolled mattress</li>
+        <li>PVC Plastic</li>
+        <li>
+          Box Dimension:
+          <ul>
+            <li>Length: 45cm</li>
+            <li>Width: 45cm</li>
+            <li>Height: 110cm</li>
+          </ul>
+        </li>
+      </ol>
+    ),
+  },
+  {
+    label: "Material",
+    content: (
+      <ul>
+        <li>
+          Fabric Cover
+          <ol>
+            <li>
+              <strong>Top &amp; Bottom Fabric</strong>
+              <p>Aloe Vera Fabric</p>
+            </li>
+            <li>
+              <strong>Side Fabric</strong>
+              <p>Woven Fabric with a mixture of Cotton &amp; Polyester</p>
+            </li>
+          </ol>
+        </li>
+        <li>
+          Density
+          <p>Dual Density Soft &amp; Firm</p>
+        </li>
+        <li>
+          Certification
+          <p>Density</p>
+        </li>
+        <li>
+          Country of Origin
+          <p>Proudly Malaysian</p>
+        </li>
+      </ul>
     ),
   },
 ];
 
 const mattressExtraInfos: TExtraInfo[] = [
   {
-    imageURL:
-      "https://images.ctfassets.net/uvwd10ivtduz/63ZP2CJyW2fvtLk0LbooQY/fae86c5734920aa2242122bfde02b0bf/16_9-Mattress__1_.png??w=1200&h=675&q=75&fit=fill&fm=webp",
-    title: "Support in all the right places",
-    content:
-      "We have a firmer support base right beneath the hips that prevents your body from sinking into the mattress. This comes in real handy when it comes to helping you maintain a healthy sleeping posture.",
+    imageURL: "/bed-3d.webp",
+    title: "What's in your Sommni?",
+    content: (
+      <ul>
+        <li>
+          Planet-friendly textiles: up to 121 recycled bottles in each cover
+        </li>
+        <li>
+          Top layer of breathable polyurethane foam coated with phase change
+          cooling material
+        </li>
+        <li>Second layer of natural latex</li>
+        <li>Third layer of zoned memory foam</li>
+        <li>Fourth layer of polyurethane foam with gel pods</li>
+        <li>Durable base of polyurethane foam with encased springs</li>
+      </ul>
+    ),
   },
   {
     imageURL:

@@ -44,7 +44,7 @@ const WhySection = () => {
   ];
 
   return (
-    <Group direction="column" position="center" style={{ paddingBottom: 40 }}>
+    <Group direction="column" position="center">
       <h1>Why Sommni?</h1>
       <div
         style={{

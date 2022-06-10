@@ -145,7 +145,7 @@ const SleepExperience: NextPage = () => {
           warranty for your Sommni !
         </Text>
 
-        <Group direction="column" style={{ padding: "2rem 0" }}>
+        <Group direction="column" style={{ padding: "4rem 0" }}>
           <Group direction="column" position="center" style={{ width: "100%" }}>
             <h2>Why do we discourage trials?</h2>
             <Text align="center" style={{ width: "100%" }}>
@@ -173,7 +173,11 @@ const SleepExperience: NextPage = () => {
           </Table>
         </Group>
 
-        <Group direction="column" position="center">
+        <Group
+          direction="column"
+          position="center"
+          style={{ paddingBottom: "4rem" }}
+        >
           <h2>
             Difference between 100 Nights Trial and Sommni&apos;s 100 Nights
             Guaranteed Experience

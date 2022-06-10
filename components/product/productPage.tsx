@@ -301,8 +301,14 @@ const ProductPage: FC<ProductPageProps> = ({
             {prodSpecs && <ProductSpecification specs={prodSpecs} />}
           </Box>
         </div>
-        <WhySection />
-        {extraInfos && <AlternatingSections infos={extraInfos} />}
+        <div style={{ padding: "4rem 0" }}>
+          <WhySection />
+        </div>
+        {extraInfos && (
+          <div style={{ paddingBottom: "4rem" }}>
+            <AlternatingSections infos={extraInfos} />
+          </div>
+        )}
       </>
     </>
   );

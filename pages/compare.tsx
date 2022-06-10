@@ -153,7 +153,11 @@ const Compare: NextPage = () => {
     <>
       <PageHead title="Compare - Sommni" />
       <TitleSection title={"Compare"} />
-      <Group direction="column" position="center">
+      <Group
+        direction="column"
+        position="center"
+        style={{ paddingBottom: "4rem" }}
+      >
         <h2>Benefits of Natural Latex</h2>
         <List>
           <List.Item>
@@ -184,7 +188,11 @@ const Compare: NextPage = () => {
           <List.Item>Environmentally friendly and biodegradable.</List.Item>
         </List>
       </Group>
-      <Group position="center" direction="column" style={{ padding: "4rem 0" }}>
+      <Group
+        position="center"
+        direction="column"
+        style={{ paddingBottom: "4rem" }}
+      >
         <h2>Characteristics of Natural Latex</h2>
         <Group align="baseline">
           {latexInfo.map((info) => {
@@ -205,7 +213,9 @@ const Compare: NextPage = () => {
           })}
         </Group>
       </Group>
-      <TableMaterial isDesktop={isDesktop} />
+      <div style={{ paddingBottom: "4rem" }}>
+        <TableMaterial isDesktop={isDesktop} />
+      </div>
     </>
   );
 };

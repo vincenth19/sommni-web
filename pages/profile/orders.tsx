@@ -145,9 +145,12 @@ const OrderItem: FC<OrderItemProps> = ({ orderItems, isDesktop }) => {
           "en-SG",
           { day: "numeric", month: "long", year: "numeric" }
         );
+
         const orderTime = new Date(item.node.processedAt).getTime();
         const timeNow = new Date().getTime();
         const diff = Math.abs(timeNow - orderTime) / 3600000;
+
+        console.log(item);
 
         let status = "";
         if (item.node.canceledAt) {
@@ -206,17 +209,23 @@ const OrderItem: FC<OrderItemProps> = ({ orderItems, isDesktop }) => {
               </div>
               <Group>
                 {item.node.successfulFulfillments.length > 0 ? (
-                  <Button>
-                    <a
-                      target="_blank"
-                      rel="noreferrer"
-                      href={
-                        item.node.successfulFulfillments[0].trackingInfo[0].url
-                      }
-                    >
-                      Track
-                    </a>
-                  </Button>
+                  <>
+                    {item.node.successfulFulfillments[0].trackingInfo.length >
+                      0 && (
+                      <Button>
+                        <a
+                          target="_blank"
+                          rel="noreferrer"
+                          href={
+                            item.node.successfulFulfillments[0].trackingInfo[0]
+                              .url
+                          }
+                        >
+                          Track
+                        </a>
+                      </Button>
+                    )}
+                  </>
                 ) : (
                   <>
                     {item.node.financialStatus === "PARTIALLY_PAID" && (

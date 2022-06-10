@@ -17,7 +17,11 @@ const AboutUs: NextPage = () => {
         spacing={"xl"}
         style={{ minHeight: "48vh", padding: "4rem 0" }}
       >
-        <Group direction="column" position="center">
+        <Group
+          direction="column"
+          position="center"
+          style={{ paddingBottom: "4rem" }}
+        >
           <h2>Our Story</h2>
           <Text align="center">
             Sommni Bedding by Domus Concept (Asia) Sdn Bhd With humble
@@ -32,7 +36,11 @@ const AboutUs: NextPage = () => {
             mattresses that are customarily exported worldwide.
           </Text>
         </Group>
-        <Group direction="column" position="center">
+        <Group
+          direction="column"
+          position="center"
+          style={{ paddingBottom: "4rem" }}
+        >
           <h2>Our Mission</h2>
           <Text align="center">
             To provide excellent sleep and comfort to everyone at the most
@@ -41,7 +49,11 @@ const AboutUs: NextPage = () => {
             Sommni mattresses at the most convenient manner to our customers.
           </Text>
         </Group>
-        <Group direction="column" position="center">
+        <Group
+          direction="column"
+          position="center"
+          style={{ paddingBottom: "4rem" }}
+        >
           <h2>Our Logo</h2>
           <Text align="center">
             Sommni&apos;s logo has been carefully thought after at it represents
@@ -53,7 +65,11 @@ const AboutUs: NextPage = () => {
             catchy and modern.
           </Text>
         </Group>
-        <Group direction="column" position="center">
+        <Group
+          direction="column"
+          position="center"
+          style={{ paddingBottom: "4rem" }}
+        >
           <h2>
             How we made modern day mattress economical through cost-effective
             and sustainable manufacturing
@@ -74,7 +90,11 @@ const AboutUs: NextPage = () => {
             carbon footprint.
           </Text>
         </Group>
-        <Group direction="column" position="center">
+        <Group
+          direction="column"
+          position="center"
+          style={{ paddingBottom: "4rem" }}
+        >
           <h2>Where do we source our materials?</h2>
           <Text align="center">
             We believe that all Sommni customers deserve the best. Therefore, we
@@ -90,7 +110,11 @@ const AboutUs: NextPage = () => {
             labour practices.
           </Text>
         </Group>
-        <Group align={"center"} direction="column">
+        <Group
+          align={"center"}
+          direction="column"
+          style={{ paddingBottom: "4rem" }}
+        >
           <h2>Our Certifications</h2>
           <Text>Sommni as a manufacturer is proudly</Text>
           <List
