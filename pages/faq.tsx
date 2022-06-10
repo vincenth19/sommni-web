@@ -259,14 +259,16 @@ const Faq: NextPage = () => {
             }}
           />
         </Group>
-        {FaqData.map((data) => (
-          <FaqCategory
-            value={data.value}
-            category={data.category}
-            categoryItems={data.categoryItems}
-            key={data.value}
-          />
-        ))}
+        <div style={{ paddingBottom: "4rem" }}>
+          {FaqData.map((data) => (
+            <FaqCategory
+              value={data.value}
+              category={data.category}
+              categoryItems={data.categoryItems}
+              key={data.value}
+            />
+          ))}
+        </div>
       </>
     </>
   );

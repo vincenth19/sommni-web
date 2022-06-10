@@ -1,10 +1,17 @@
-import { Group, Image } from "@mantine/core";
+import { Group, Image as MantineImage } from "@mantine/core";
+import Image from "next/image";
 import { useMediaQuery } from "@mantine/hooks";
 import { FC, useEffect, useState } from "react";
 import { screenSizes, TExtraInfo } from "../../types";
 
 interface AlternatingSectionsProps {
   infos: TExtraInfo[];
+}
+
+function isValidUrl(path: string) {
+  const matchPattern = /^(?:\w+:)?\/\/([^\s\.]+\.\S{2}|localhost[\:?\d]*)\S*$/;
+  const res = matchPattern.test(path);
+  return res;
 }
 
 const AlternatingSections: FC<AlternatingSectionsProps> = ({ infos }) => {
@@ -33,17 +40,34 @@ const AlternatingSections: FC<AlternatingSectionsProps> = ({ infos }) => {
             }}
             key={index}
           >
-            <Image
-              radius={"md"}
-              style={{
-                width: isScreenBig ? "50%" : "100%",
-                borderRadius: "5px",
-              }}
-              src={info.imageURL}
-              alt={"extra-product-info-image"}
-            />
+            {info.imageURL !== "" && (
+              <>
+                {isValidUrl(info.imageURL) ? (
+                  <>
+                    <MantineImage
+                      radius={"md"}
+                      style={{
+                        width: isScreenBig ? "50%" : "100%",
+                        borderRadius: "5px",
+                      }}
+                      src={info.imageURL}
+                      alt={"extra-product-info-image"}
+                    />
+                  </>
+                ) : (
+                  <Image src={info.imageURL} width={1000} height={850} />
+                )}
+              </>
+            )}
+
             <Group
-              style={{ width: isScreenBig ? "50%" : "100%" }}
+              style={{
+                width: isValidUrl(info.imageURL)
+                  ? isScreenBig
+                    ? "50%"
+                    : "100%"
+                  : "100%",
+              }}
               direction="column"
               spacing={"xs"}
             >

@@ -12,12 +12,14 @@ import type { GetStaticProps, NextPage } from "next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import dynamic from "next/dynamic";
 import Image from "next/image";
-import { screenSizes, TExtraInfo } from "../types";
+import { screenSizes, TExtraInfo, TProductOption } from "../types";
 import Link from "next/link";
 import { useMediaQuery } from "@mantine/hooks";
 import { FC, useEffect, useMemo, useState } from "react";
+import { getProduct } from "../lib/shopify";
+import ProductPage from "../components/product/productPage";
+import Loading from "../components/shared/loading";
 
-const MainFrame = dynamic(() => import("../components/shared/mainFrame"));
 const AlternatingSections = dynamic(
   () => import("../components/shared/alternatingSections")
 );
@@ -116,7 +118,7 @@ const Home: NextPage = () => {
         src="https://www.thespruce.com/thmb/rmDEwUoAgwucuusBRvFoE4JBc0o=/4000x2250/smart/filters:no_upscale()/master-bedroom-in-new-luxury-home-with-chandelier-and-large-bank-of-windows-with-view-of-trees-1222623844-212940f4f89e4b69b6ce56fd968e9351.jpg"
         alt="Swiper Image"
       />
-      <Group direction="column" position="center" style={{ padding: "2rem 0" }}>
+      <Group direction="column" position="center" style={{ padding: "4rem 0" }}>
         <Divider
           size={"xs"}
           color="gray"
@@ -130,10 +132,90 @@ const Home: NextPage = () => {
           proud to serve Malaysia for a better sleep!
         </p>
       </Group>
-      <AlternatingSections infos={homeInfos} />
-      <WhySection />
-      <SleepExperienceSection isScreenBig={isScreenBig} cardItems={cardItems} />
+      <div style={{ paddingBottom: "4rem" }}>
+        <SingleProductShowcase />
+      </div>
+      <div style={{ paddingBottom: "4rem" }}>
+        <div
+          style={{
+            backgroundColor: "#f8f8f8",
+            padding: "2rem",
+            borderRadius: "10px",
+          }}
+        >
+          <AlternatingSections infos={homeInfos} />
+        </div>
+      </div>
+      <div style={{ paddingBottom: "4rem" }}>
+        <WhySection />
+      </div>
+      <div style={{ paddingBottom: "4rem" }}>
+        <SleepExperienceSection
+          isScreenBig={isScreenBig}
+          cardItems={cardItems}
+        />
+      </div>
     </div>
+  );
+};
+
+const SingleProductShowcase: FC = () => {
+  const [variants, setVariants] = useState<any>(null);
+  const [fetchedProduct, setFetchedProduct] = useState<any>(null);
+  const [isLoading, setIsloading] = useState<boolean>(true);
+  useEffect(() => {
+    const abortCont = new AbortController();
+    const fetchProduct = async () => {
+      const res = await getProduct("the-sommni", abortCont);
+      if (res) {
+        setFetchedProduct(res);
+      }
+      setIsloading(false);
+    };
+    fetchProduct();
+  }, []);
+  useEffect(() => {
+    if (fetchedProduct && "errors" in fetchedProduct === false) {
+      if (fetchedProduct.options.length > 0) {
+        fetchedProduct.options.forEach((option: TProductOption) => {
+          if (option.name !== "Title") {
+            setVariants((prev: any) => (prev = { ...prev, [option.name]: "" }));
+          }
+        });
+      }
+    }
+  }, [fetchedProduct]);
+  return (
+    <>
+      {isLoading ? (
+        <>
+          <Loading height="10vh" text="Getting our best seller..." />
+        </>
+      ) : (
+        <>
+          {fetchedProduct &&
+            ("errors" in fetchedProduct ? (
+              <></>
+            ) : (
+              <>
+                <Group
+                  position="center"
+                  direction="column"
+                  style={{ paddingBottom: "2rem" }}
+                >
+                  <h1>Best Seller</h1>
+                  <Text>Time to unlock your goodnight sleep.</Text>
+                </Group>
+                <ProductPage
+                  productData={fetchedProduct}
+                  valueState={variants}
+                  valueSetter={setVariants}
+                />
+              </>
+            ))}
+        </>
+      )}
+    </>
   );
 };
 
@@ -152,7 +234,7 @@ const SleepExperienceSection: FC<SleepExperienceSectionProps> = ({
 }) => {
   const themes = useMantineTheme();
   return (
-    <Box style={{ padding: "2rem 0" }}>
+    <Box>
       <h1 style={{ textAlign: "center", padding: "2rem 0" }}>
         Sommni&apos;s Guaranteed Sleep Experience
       </h1>
