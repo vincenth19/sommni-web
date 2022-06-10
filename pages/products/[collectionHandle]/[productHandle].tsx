@@ -179,7 +179,7 @@ const mattressSpecs: TAccordionItem[] = [
         </li>
         <li>
           Certification
-          <p>Density</p>
+          <p>Eco-Institute certified</p>
         </li>
         <li>
           Country of Origin
