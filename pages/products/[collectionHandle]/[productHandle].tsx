@@ -97,16 +97,16 @@ const mattressSpecs: TAccordionItem[] = [
     content: (
       <ol>
         <li>
-          <strong>Sommni's Miracle Memory</strong>
+          <strong>Sommni&apos;s Miracle Memory</strong>
           <p>
-            Sommni's special memory foam is soft to touch and provides
+            Sommni&apos;s special memory foam is soft to touch and provides
             remarkable plush comfort as it moulds to your body
           </p>
         </li>
         <li>
-          <strong> Sommni's Miracle Memory </strong>
+          <strong> Sommni&apos;s Miracle Memory </strong>
           <p>
-            Sommni's special memory foam is soft to touch and provides
+            Sommni&apos;s special memory foam is soft to touch and provides
             remarkable plush comfort as it moulds to your body
           </p>
         </li>
@@ -121,19 +121,19 @@ const mattressSpecs: TAccordionItem[] = [
         <li>
           <strong>HD Firm Cushion</strong>
           <p>
-            Sommni's High Density Firm Cushion is firm yet comfortable. It is
-            added to provide optimal firm feel and support to the firm side of
-            the mattress.
+            Sommni&apos;s High Density Firm Cushion is firm yet comfortable. It
+            is added to provide optimal firm feel and support to the firm side
+            of the mattress.
           </p>
         </li>
         <li>
           <strong>3D Natural Latex</strong>
           <p>
             Different from the second layer of The Sommni Mattress, The bottom
-            layer consist of a different blend of Sommni';s in house certified
-            100% Natural Latex. The 3D Natural Latex is firmer at feel with a
-            larger pinhole design. Sleepers who prefer dozing off on the firm
-            side would get to enjoy the best of Mother Nature.
+            layer consist of a different blend of Sommni&apos;s in house
+            certified 100% Natural Latex. The 3D Natural Latex is firmer at feel
+            with a larger pinhole design. Sleepers who prefer dozing off on the
+            firm side would get to enjoy the best of Mother Nature.
           </p>
         </li>
       </ol>
