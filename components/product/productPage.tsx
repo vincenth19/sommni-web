@@ -38,6 +38,7 @@ interface ProductPageProps {
   valueSetter: (value: string) => void;
   prodSpecs?: TAccordionItem[] | null;
   extraInfos?: TExtraInfo[] | null;
+  showWhySommni?: boolean;
 }
 
 const ProductPage: FC<ProductPageProps> = ({
@@ -46,6 +47,7 @@ const ProductPage: FC<ProductPageProps> = ({
   valueSetter,
   prodSpecs,
   extraInfos,
+  showWhySommni = true,
 }) => {
   const biggerScreen = useMediaQuery(`(min-width: ${screenSizes.sm})`);
   const [isScreenBig, setIsScreenBig] = useState<boolean>();
@@ -301,9 +303,12 @@ const ProductPage: FC<ProductPageProps> = ({
             {prodSpecs && <ProductSpecification specs={prodSpecs} />}
           </Box>
         </div>
-        <div style={{ padding: "4rem 0" }}>
-          <WhySection />
-        </div>
+
+        {showWhySommni && (
+          <div style={{ padding: "4rem 0" }}>
+            <WhySection />
+          </div>
+        )}
         {extraInfos && (
           <div style={{ paddingBottom: "4rem" }}>
             <AlternatingSections infos={extraInfos} />

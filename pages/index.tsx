@@ -207,6 +207,7 @@ const SingleProductShowcase: FC = () => {
                   <Text>Time to unlock your goodnight sleep.</Text>
                 </Group>
                 <ProductPage
+                  showWhySommni={false}
                   productData={fetchedProduct}
                   valueState={variants}
                   valueSetter={setVariants}
