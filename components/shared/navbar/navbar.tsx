@@ -101,7 +101,8 @@ const Navbar = () => {
         <Container size={"xl"} style={{ padding: "1rem" }}>
           <Group position="apart">
             <Group>
-              <NavDrawer />
+              {!isDesktop && <NavDrawer />}
+
               <Link href="/" passHref>
                 <Box component="a" style={{ cursor: "pointer" }}>
                   <Image
