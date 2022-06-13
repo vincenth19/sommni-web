@@ -200,7 +200,7 @@ const SingleProductShowcase: FC<SingleProductShowcaseProps> = ({
             you wake up cool and dry.
           </Text>
           <Link href={"/products/mattress/the-sommni"} passHref>
-            <Button size="lg" component="a">
+            <Button size="lg" fullWidth={!isDesktop} component="a">
               Shop Now
             </Button>
           </Link>
