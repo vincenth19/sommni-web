@@ -169,14 +169,14 @@ const SingleProductShowcase: FC<SingleProductShowcaseProps> = ({
 }) => {
   return (
     <>
-      <Group
+      {/* <Group
         position="center"
         direction="column"
         style={{ paddingBottom: "4rem" }}
       >
         <h1>Best Seller</h1>
         <Text>Time to unlock your goodnight sleep.</Text>
-      </Group>
+      </Group> */}
       <div
         style={{
           display: "flex",
