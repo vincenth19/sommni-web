@@ -16,9 +16,6 @@ import { screenSizes, TExtraInfo, TProductOption } from "../types";
 import Link from "next/link";
 import { useMediaQuery } from "@mantine/hooks";
 import { FC, useEffect, useMemo, useState } from "react";
-import { getProduct } from "../lib/shopify";
-import ProductPage from "../components/product/productPage";
-import Loading from "../components/shared/loading";
 
 const AlternatingSections = dynamic(
   () => import("../components/shared/alternatingSections")
@@ -61,14 +58,14 @@ const Home: NextPage = () => {
           <>
             <p>
               Under Domnus Concept (Asia) Sdn. Bhd., Sommni was create to cater
-              to cater to Malaysians.
+              Malaysians.
             </p>
             <p>
               With humble beginning since 2013, Domnus Concept is a mattress
-              manufacturer based in Malaysia that specialised in OEM mattress &
-              bedding exports. Our facility is located in Mantin, Negeri
+              manufacturer based in Malaysia that specialised in OEM mattress
+              &amp; bedding exports. Our facility is located in Mantin, Negeri
               Sembilan on 200,000 sq. ft. land where we manufacture and export
-              to many of our partneting clients worldwide.
+              to many of our partnering clients worldwide.
             </p>
             <Link href="/about-us" passHref>
               <Button
@@ -89,9 +86,9 @@ const Home: NextPage = () => {
         content: (
           <>
             <p>
-              Sommni is revolitionising the traditional mattress shopping
+              Sommni is revolutionising the traditional mattress shopping
               experience by eliminating the need of physical mattress store. In
-              view of the Coronavirus pandemin in 2019, Sommni has entered the
+              view of the Coronavirus pandemic in 2019, Sommni has entered the
               online marketplace by making appearance in Lazada and Shopee.
             </p>
             <p>
@@ -120,7 +117,7 @@ const Home: NextPage = () => {
         style={{
           position: "relative",
           width: "99vw",
-          left: "calc(-50vw + 50%)",
+          left: "calc(-49.55vw + 50%)",
         }}
       />
       <Group direction="column" position="center" style={{ padding: "4rem 0" }}>
@@ -138,7 +135,7 @@ const Home: NextPage = () => {
         </p>
       </Group>
       <div style={{ paddingBottom: "4rem" }}>
-        <SingleProductShowcase />
+        <SingleProductShowcase isDesktop={isScreenBig} />
       </div>
       <div style={{ paddingBottom: "4rem" }}>
         <div
@@ -164,64 +161,51 @@ const Home: NextPage = () => {
   );
 };
 
-const SingleProductShowcase: FC = () => {
-  const [variants, setVariants] = useState<any>(null);
-  const [fetchedProduct, setFetchedProduct] = useState<any>(null);
-  const [isLoading, setIsloading] = useState<boolean>(true);
-  useEffect(() => {
-    const abortCont = new AbortController();
-    const fetchProduct = async () => {
-      const res = await getProduct("the-sommni", abortCont);
-      if (res) {
-        setFetchedProduct(res);
-      }
-      setIsloading(false);
-    };
-    fetchProduct();
-  }, []);
-  useEffect(() => {
-    if (fetchedProduct && "errors" in fetchedProduct === false) {
-      if (fetchedProduct.options.length > 0) {
-        fetchedProduct.options.forEach((option: TProductOption) => {
-          if (option.name !== "Title") {
-            setVariants((prev: any) => (prev = { ...prev, [option.name]: "" }));
-          }
-        });
-      }
-    }
-  }, [fetchedProduct]);
+interface SingleProductShowcaseProps {
+  isDesktop: boolean | undefined;
+}
+const SingleProductShowcase: FC<SingleProductShowcaseProps> = ({
+  isDesktop,
+}) => {
   return (
     <>
-      {isLoading ? (
-        <>
-          <Loading height="10vh" text="Getting our best seller..." />
-        </>
-      ) : (
-        <>
-          {fetchedProduct &&
-            ("errors" in fetchedProduct ? (
-              <></>
-            ) : (
-              <>
-                <Group
-                  position="center"
-                  direction="column"
-                  style={{ paddingBottom: "2rem" }}
-                >
-                  <h1>Best Seller</h1>
-                  <Text>Time to unlock your goodnight sleep.</Text>
-                </Group>
-                <ProductPage
-                  showWhySommni={false}
-                  productData={fetchedProduct}
-                  valueState={variants}
-                  valueSetter={setVariants}
-                  stickyAddToCart={false}
-                />
-              </>
-            ))}
-        </>
-      )}
+      <Group
+        position="center"
+        direction="column"
+        style={{ paddingBottom: "4rem" }}
+      >
+        <h1>Best Seller</h1>
+        <Text>Time to unlock your goodnight sleep.</Text>
+      </Group>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: isDesktop ? "row" : "column",
+          alignItems: "center",
+          gap: "3rem",
+        }}
+      >
+        <MantineImage
+          width={isDesktop ? "45vw" : "100%"}
+          alt="single-product-showcase-image"
+          height="100%"
+          radius={10}
+          src="https://images.ctfassets.net/uvwd10ivtduz/35mSXLQVqOQCfKri6Ohm3H/2a29eefe6e8ee262d7db7f3e82c706b8/210621_koala_jballa_ls2_02_lowangle_656_queen.jpeg??w=1920&h=1440&q=75&fit=fill&fm=webp"
+        />
+        <div style={{ textAlign: isDesktop ? "left" : "center" }}>
+          <h2 style={{ paddingBottom: "1.5rem" }}>The Sommni</h2>
+          <Text style={{ paddingBottom: "2.5rem" }}>
+            Prone to a sensitive back, hip, or joints? Our multi-layered 3 zone
+            support helps relieve the pressure, plus, our COOLMAX® Tech helps
+            you wake up cool and dry.
+          </Text>
+          <Link href={"/products/mattress/the-sommni"} passHref>
+            <Button size="lg" fullWidth={!isDesktop} component="a">
+              Shop Now
+            </Button>
+          </Link>
+        </div>
+      </div>
     </>
   );
 };
