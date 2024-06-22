@@ -12,7 +12,7 @@ import type { GetStaticProps, NextPage } from "next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import dynamic from "next/dynamic";
 import Image from "next/image";
-import { screenSizes, TExtraInfo, TProductOption } from "../types";
+import { screenSizes, TExtraInfo } from "../types";
 import Link from "next/link";
 import { useMediaQuery } from "@mantine/hooks";
 import { FC, useEffect, useMemo, useState } from "react";
